@@ -1,0 +1,26 @@
+function init(self)
+	self.m_background = gui.get_node("backgroundcolor")
+end
+
+function final(self)
+end
+
+function update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == hash("add_item")) then
+		ccprint("gwjgwj,add item,index=%d", message.index)
+		local itemId = message.itemId
+		local nodeId = gui.get_id(self.m_background)
+--		ccprint("gwjgwj,aaaaa,nodeId=%s", tostring(nodeId))
+		msg.post(itemId, "set_parent", {parent_id=nodeId})
+--		ccprint("gwjgwj,bbbbb")
+	end
+end
+
+function on_input(self, action_id, action)
+end
+
+function on_reload(self)
+end

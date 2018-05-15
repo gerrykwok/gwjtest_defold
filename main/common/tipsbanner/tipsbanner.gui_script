@@ -1,0 +1,46 @@
+require("main.common.MiscUtil")
+
+function init(self)
+	self.m_leftTime = 0
+end
+
+function final(self)
+end
+
+function update(self, dt)
+	if(self.m_leftTime > 0) then
+		self.m_leftTime = self.m_leftTime - dt
+		if(self.m_leftTime <= 0) then
+			fade(1, 0, function()
+				local url = msg.url()
+--				ccprint("socket=%s,path=%s,fragment=%s", url.socket, url.path, url.fragment)
+				local url2 = msg.url(url.socket, url.path, "")
+				msg.post(url2, "deleteTipsBanner")
+			end)
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+--	ccprint("gwjgwj,tipsbanner,message:%s", tostring(message_id))
+	if(message_id == hash("setText")) then
+		local textNode = gui.get_node("text")
+		gui.set_text(textNode, message.text)
+		fade(0, 1, function()
+		end)
+	elseif(message_id == hash("delayDestroy")) then
+		self.m_leftTime = message.delay
+	end
+end
+
+function on_input(self, action_id, action)
+end
+
+function on_reload(self)
+end
+
+function fade(from, to, onComplete)
+	local tipsbg = gui.get_node("tipsbg")
+	gui.set_color(tipsbg, vmath.vector4(1, 1, 1, from))
+	gui.animate(tipsbg, "color.w", to, gui.EASING_LINEAR, 0.2, 0, onComplete)
+end

@@ -1,0 +1,27 @@
+require("main.common.MiscUtil")
+
+function init(self)
+end
+
+function final(self)
+end
+
+function update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+--	ccprint("gwjgwj,input:%s", tostring(action_id))
+	if(action_id == hash("text")) then
+		ccprint("gwjgwj,text:%s", action.text)
+--		local node = gui.get_node("text")
+--		gui.set_text(node, action.text)
+	elseif(action_id == hash("touch")) then
+		gui.show_keyboard(gui.KEYBOARD_TYPE_DEFAULT, true)
+	end
+end
+
+function on_reload(self)
+end

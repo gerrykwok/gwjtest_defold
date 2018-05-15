@@ -1,0 +1,42 @@
+require("main.common.MiscUtil")
+
+function init(self)
+	self.m_count = 0
+	local x,y,w,h = tilemap.get_bounds("#tilemap")
+	ccprint("gwjgwj,bound=(%d,%d,%d,%d)", x, y, w, h)
+	self.m_bound = cc.rect(x, y, w, h)
+	self.m_x = x
+	self.m_y = y
+	self.m_doing = true
+end
+
+function final(self)
+end
+
+function update(self, dt)
+	if(self.m_doing) then
+		self.m_count = self.m_count + 1
+		if(self.m_count == 30) then
+			self.m_count = self.m_count - 30
+			tilemap.set_tile("#tilemap", "layer1", self.m_x, self.m_y, 1)
+			self.m_x = self.m_x + 1
+			if(self.m_x >= self.m_bound.x+self.m_bound.w) then
+				self.m_x = self.m_bound.x
+				self.m_y = self.m_y + 1
+				if(self.m_y >= self.m_bound.y+self.m_bound.h) then
+					self.m_doing = false
+					ccprint("gwjgwj,end")
+				end
+			end
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+end
+
+function on_reload(self)
+end

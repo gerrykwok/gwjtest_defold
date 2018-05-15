@@ -1,0 +1,84 @@
+require("main.common.MiscUtil")
+local GwjUIListView = require("gwjui.GwjUIListView")
+local TipsBanner = require("main.common.tipsbanner.tipsbanner")
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	--郭伟基测试listview
+	local maxItemType = 5
+	local listview = GwjUIListView.createInstance({
+		list_id = "list1",
+		direction = GwjUIListView.DIRECTION_VERTICAL,
+	})
+	listview:onTouch(function(event)
+		if(event.name == "clicked") then
+			ccprint("clicked:%d", event.itemPos)
+			local str = string.format("clicked1:%d", event.itemPos)
+			TipsBanner.show(str)
+		else
+--			dump(event, "listview touch")
+		end
+	end)
+	for i=1,5 do
+		local item = listview:addItem(string.format("list_item%d", math.modf(i%maxItemType)+1))
+	end
+	listview:reload()
+
+	local listview = GwjUIListView.createInstance({
+		list_id = "list2",
+		direction = GwjUIListView.DIRECTION_VERTICAL,
+	})
+	listview:onTouch(function(event)
+		if(event.name == "clicked") then
+			ccprint("clicked:%d", event.itemPos)
+			local str = string.format("clicked2:%d", event.itemPos)
+			TipsBanner.show(str)
+		else
+--			dump(event, "listview touch")
+		end
+	end)
+	for i=1,20 do
+		local itemId = string.format("list_item%d", math.modf(i%maxItemType)+1)
+		local wh = gui.get_size(gui.get_node(itemId))
+		local item = listview:addItem(itemId, wh.x, wh.y+20)
+	end
+	listview:reload()
+
+	local list3 = GwjUIListView.createInstance({
+		list_id = "list3",
+		direction = GwjUIListView.DIRECTION_HORIZONTAL,
+	})
+	list3:onTouch(function(event)
+		if(event.name == "clicked") then
+			ccprint("clicked:%d", event.itemPos)
+			local str = string.format("clicked3:%d", event.itemPos)
+			TipsBanner.show(str)
+		else
+--			dump(event, "listview touch")
+		end
+	end)
+	for i=1,20 do
+		local item = list3:addItem(string.format("list_item%d", math.modf(i%maxItemType)+1))
+--		item.width = item.width + 10
+	end
+	list3:reload()
+end
+
+function final(self)
+	GwjUIListView.final()
+end
+
+function update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+	if(action_id == hash("touch")) then
+		GwjUIListView.handleTouchEvent(action)
+	end
+end
+
+function on_reload(self)
+end

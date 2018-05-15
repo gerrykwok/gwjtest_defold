@@ -1,0 +1,61 @@
+require("main.common.MiscUtil")
+local timer = require("main.common.timer")
+
+local function show(self, proxy)
+	msg.post(proxy, "async_load")
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.m_curTest = 0
+	self.m_sceneSwitch = true
+	show(self, "#mainscene_proxy")
+	--test:如何判断某个collection proxy是否存在?
+--	for i=1,5 do
+--		local url = string.format("go#proxy_test%02d", i)
+--		local id = go.get_id(url)
+--		ccprint("url %s,id=%s", url, tostring(id))
+--		local urlId = msg.url(url)
+--		ccprint("urlId=%s", tostring(urlId))
+--	end
+end
+
+function final(self)
+end
+
+function update(self, dt)
+	timer.update(dt)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("proxy_loaded") then
+		if(self.m_sceneSwitch) then
+			if self.current_proxy then
+				msg.post(self.current_proxy, "unload")
+			end
+			self.current_proxy = sender
+		end
+		self.m_sceneSwitch = false
+		msg.post(sender, "init")--这里不调用都可以
+		msg.post(sender, "enable")
+		if(self.m_curTest ~= 0) then
+			msg.post(string.format("test%02d:/go", self.m_curTest), "set_test_data", {index=self.m_curTest})
+		end
+	elseif(message_id == hash("showMainScene")) then
+		self.m_sceneSwitch = true
+		show(self, "#mainscene_proxy")
+		self.m_curTest = 0
+	elseif(message_id == hash("gotoTest")) then
+		ccprint("goto test:%s", message.name)
+		self.m_sceneSwitch = true
+		local proxy = string.format("#proxy_test%02d", message.name)
+		self.m_curTest = message.name
+		show(self, proxy)
+	end
+end
+
+function on_input(self, action_id, action)
+end
+
+function on_reload(self)
+end

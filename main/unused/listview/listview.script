@@ -1,0 +1,91 @@
+require("main.common.MiscUtil")
+
+function init(self)
+	ccprint("listview.init")
+	msg.post(".", "acquire_input_focus")--关键
+	self.m_allItems = {}
+	--滚动容器
+	self.m_scroller = factory.create("#scrollfactory")
+	msg.post(self.m_scroller, "set_parent", {parent_id=go.get_id(), keep_world_transform = 1})
+end
+
+function final(self)
+end
+
+function update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+	if(message_id == hash("setProp")) then
+		setProp(self, message)
+	elseif(message_id == hash("add_item")) then
+		local itemId = message.itemId
+		local itemSize = message.itemSize
+		if(itemId) then
+			msg.post(itemId, "set_parent", { parent_id = self.m_scroller, keep_world_transform = 1})
+			table.insert(self.m_allItems, {itemId=itemId, itemSize=itemSize})
+		else
+			ccprint("must have itemId")
+		end
+	elseif(message_id == hash("layout")) then
+		doLayout(self)
+	end
+end
+
+function on_input(self, action_id, action)
+	if(action_id == hash("mouse")) then
+		if(action.pressed and not action.released) then
+			self.m_down = {x=action.x, y=action.y}
+--			dump(action, "gwjgwj,mouse down")
+			onMyMouseEvent(self, {name="began", x=action.x, y=action.y})
+		elseif(not action.pressed and not action.released) then
+			if(action.x ~= self.m_down.x or action.y ~= self.m_down.y) then
+				--dump(action, "gwjgwj,mouse move")
+--				ccprint("gwjgwj,mouse move:%f,%f", action.x, action.y)
+				onMyMouseEvent(self, {name="moved", x=action.x, y=action.y})
+				self.m_down.x = action.x
+				self.m_down.y = action.y
+			end
+		elseif(not action.pressed and action.released) then
+--			dump(action, "gwjgwj,mouse up")
+			onMyMouseEvent(self, {name="ended", x=action.x, y=action.y})
+		end
+--	elseif(action_id == hash("touch")) then
+--		dump(action, "gwjgwj,touch,action")
+	end
+end
+
+function on_reload(self)
+end
+
+---------------------------------------------------------------------------------------------------------------
+
+function setProp(self, prop)
+end
+
+function doLayout(self)
+	ccprint("gwjgwj,do layout")
+--	local itemHeight = 30
+	local totalHeight = 0
+	for i,item in ipairs(self.m_allItems) do
+		local itemId = item.itemId
+		totalHeight = totalHeight + item.itemSize.height
+	end
+	local y = totalHeight
+	for i,item in ipairs(self.m_allItems) do
+		local itemId = item.itemId
+		go.set_position(vmath.vector3(100, y-item.itemSize.height/2, 0), itemId)
+		y = y - item.itemSize.height
+	end
+end
+
+function onMyMouseEvent(self, event)
+	if(event.name == "began") then
+		local pos = go.get_position(self.m_scroller)
+		self.m_xDown = event.x - pos.x
+		self.m_yDown = event.y - pos.y
+	elseif(event.name == "moved") then
+		go.set_position(vmath.vector3(0, event.y-self.m_yDown, 0), self.m_scroller)
+	elseif(event.name == "ended") then
+	end
+end

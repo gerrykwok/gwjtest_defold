@@ -1,0 +1,46 @@
+require("main.common.MiscUtil")
+--require("builtins.scripts.socket")
+local dirtylarry = require("gooey.themes.dirtylarry.dirtylarry")
+
+function init(self)
+	dirtylarry.acquire_input()
+	ccprint("client=%s", tostring(socket))
+end
+
+function final(self)
+end
+
+function update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+	local group = dirtylarry.group("group1", function()
+		dirtylarry.button("request", action_id, action, function(button)
+			doRequest(self)
+		end)
+	end)
+	return group.consumed
+end
+
+function on_reload(self)
+end
+
+function doRequest(self)
+	local url = "https://blog.csdn.net/sobeautiy/article/details/49748545"
+	http.request(url, "POST", function(self, _, response)
+--		dump(response, "response", 1000)
+		if(response.status == 200) then
+			local resp = response.response
+			local max = 1000
+			if(string.len(resp) > max) then
+				resp = string.sub(resp, 1, max)
+			end
+			ccprint("gwjgwj,response=%s", resp)
+			local node = gui.get_node("text")
+			gui.set_text(node, resp)
+		end
+	end)
+end

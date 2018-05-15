@@ -1,0 +1,9 @@
+images {
+  image: "/main/tests/test06/images/plm.png"
+}
+images {
+  image: "/main/tests/test06/images/circle.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

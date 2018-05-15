@@ -1,0 +1,30 @@
+--测试set_time_step
+require("main.common.MiscUtil")
+
+function init(self)
+--	local id = go.get_id()
+--	dump(id, "id", 100)
+--	msg.post("main:/go#proxy_test02", "set_time_step", {factor=0.2, mode=1})
+end
+
+function final(self)
+end
+
+function update(self, dt)
+	ccprint("update:%s", tostring(dt))
+end
+
+function on_message(self, message_id, message, sender)
+	ccprint("test02,on_message:%s", tostring(message_id))
+	if(message_id == hash("set_test_data")) then
+		dump(message, "set test data")
+		local index = message.index
+		msg.post(string.format("main:/go#proxy_test%02d", index), "set_time_step", {factor=0.2, mode=1})
+	end
+end
+
+function on_input(self, action_id, action)
+end
+
+function on_reload(self)
+end

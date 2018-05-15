@@ -1,0 +1,23 @@
+require("main.common.MiscUtil")
+
+function init(self)
+	local pie = gui.get_node("pie")
+	gui.set_fill_angle(pie, 0)
+	gui.animate(pie, "fill_angle", 360, gui.EASING_OUTQUAD, 2, 1, function()
+	end, gui.PLAYBACK_LOOP_PINGPONG)
+end
+
+function final(self)
+end
+
+function update(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+end
+
+function on_reload(self)
+end
