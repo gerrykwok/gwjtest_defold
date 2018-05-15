@@ -6,6 +6,7 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	--郭伟基测试listview
 	local maxItemType = 5
+	--list1
 	local listview = GwjUIListView.createInstance({
 		list_id = "list1",
 		direction = GwjUIListView.DIRECTION_VERTICAL,
@@ -20,10 +21,10 @@ function init(self)
 		end
 	end)
 	for i=1,5 do
-		local item = listview:addItem(string.format("list_item%d", math.modf(i%maxItemType)+1))
+		local item = listview:addItem(string.format("list_item%d", math.modf((i-1)%maxItemType)+1))
 	end
 	listview:reload()
-
+	--list2
 	local listview = GwjUIListView.createInstance({
 		list_id = "list2",
 		direction = GwjUIListView.DIRECTION_VERTICAL,
@@ -38,12 +39,19 @@ function init(self)
 		end
 	end)
 	for i=1,20 do
-		local itemId = string.format("list_item%d", math.modf(i%maxItemType)+1)
+		local idx = math.modf((i-1)%maxItemType)+1
+		local itemId = string.format("list_item%d", idx)
 		local wh = gui.get_size(gui.get_node(itemId))
-		local item = listview:addItem(itemId, wh.x, wh.y+20)
+		local item = listview:addItem(itemId, wh.x, wh.y+20, function(clones)
+			dump(clones, "clones")
+			local text = clones[string.format("idx%d", idx)]
+			if(text) then
+				gui.set_text(text, string.format("%d:", i))
+			end
+		end)
 	end
 	listview:reload()
-
+	--list3
 	local list3 = GwjUIListView.createInstance({
 		list_id = "list3",
 		direction = GwjUIListView.DIRECTION_HORIZONTAL,
@@ -58,7 +66,7 @@ function init(self)
 		end
 	end)
 	for i=1,20 do
-		local item = list3:addItem(string.format("list_item%d", math.modf(i%maxItemType)+1))
+		local item = list3:addItem(string.format("list_item%d", math.modf((i-1)%maxItemType)+1))
 --		item.width = item.width + 10
 	end
 	list3:reload()

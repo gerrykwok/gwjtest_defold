@@ -115,9 +115,13 @@ local colors = {
 	vmath.vector4(1, 1, 0, 1),
 }
 local idxColor = 1
-function clsGwjUIListView:addItem(item_template_id, itemWidth, itemHeight)
+function clsGwjUIListView:addItem(item_template_id, itemWidth, itemHeight, funcSetData)
 	item_template_id = clsGwjUIListView.to_hash(item_template_id)
 	local clones = gui.clone_tree(gui.get_node(item_template_id))
+
+	if(funcSetData) then
+		funcSetData(clones)
+	end
 
 	local root = clones[item_template_id]
 	local wh = gui.get_size(root)

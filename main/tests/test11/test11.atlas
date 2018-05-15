@@ -1,17 +1,17 @@
 images {
-  image: "/main/tests/test11/images/share_icon3.png"
+  image: "/main/tests/test11/images/item_img1.png"
 }
 images {
-  image: "/main/tests/test11/images/chakan.png"
+  image: "/main/tests/test11/images/item_img2.png"
 }
 images {
-  image: "/main/tests/test11/images/btn_bg2.png"
+  image: "/main/tests/test11/images/item_img3.png"
 }
 images {
-  image: "/main/tests/test11/images/fuzhiweixin.png"
+  image: "/main/tests/test11/images/item_img4.png"
 }
 images {
-  image: "/main/tests/test11/images/queding.png"
+  image: "/main/tests/test11/images/item_img5.png"
 }
 margin: 0
 extrude_borders: 0
