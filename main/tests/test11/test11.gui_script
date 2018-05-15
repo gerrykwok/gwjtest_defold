@@ -43,7 +43,7 @@ function init(self)
 		local itemId = string.format("list_item%d", idx)
 		local wh = gui.get_size(gui.get_node(itemId))
 		local item = listview:addItem(itemId, wh.x, wh.y+20, function(clones)
-			dump(clones, "clones")
+--			dump(clones, "clones")
 			local text = clones[string.format("idx%d", idx)]
 			if(text) then
 				gui.set_text(text, string.format("%d:", i))

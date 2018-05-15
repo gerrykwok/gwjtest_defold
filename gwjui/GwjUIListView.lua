@@ -101,6 +101,8 @@ function clsGwjUIListView:ctor(params)
 	gui.set_parent(node, self.m_listNode)
 	self.m_scrollNode = gui.new_box_node(vmath.vector3(0, size.y, 0), vmath.vector3())
 	gui.set_parent(self.m_scrollNode, node)
+
+	self.m_speed = {x=0,y=0}
 end
 
 function clsGwjUIListView:isVertical()
@@ -214,9 +216,12 @@ function clsGwjUIListView:onTouch_(event)
 		self.m_prevXY = gwjui.point(event.x, event.y)
 		self.m_posScroll = gui.get_position(self.m_scrollNode)
 		self.m_bDrag = false
+		gui.cancel_animation(self.m_listNode, "position")
 		self:notifyListener_({name="began", x=event.x, y=event.y})
 	elseif(event.name == "ended") then
 		if(self.m_bDrag) then
+			self.m_bDrag = false
+			self:scrollAuto()
 			self:notifyListener_({name="ended", x=event.x, y=event.y})
 		else
 			--判断点中了哪个item
@@ -232,9 +237,16 @@ function clsGwjUIListView:onTouch_(event)
 			return
 		end
 		self.m_bDrag = true
+		self.m_speed.x = event.x - event.prevX
+		self.m_speed.y = event.y - event.prevY
+		if(self.m_direction == clsGwjUIListView.DIRECTION_VERTICAL) then
+			self.m_speed.x = 0
+		elseif(self.m_direction == clsGwjUIListView.DIRECTION_HORIZONTAL) then
+			self.m_speed.y = 0
+		end
 		local pos = gui.get_position(self.m_scrollNode)
-		local x = pos.x + event.x - event.prevX
-		local y = pos.y + event.y - event.prevY
+		local x = pos.x + self.m_speed.x
+		local y = pos.y + self.m_speed.y
 		
 		local viewSize = self.m_viewSize
 		if(self.m_direction == clsGwjUIListView.DIRECTION_VERTICAL) then
@@ -262,6 +274,12 @@ function clsGwjUIListView:onTouch_(event)
 	end
 end
 
+function clsGwjUIListView:scrollAuto()
+	local disX, disY = self:moveXY(0, 0, self.m_speed.x*6, self.m_speed.y*6)
+	local pos = gui.get_position(self.m_scrollNode)
+	gui.animate(self.m_scrollNode, "position", vmath.vector3(pos.x+disX, pos.y+disY, 0), gui.EASING_OUTSINE, 0.3)
+end
+
 function clsGwjUIListView:isShake_(event)
 	if(self.m_direction == clsGwjUIListView.DIRECTION_VERTICAL) then
 		return math.abs(event.y - self.m_prevXY.y) < self.m_nShake
@@ -276,6 +294,10 @@ function clsGwjUIListView:hitTest(event)
 			return item
 		end
 	end
+end
+
+function clsGwjUIListView:moveXY(orgX, orgY, speedX, speedY)
+	return orgX + speedX, orgY + speedY--bounce
 end
 
 return clsGwjUIListView
