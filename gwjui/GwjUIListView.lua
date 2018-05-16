@@ -103,6 +103,11 @@ function clsGwjUIListView:ctor(params)
 	gui.set_parent(self.m_scrollNode, node)
 
 	self.m_speed = {x=0,y=0}
+	self.m_bBounce = true
+end
+
+function clsGwjUIListView:setBounceable(bBounceable)
+	self.m_bBounce = bBounceable
 end
 
 function clsGwjUIListView:isVertical()
@@ -214,24 +219,9 @@ function clsGwjUIListView:onTouch_(event)
 --	gwjui.printf("gwjgwj,event:%s", event.name)
 	if(event.name == "began") then
 		self.m_prevXY = gwjui.point(event.x, event.y)
-		self.m_posScroll = gui.get_position(self.m_scrollNode)
 		self.m_bDrag = false
 		gui.cancel_animation(self.m_listNode, "position")
 		self:notifyListener_({name="began", x=event.x, y=event.y})
-	elseif(event.name == "ended") then
-		if(self.m_bDrag) then
-			self.m_bDrag = false
-			self:scrollAuto()
-			self:notifyListener_({name="ended", x=event.x, y=event.y})
-		else
-			--判断点中了哪个item
-			local item = self:hitTest(event)
-			if(item) then
-				self:notifyListener_({name="clicked",
-					listView = self, itemPos = item.idx, item = item,
-					x=event.x, y=event.y})
-			end
-		end
 	elseif(event.name == "moved") then
 		if(self:isShake_(event)) then
 			return
@@ -244,40 +234,101 @@ function clsGwjUIListView:onTouch_(event)
 		elseif(self.m_direction == clsGwjUIListView.DIRECTION_HORIZONTAL) then
 			self.m_speed.y = 0
 		end
-		local pos = gui.get_position(self.m_scrollNode)
-		local x = pos.x + self.m_speed.x
-		local y = pos.y + self.m_speed.y
-		
-		local viewSize = self.m_viewSize
-		if(self.m_direction == clsGwjUIListView.DIRECTION_VERTICAL) then
-			if(y+self.m_scrollContentSize.height < viewSize.height) then
-				y = viewSize.height - self.m_scrollContentSize.height
-			end
-			if(self.m_scrollContentSize.height > viewSize.height) then
-				if(y > 0) then
-					y = 0
-				end
-			else
-				y = viewSize.height - self.m_scrollContentSize.height
-			end
-			gwjui.setGuiPos(self.m_scrollNode, {y=y})
-		else
-			if(x > 0) then x = 0 end
-			if(self.m_scrollContentSize.width > viewSize.width) then
-				if(x+self.m_scrollContentSize.width < viewSize.width) then
-					x = viewSize.width-self.m_scrollContentSize.width
-				end
-			end
-			gwjui.setGuiPos(self.m_scrollNode, {x=x})
-		end
+		self:scrollBy(self.m_speed.x, self.m_speed.y)
 		self:notifyListener_({name="moved", x=event.x, y=event.y})
+	elseif(event.name == "ended") then
+		if(self.m_bDrag) then
+			self.m_bDrag = false
+			self:scrollAuto()
+			self:notifyListener_({name="ended", x=event.x, y=event.y})
+		else
+			--判断点中了哪个item
+			local item = self:hitTest(event)
+			if(item) then
+				self:notifyListener_({name="clicked",
+				listView = self, itemPos = item.idx, item = item,
+				x=event.x, y=event.y})
+			end
+		end
 	end
 end
 
+function clsGwjUIListView:scrollBy(x, y)
+	local pos = gui.get_position(self.m_scrollNode)
+	pos.x,pos.y = self:moveXY(pos.x, pos.y, x, y)
+	gui.set_position(self.m_scrollNode, pos)
+end
+
+function clsGwjUIListView:scrollTo(x, y)
+	gui.set_position(self.m_scrollNode, vmath.vector3(x, y, 0))
+end
+
 function clsGwjUIListView:scrollAuto()
+	if self:twiningScroll() then
+		return
+	end
+	self:elasticScroll()
+end
+
+function clsGwjUIListView:twiningScroll()
+	if self:isSideShow() then
+		-- printInfo("UIScrollView - side is show, so elastic scroll")
+		return false
+	end
+
+	if math.abs(self.m_speed.x) < 10 and math.abs(self.m_speed.y) < 10 then
+		-- printInfo("#DEBUG, UIScrollView - isn't twinking scroll:" .. self.m_speed.x .. " " .. self.m_speed.y)
+		return false
+	end
+
 	local disX, disY = self:moveXY(0, 0, self.m_speed.x*6, self.m_speed.y*6)
 	local pos = gui.get_position(self.m_scrollNode)
-	gui.animate(self.m_scrollNode, "position", vmath.vector3(pos.x+disX, pos.y+disY, 0), gui.EASING_OUTSINE, 0.3)
+	gui.animate(self.m_scrollNode, "position", vmath.vector3(pos.x+disX, pos.y+disY, 0), gui.EASING_OUTSINE, 0.3, 0, function()
+		self:elasticScroll()
+	end)
+end
+
+function clsGwjUIListView:elasticScroll()
+	local cascadeBound = self:getScrollNodeRect()
+	local disX, disY = 0, 0
+	local viewRect = self:getViewRectInSelf()
+
+	if cascadeBound.width < viewRect.width then
+		disX = viewRect.x - cascadeBound.x
+	else
+		if cascadeBound.x > viewRect.x then
+			disX = viewRect.x - cascadeBound.x
+		elseif cascadeBound.x + cascadeBound.width < viewRect.x + viewRect.width then
+			disX = viewRect.x + viewRect.width - cascadeBound.x - cascadeBound.width
+		end
+	end
+
+	if cascadeBound.height < viewRect.height then
+		disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+	else
+		if cascadeBound.y > viewRect.y then
+			disY = viewRect.y - cascadeBound.y
+		elseif cascadeBound.y + cascadeBound.height < viewRect.y + viewRect.height then
+			disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+		end
+	end
+
+	if 0 == disX and 0 == disY then
+		return
+	end
+
+	--[[
+	transition.moveBy(self.scrollNode,
+	{x = disX, y = disY, time = 0.3,
+	easing = "backout",
+	onComplete = function()
+		self:callListener_{name = "scrollEnd"}
+	end})
+	]]
+	local pos = gui.get_position(self.m_scrollNode)
+	gui.animate(self.m_scrollNode, "position", vmath.vector3(pos.x+disX, pos.y+disY, 0), gui.EASING_OUTBACK, 0.3, 0, function()
+		self:notifyListener_{name = "scrollEnd"}
+	end)
 end
 
 function clsGwjUIListView:isShake_(event)
@@ -297,7 +348,68 @@ function clsGwjUIListView:hitTest(event)
 end
 
 function clsGwjUIListView:moveXY(orgX, orgY, speedX, speedY)
-	return orgX + speedX, orgY + speedY--bounce
+	if(self.m_bBounce) then
+		return orgX + speedX, orgY + speedY--bounce
+	end
+
+	local scaleToWorldSpace_ = gwjui.point(1, 1)
+	local cascadeBound = self:getScrollNodeRect()
+	local viewRect = self:getViewRectInSelf()
+	local x, y = orgX, orgY
+	local disX, disY
+
+	if speedX > 0 then
+		if cascadeBound.x < viewRect.x then
+			disX = viewRect.x - cascadeBound.x
+			disX = disX / scaleToWorldSpace_.x
+			x = orgX + math.min(disX, speedX)
+		end
+	else
+		if cascadeBound.x + cascadeBound.width > viewRect.x + viewRect.width then
+			disX = viewRect.x + viewRect.width - cascadeBound.x - cascadeBound.width
+			disX = disX / scaleToWorldSpace_.x
+			x = orgX + math.max(disX, speedX)
+		end
+	end
+
+	if speedY > 0 then
+		if cascadeBound.y < viewRect.y then
+			disY = viewRect.y - cascadeBound.y
+			disY = disY / scaleToWorldSpace_.y
+			y = orgY + math.min(disY, speedY)
+		end
+	else
+		if cascadeBound.y + cascadeBound.height > viewRect.y + viewRect.height then
+			disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+			disY = disY / scaleToWorldSpace_.y
+			y = orgY + math.max(disY, speedY)
+		end
+	end
+
+	return x, y
+end
+
+-- 是否显示到边缘
+function clsGwjUIListView:isSideShow()
+--	local bound = self.scrollNode:getCascadeBoundingBox()
+--	if bound.x > self.viewRect_.x
+--	or bound.y > self.viewRect_.y
+--	or bound.x + bound.width < self.viewRect_.x + self.viewRect_.width
+--	or bound.y + bound.height < self.viewRect_.y + self.viewRect_.height then
+--		return true
+--	end
+--
+--	return false
+end
+
+function clsGwjUIListView:getScrollNodeRect()
+	local pos = gui.get_position(self.m_scrollNode)
+	local cascadeBound = gwjui.rect(pos.x, pos.y, self.m_scrollContentSize.width, self.m_scrollContentSize.height)
+	return cascadeBound
+end
+
+function clsGwjUIListView:getViewRectInSelf()
+	return gwjui.rect(0, 0, self.m_viewSize.width, self.m_viewSize.height)
 end
 
 return clsGwjUIListView
