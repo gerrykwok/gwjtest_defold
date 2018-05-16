@@ -260,4 +260,18 @@ function gwjui.dump(value, desciption, nesting)
 	end
 end
 
+-- Convert string to hash, unless it's already a hash
+-- @param str String to convert
+-- @return The hashed string
+function gwjui.to_hash(str)
+	return type(str) == "string" and hash(str) or str
+end
+
+-- safely call function
+function gwjui.callfunc(func, ...)
+	if(func) then
+		func(...)
+	end
+end
+
 return gwjui

@@ -1,12 +1,16 @@
 require("main.common.MiscUtil")
 local GwjUIListView = require("gwjui.GwjUIListView")
+local GwjUIPushButton = require("gwjui.GwjUIPushButton")
+local GwjScaleButton = require("gwjui.GwjScaleButton")
+local gwjinput = require("gwjui.gwjinput")
 local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+	self.m_input = gwjinput.createInstance()
 	--郭伟基测试listview
 	local maxItemType = 5
-	--list1
+	--list1 ---------------------------------------------------------------------
 	local listview = GwjUIListView.createInstance({
 		list_id = "list1",
 		direction = GwjUIListView.DIRECTION_VERTICAL,
@@ -24,7 +28,7 @@ function init(self)
 		local item = listview:addItem(string.format("list_item%d", math.modf((i-1)%maxItemType)+1))
 	end
 	listview:reload()
-	--list2
+	--list2 ---------------------------------------------------------------------
 	local listview = GwjUIListView.createInstance({
 		list_id = "list2",
 		direction = GwjUIListView.DIRECTION_VERTICAL,
@@ -52,7 +56,7 @@ function init(self)
 		end)
 	end
 	listview:reload()
-	--list3
+	--list3 ---------------------------------------------------------------------
 	local list3 = GwjUIListView.createInstance({
 		list_id = "list3",
 		direction = GwjUIListView.DIRECTION_HORIZONTAL,
@@ -71,10 +75,36 @@ function init(self)
 --		item.width = item.width + 10
 	end
 	list3:reload()
+	--button1 -----------------------------------------------------------------------
+	local btn = GwjUIPushButton.createInstance({
+		main_id = "button1",
+	})
+	btn:onButtonPressed(function()
+		ccprint("button1 pressed")
+	end)
+	:onButtonReleased(function()
+		ccprint("button1 released")
+	end)
+	:onButtonClicked(function()
+		TipsBanner.show("button1 clicked")
+	end)
+	--button2 -----------------------------------------------------------------------
+	local btn = GwjScaleButton.createInstance({
+		main_id = "button2",
+	})
+	btn:onButtonPressed(function()
+		ccprint("button2 pressed")
+	end)
+	:onButtonReleased(function()
+		ccprint("button2 released")
+	end)
+	:onButtonClicked(function()
+		TipsBanner.show("button2 clicked")
+	end)
 end
 
 function final(self)
-	GwjUIListView.final()
+	self.m_input:final()
 end
 
 function update(self, dt)
@@ -85,7 +115,7 @@ end
 
 function on_input(self, action_id, action)
 	if(action_id == hash("touch")) then
-		GwjUIListView.handleTouchEvent(action)
+		self.m_input:handleTouchEvent(action)
 	end
 end
 

@@ -4,86 +4,25 @@
 -- Description: 模仿cocos2dx的listview
 
 local gwjui = require("gwjui.gwjui")
+local gwjinput = require("gwjui.gwjinput")
 
 local clsGwjUIListView = gwjui.class("GwjUIListView")
+if false then
+	GwjUIListView = clsGwjUIListView
+end
 
 clsGwjUIListView.DIRECTION_VERTICAL = 1
 clsGwjUIListView.DIRECTION_HORIZONTAL = 2
-clsGwjUIListView.s_allListView = {}
-clsGwjUIListView.s_listviewDown = nil
 clsGwjUIListView.DEFAULT_SHAKE_DISTANCE = 8
-clsGwjUIListView.s_lastTouchXY = {}
-
--- Convert string to hash, unless it's already a hash
--- @param str String to convert
--- @return The hashed string
-function clsGwjUIListView.to_hash(str)
-	return type(str) == "string" and hash(str) or str
-end
 
 function clsGwjUIListView.createInstance(...)
 	return clsGwjUIListView.new(...)
 end
 
-function clsGwjUIListView.handleTouchEvent(action)
-	if(action.pressed) then--began
-		clsGwjUIListView.m_xDown = action.x
-		clsGwjUIListView.m_yDown = action.y
---		gwjui.printf("began:%f,%f", action.x, action.y)
-		--判断点中了哪个listview
-		for i,listview in ipairs(clsGwjUIListView.s_allListView) do
-			if(gui.pick_node(listview.m_listNode, action.x, action.y)) then
-				clsGwjUIListView.s_listviewDown = listview
-				clsGwjUIListView.s_lastTouchXY = gwjui.point(action.x, action.y)
-				listview:onTouch_({
-					name = "began",
-					x = action.x,
-					y = action.y,
-					prevX = clsGwjUIListView.s_lastTouchXY.x,
-					prevY = clsGwjUIListView.s_lastTouchXY.y,
-				})
-				break
-			end
-		end
-	elseif(action.released) then--ended
---		gwjui.printf("ended:%f,%f", action.x, action.y)
-		if(clsGwjUIListView.s_listviewDown) then
-			clsGwjUIListView.s_listviewDown:onTouch_({
-				name = "ended",
-				x = action.x,
-				y = action.y,
-				prevX = clsGwjUIListView.s_lastTouchXY.x,
-				prevY = clsGwjUIListView.s_lastTouchXY.y,
-			})
-		end
-		clsGwjUIListView.s_listviewDown = nil
-	else--moved
-		if(action.x ~= clsGwjUIListView.m_xDown or action.y ~= clsGwjUIListView.m_yDown) then
---			gwjui.printf("moved:%f,%f", action.x, action.y)
-			clsGwjUIListView.m_xDown = action.x
-			clsGwjUIListView.m_yDown = action.y
-			if(clsGwjUIListView.s_listviewDown) then
-				clsGwjUIListView.s_listviewDown:onTouch_({
-					name = "moved",
-					x = action.x,
-					y = action.y,
-					prevX = clsGwjUIListView.s_lastTouchXY.x,
-					prevY = clsGwjUIListView.s_lastTouchXY.y,
-				})
-			end
-			clsGwjUIListView.s_lastTouchXY.x = action.x
-			clsGwjUIListView.s_lastTouchXY.y = action.y
-		end
-	end
-end
-
-function clsGwjUIListView.final()
-	clsGwjUIListView.s_listviewDown = nil
-	clsGwjUIListView.s_allListView = {}
-end
-
 function clsGwjUIListView:ctor(params)
-	table.insert(clsGwjUIListView.s_allListView, self)
+	if(gwjinput.s_recentlyInstance) then
+		gwjinput.s_recentlyInstance:addObject(self)
+	end
 	params = params or {}
 	local list_id = params.list_id
 	self.m_listNode = gui.get_node(list_id)
@@ -106,6 +45,10 @@ function clsGwjUIListView:ctor(params)
 	self.m_bBounce = true
 end
 
+function clsGwjUIListView:getMainNode()
+	return self.m_listNode
+end
+
 function clsGwjUIListView:setBounceable(bBounceable)
 	self.m_bBounce = bBounceable
 end
@@ -123,7 +66,7 @@ local colors = {
 }
 local idxColor = 1
 function clsGwjUIListView:addItem(item_template_id, itemWidth, itemHeight, funcSetData)
-	item_template_id = clsGwjUIListView.to_hash(item_template_id)
+	item_template_id = gwjui.to_hash(item_template_id)
 	local clones = gui.clone_tree(gui.get_node(item_template_id))
 
 	if(funcSetData) then
@@ -183,8 +126,8 @@ function clsGwjUIListView:reload()
 		end
 		self.m_scrollContentSize.width = totalWidth
 	end
-	print("scrollContentSize:", self.m_scrollContentSize.width, self.m_scrollContentSize.height)
-	print("viewSize:", viewSize.width, viewSize.height)
+--	print("scrollContentSize:", self.m_scrollContentSize.width, self.m_scrollContentSize.height)
+--	print("viewSize:", viewSize.width, viewSize.height)
 	--设定每个item的位置
 	if(self.m_direction == clsGwjUIListView.DIRECTION_VERTICAL) then
 		local x = viewSize.width / 2
@@ -246,8 +189,8 @@ function clsGwjUIListView:onTouch_(event)
 			local item = self:hitTest(event)
 			if(item) then
 				self:notifyListener_({name="clicked",
-				listView = self, itemPos = item.idx, item = item,
-				x=event.x, y=event.y})
+					listView = self, itemPos = item.idx, item = item,
+					x=event.x, y=event.y})
 			end
 		end
 	end
@@ -391,15 +334,15 @@ end
 
 -- 是否显示到边缘
 function clsGwjUIListView:isSideShow()
---	local bound = self.scrollNode:getCascadeBoundingBox()
---	if bound.x > self.viewRect_.x
---	or bound.y > self.viewRect_.y
---	or bound.x + bound.width < self.viewRect_.x + self.viewRect_.width
---	or bound.y + bound.height < self.viewRect_.y + self.viewRect_.height then
---		return true
---	end
---
---	return false
+	local bound = self:getScrollNodeRect()
+	local viewRect = self:getViewRectInSelf()
+	if(bound.x > viewRect.x
+		or bound.x+bound.width < viewRect.x+viewRect.width
+		or bound.y > viewRect.y
+		or bound.y+bound.height < viewRect.y+viewRect.height) then
+		return true
+	end
+	return false
 end
 
 function clsGwjUIListView:getScrollNodeRect()
