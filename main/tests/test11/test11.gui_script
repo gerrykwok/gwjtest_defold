@@ -91,13 +91,8 @@ function init(self)
 	--button2 -----------------------------------------------------------------------
 	local btn = GwjScaleButton.createInstance({
 		main_id = "button2",
+		maxScale = 1.1,
 	})
-	btn:onButtonPressed(function()
-		ccprint("button2 pressed")
-	end)
-	:onButtonReleased(function()
-		ccprint("button2 released")
-	end)
 	:onButtonClicked(function()
 		TipsBanner.show("button2 clicked")
 	end)

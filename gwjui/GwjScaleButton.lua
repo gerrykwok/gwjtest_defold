@@ -14,27 +14,42 @@ end
 
 function clsGwjScaleButton:ctor(params)
 	clsGwjScaleButton.super.ctor(self, params)
+	self.m_maxScale = params.maxScale or 1
+	self.m_scaleTime = params.scaleTime or 0.15
+	self.m_onPressed = nil
+	self.m_onReleased = nil
+	self.m_onClicked = nil
+	clsGwjScaleButton.super.onButtonPressed(self, function()
+		self:scaleTo(self.m_maxScale)
+		gwjui.callfunc(self.m_onPressed)
+	end)
+	clsGwjScaleButton.super.onButtonReleased(self, function()
+		self:scaleTo(1)
+		gwjui.callfunc(self.m_onReleased)
+	end)
+	clsGwjScaleButton.super.onButtonClicked(self, function()
+		self:scaleTo(1)
+		gwjui.callfunc(self.m_onClicked)
+	end)
 end
 
 function clsGwjScaleButton:onButtonPressed(func)
-	return clsGwjScaleButton.super.onButtonPressed(self, function()
-		func()
-		gui.animate(self:getMainNode(), "scale", vmath.vector3(1.1, 1.1, 1), gui.EASING_LINEAR, 0.2)
-	end)
+	self.m_onPressed = func
+	return self
 end
 
 function clsGwjScaleButton:onButtonReleased(func)
-	return clsGwjScaleButton.super.onButtonReleased(self, function()
-		func()
-		gui.animate(self:getMainNode(), "scale", vmath.vector3(1, 1, 1), gui.EASING_LINEAR, 0.2)
-	end)
+	self.m_onReleased = func
+	return self
 end
 
 function clsGwjScaleButton:onButtonClicked(func)
-	return clsGwjScaleButton.super.onButtonClicked(self, function()
-		func()
-		gui.animate(self:getMainNode(), "scale", vmath.vector3(1, 1, 1), gui.EASING_LINEAR, 0.2)
-	end)
+	self.m_onClicked = func
+	return self
+end
+
+function clsGwjScaleButton:scaleTo(scale)
+	gui.animate(self:getMainNode(), "scale", vmath.vector3(scale, scale, 1), gui.EASING_LINEAR, self.m_scaleTime)
 end
 
 return clsGwjScaleButton

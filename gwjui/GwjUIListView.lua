@@ -13,7 +13,7 @@ end
 
 clsGwjUIListView.DIRECTION_VERTICAL = 1
 clsGwjUIListView.DIRECTION_HORIZONTAL = 2
-clsGwjUIListView.DEFAULT_SHAKE_DISTANCE = 8
+clsGwjUIListView.DEFAULT_SHAKE_DISTANCE = 5
 
 function clsGwjUIListView.createInstance(...)
 	return clsGwjUIListView.new(...)
@@ -260,14 +260,6 @@ function clsGwjUIListView:elasticScroll()
 		return
 	end
 
-	--[[
-	transition.moveBy(self.scrollNode,
-	{x = disX, y = disY, time = 0.3,
-	easing = "backout",
-	onComplete = function()
-		self:callListener_{name = "scrollEnd"}
-	end})
-	]]
 	local pos = gui.get_position(self.m_scrollNode)
 	gui.animate(self.m_scrollNode, "position", vmath.vector3(pos.x+disX, pos.y+disY, 0), gui.EASING_OUTBACK, 0.3, 0, function()
 		self:notifyListener_{name = "scrollEnd"}
