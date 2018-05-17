@@ -1,15 +1,15 @@
-require("main.common.MiscUtil")
+local MiscUtil = require("main.common.MiscUtil")
 local timer = require("main.common.timer")
 
 local TipsBanner = {}
 
-TipsBanner.s_urlCurrent = nil
+TipsBanner.s_allRunningTipsUrl = {}
 
 function TipsBanner.show(str)
-	if(TipsBanner.s_urlCurrent) then
-		msg.post(TipsBanner.s_urlCurrent, "deleteTipsBanner")
-		TipsBanner.s_urlCurrent = nil
+	for i,url in ipairs(TipsBanner.s_allRunningTipsUrl) do
+		msg.post(url, "deleteTipsBanner")
 	end
+	TipsBanner.s_allRunningTipsUrl = {}
 	
 	local ids = collectionfactory.create("#tipsbanner")
 	local firstId = nil
@@ -18,17 +18,19 @@ function TipsBanner.show(str)
 			firstId = v
 			break
 		end
-		ccprint("firstId=%s", tostring(firstId))
-		TipsBanner.s_urlCurrent = firstId
 		msg.post(firstId, "setText", {text=str})
 		msg.post(firstId, "delayDestroy", {delay=2})
 	end
 end
 
+function TipsBanner.init()
+	local url = msg.url()
+	table.insert(TipsBanner.s_allRunningTipsUrl, url)
+end
+
 function TipsBanner.final()
 	local url = msg.url()
-	ccprint("url in final:%s", tostring(url))
-	TipsBanner.s_urlCurrent = nil
+	MiscUtil.table.removebyvalue(TipsBanner.s_allRunningTipsUrl, url)
 end
 
 return TipsBanner

@@ -1,8 +1,7 @@
 local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 
 function init(self)
---	local url = msg.url()
---	TipsBanner.s_urlCurrent = url
+	TipsBanner.init()
 end
 
 function final(self)

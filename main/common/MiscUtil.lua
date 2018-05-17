@@ -157,3 +157,111 @@ elseif(sysName == "Windows") then
 elseif(sysName == "Darwin") then
 	device.platform = "mac"
 end
+
+local MiscUtil = {}
+MiscUtil.table = {}
+
+-- start --
+
+--------------------------------
+-- 从表格中查找指定值，返回其索引，如果没找到返回 false
+-- @function [parent=#table] indexof
+-- @param table array 表格
+-- @param mixed value 要查找的值
+-- @param integer begin 起始索引值
+-- @return integer#integer 
+
+--[[--
+
+从表格中查找指定值，返回其索引，如果没找到返回 false
+
+~~~ lua
+
+local array = {"a", "b", "c"}
+print(table.indexof(array, "b")) -- 输出 2
+
+~~~
+
+]]
+
+-- end --
+
+function MiscUtil.table.indexof(array, value, begin)
+	for i = begin or 1, #array do
+		if array[i] == value then return i end
+	end
+	return false
+end
+
+-- start --
+
+--------------------------------
+-- 从表格中查找指定值，返回其 key，如果没找到返回 nil
+-- @function [parent=#table] keyof
+-- @param table hashtable 表格
+-- @param mixed value 要查找的值
+-- @return string#string  该值对应的 key
+
+--[[--
+
+从表格中查找指定值，返回其 key，如果没找到返回 nil
+
+~~~ lua
+
+local hashtable = {name = "dualface", comp = "chukong"}
+print(table.keyof(hashtable, "chukong")) -- 输出 comp
+
+~~~
+
+]]
+
+-- end --
+
+function MiscUtil.table.keyof(hashtable, value)
+	for k, v in pairs(hashtable) do
+		if v == value then return k end
+	end
+	return nil
+end
+
+-- start --
+
+--------------------------------
+-- 从表格中删除指定值，返回删除的值的个数
+-- @function [parent=#table] removebyvalue
+-- @param table array 表格
+-- @param mixed value 要删除的值
+-- @param boolean removeall 是否删除所有相同的值
+-- @return integer#integer 
+
+--[[--
+
+从表格中删除指定值，返回删除的值的个数
+
+~~~ lua
+
+local array = {"a", "b", "c", "c"}
+print(table.removebyvalue(array, "c", true)) -- 输出 2
+
+~~~
+
+]]
+
+-- end --
+
+function MiscUtil.table.removebyvalue(array, value, removeall)
+	local c, i, max = 0, 1, #array
+	while i <= max do
+		if array[i] == value then
+			table.remove(array, i)
+			c = c + 1
+			i = i - 1
+			max = max - 1
+			if not removeall then break end
+		end
+		i = i + 1
+	end
+	return c
+end
+
+return MiscUtil
