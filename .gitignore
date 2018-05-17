@@ -9,3 +9,4 @@ build
 builtins
 .internal
 obj
+gwjtest_defold.*
