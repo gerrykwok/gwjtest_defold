@@ -37,6 +37,21 @@ embedded_instances {
   "    w: 1.0\n"
   "  }\n"
   "}\n"
+  "components {\n"
+  "  id: \"test061\"\n"
+  "  component: \"/main/tests/test06/test06.script\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
   "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -46,8 +61,8 @@ embedded_instances {
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
   "  position {\n"
-  "    x: 568.0\n"
-  "    y: 320.0\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -59,9 +74,9 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 568.0
+    y: 320.0
+    z: -500.0
   }
   rotation {
     x: 0.0

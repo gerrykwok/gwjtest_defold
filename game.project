@@ -32,3 +32,6 @@ bundle_identifier = org.evakwok.gwjtest
 [collection_proxy]
 max_count = 128
 
+[library]
+include_dirs = gwjui
+
