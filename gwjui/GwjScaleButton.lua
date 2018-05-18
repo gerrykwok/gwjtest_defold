@@ -1,7 +1,7 @@
 --------------------------------------------------------------------
 -- Author: guoweiji
 -- Start Date: 2018-05-16
--- Description: 缩放的按钮
+-- Description: 按下时会放大的按钮
 
 local gwjui = require("gwjui.gwjui")
 local GwjUIPushButton = require("gwjui.GwjUIPushButton")
