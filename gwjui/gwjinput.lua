@@ -36,7 +36,8 @@ function gwjinput:handleTouchEvent(action)
 --		gwjui.printf("began:%f,%f", action.x, action.y)
 		--判断点中了哪个node
 		for i,obj in ipairs(self.m_allObjects) do
-			if(gui.pick_node(obj:getMainNode(), action.x, action.y)) then
+			local node = obj:getMainNode()
+			if(node and gui.pick_node(node, action.x, action.y)) then
 				self.m_objectCaptured = obj
 				self.m_lastTouchPt = gwjui.point(action.x, action.y)
 				obj:onTouch_({
