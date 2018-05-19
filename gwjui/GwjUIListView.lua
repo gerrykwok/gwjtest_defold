@@ -4,9 +4,9 @@
 -- Description: 模仿cocos2dx的listview
 
 local gwjui = require("gwjui.gwjui")
-local gwjinput = require("gwjui.gwjinput")
+local GwjInputObject = require("gwjui.GwjInputObject")
 
-local clsGwjUIListView = gwjui.class("GwjUIListView")
+local clsGwjUIListView = gwjui.class("GwjUIListView", GwjInputObject)
 if false then
 	GwjUIListView = clsGwjUIListView
 end
@@ -20,33 +20,24 @@ function clsGwjUIListView.createInstance(...)
 end
 
 function clsGwjUIListView:ctor(params)
-	if(gwjinput.s_recentlyInstance) then
-		gwjinput.s_recentlyInstance:addObject(self)
-	end
-	params = params or {}
-	local list_id = params.list_id
-	self.m_listNode = gui.get_node(list_id)
+	clsGwjUIListView.super.ctor(self, params)
 	self.m_allItems = {}
 	self.m_direction = params.direction or clsGwjUIListView.DIRECTION_VERTICAL
 	self.m_nShake = clsGwjUIListView.DEFAULT_SHAKE_DISTANCE
 	self.m_scrollContentSize = gwjui.size(0, 0)
-	local size = gui.get_size(self.m_listNode)
+	local size = gui.get_size(self.m_mainNode)
 	self.m_viewSize = gwjui.size(size.x, size.y)
 --	gwjui.dump(size, "node size")
-	local anchor = gwjui.getGuiAnchorPoint(self.m_listNode)
+	local anchor = gwjui.getGuiAnchorPoint(self.m_mainNode)
 --	gwjui.printf("gwjgwj,anchor:%f,%f", anchor.x, anchor.y)
 	--创建scrollnode
 	local node = gui.new_box_node(vmath.vector3(-anchor.x*size.x, -anchor.y*size.y, 0), vmath.vector3())
-	gui.set_parent(node, self.m_listNode)
+	gui.set_parent(node, self.m_mainNode)
 	self.m_scrollNode = gui.new_box_node(vmath.vector3(0, size.y, 0), vmath.vector3())
 	gui.set_parent(self.m_scrollNode, node)
 
 	self.m_speed = {x=0,y=0}
 	self.m_bBounce = true
-end
-
-function clsGwjUIListView:getMainNode()
-	return self.m_listNode
 end
 
 function clsGwjUIListView:setBounceable(bBounceable)
@@ -163,7 +154,7 @@ function clsGwjUIListView:onTouch_(event)
 	if(event.name == "began") then
 		self.m_prevXY = gwjui.point(event.x, event.y)
 		self.m_bDrag = false
-		gui.cancel_animation(self.m_listNode, "position")
+		gui.cancel_animation(self.m_scrollNode, "position")
 		self:notifyListener_({name="began", x=event.x, y=event.y})
 	elseif(event.name == "moved") then
 		if(self:isShake_(event)) then

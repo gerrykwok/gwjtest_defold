@@ -4,33 +4,20 @@
 -- Description: PushButton
 
 local gwjui = require("gwjui.gwjui")
-local gwjinput = require("gwjui.gwjinput")
+local GwjInputObject = require("gwjui.GwjInputObject")
 
-local clsGwjUIPushButton = gwjui.class("GwjUIPushButton")
+local clsGwjUIPushButton = gwjui.class("GwjUIPushButton", GwjInputObject)
 if false then
 	GwjUIPushButton = clsGwjUIPushButton
 end
 
-function clsGwjUIPushButton.createInstance(...)
-	return clsGwjUIPushButton.new(...)
-end
-
 function clsGwjUIPushButton:ctor(params)
-	if(gwjinput.s_recentlyInstance) then
-		gwjinput.s_recentlyInstance:addObject(self)
-	end
-	params = params or {}
-	local main_id = params.main_id
-	self.m_mainNode = gui.get_node(main_id)
+	clsGwjUIPushButton.super.ctor(self, params)
 
 	self.m_onButtonPressed = nil
 	self.m_onButtonReleased = nil
 	self.m_onButtonClicked = nil
 	self.m_pressed = false
-end
-
-function clsGwjUIPushButton:getMainNode()
-	return self.m_mainNode
 end
 
 function clsGwjUIPushButton:onTouch_(event)

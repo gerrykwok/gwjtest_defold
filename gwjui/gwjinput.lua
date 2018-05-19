@@ -18,6 +18,7 @@ function gwjinput:final()
 end
 
 --往input中插入一个对象
+--GwjInputObject对象
 --注意:此对象需要支持onTouch_方法、getMainNode方法
 function gwjinput:addObject(obj)
 	for k,v in pairs(self.m_allObjects) do

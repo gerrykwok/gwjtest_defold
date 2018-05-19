@@ -14,7 +14,7 @@ function init(self)
 	local maxItemType = 5
 	--list1 ---------------------------------------------------------------------
 	local listview = GwjUIListView.createInstance({
-		list_id = "list1",
+		main_id = "list1",
 		direction = GwjUIListView.DIRECTION_VERTICAL,
 	})
 	listview:onTouch(function(event)
@@ -32,7 +32,7 @@ function init(self)
 	listview:reload()
 	--list2 ---------------------------------------------------------------------
 	local listview = GwjUIListView.createInstance({
-		list_id = "list2",
+		main_id = "list2",
 		direction = GwjUIListView.DIRECTION_VERTICAL,
 	})
 --	listview:setBounceable(false)
@@ -60,7 +60,7 @@ function init(self)
 	listview:reload()
 	--list3 ---------------------------------------------------------------------
 	local list3 = GwjUIListView.createInstance({
-		list_id = "list3",
+		main_id = "list3",
 		direction = GwjUIListView.DIRECTION_HORIZONTAL,
 	})
 	list3:onTouch(function(event)
