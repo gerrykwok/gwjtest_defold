@@ -3,6 +3,7 @@ local GwjUIListView = require("gwjui.GwjUIListView")
 local GwjUIPushButton = require("gwjui.GwjUIPushButton")
 local GwjScaleButton = require("gwjui.GwjScaleButton")
 local GwjPushButton = require("gwjui.GwjPushButton")
+local GwjDarkenButton = require("gwjui.GwjDarkenButton")
 local gwjinput = require("gwjui.gwjinput")
 local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 
@@ -98,10 +99,16 @@ function init(self)
 		TipsBanner.show("button2 clicked")
 	end)
 	--button3 -----------------------------------------------------------------------
-	local btn = GwjPushButton.createInstance({
+--	local btn = GwjPushButton.createInstance({
+--		main_id = "button3/btn_bg",
+--		normal_id = "button3/btn_normal",
+--		clicked_id = "button3/btn_clicked",
+--	})
+--	:onButtonClicked(function()
+--		TipsBanner.show("button3 clicked")
+--	end)
+	local btn = GwjDarkenButton.new({
 		main_id = "button3/btn_bg",
-		normal_id = "button3/btn_normal",
-		clicked_id = "button3/btn_clicked",
 	})
 	:onButtonClicked(function()
 		TipsBanner.show("button3 clicked")
