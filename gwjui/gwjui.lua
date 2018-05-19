@@ -57,6 +57,10 @@ function gwjui.class(classname, super)
 		end
 	end
 
+	function cls.createInstance(...)
+		return cls.new(...)
+	end
+
 	return cls
 end
 
