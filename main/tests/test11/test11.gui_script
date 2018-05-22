@@ -1,21 +1,16 @@
 require("main.common.MiscUtil")
-local GwjUIListView = require("gwjui.GwjUIListView")
-local GwjUIPushButton = require("gwjui.GwjUIPushButton")
-local GwjScaleButton = require("gwjui.GwjScaleButton")
-local GwjPushButton = require("gwjui.GwjPushButton")
-local GwjDarkenButton = require("gwjui.GwjDarkenButton")
-local gwjinput = require("gwjui.gwjinput")
+local gwjui = require("gwjui.gwjui")
 local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	self.m_input = gwjinput.createInstance()
+	self.m_input = gwjui.input.createInstance()
 	--郭伟基测试listview
 	local maxItemType = 5
 	--list1 ---------------------------------------------------------------------
-	local listview = GwjUIListView.createInstance({
+	local listview = gwjui.UIListView.createInstance({
 		main_id = "list1",
-		direction = GwjUIListView.DIRECTION_VERTICAL,
+		direction = gwjui.UIListView.DIRECTION_VERTICAL,
 	})
 	listview:onTouch(function(event)
 		if(event.name == "clicked") then
@@ -31,9 +26,9 @@ function init(self)
 	end
 	listview:reload()
 	--list2 ---------------------------------------------------------------------
-	local listview = GwjUIListView.createInstance({
+	local listview = gwjui.UIListView.createInstance({
 		main_id = "list2",
-		direction = GwjUIListView.DIRECTION_VERTICAL,
+		direction = gwjui.UIListView.DIRECTION_VERTICAL,
 	})
 --	listview:setBounceable(false)
 	listview:onTouch(function(event)
@@ -59,9 +54,9 @@ function init(self)
 	end
 	listview:reload()
 	--list3 ---------------------------------------------------------------------
-	local list3 = GwjUIListView.createInstance({
+	local list3 = gwjui.UIListView.createInstance({
 		main_id = "list3",
-		direction = GwjUIListView.DIRECTION_HORIZONTAL,
+		direction = gwjui.UIListView.DIRECTION_HORIZONTAL,
 	})
 	list3:onTouch(function(event)
 		if(event.name == "clicked") then
@@ -78,7 +73,7 @@ function init(self)
 	end
 	list3:reload()
 	--button1 -----------------------------------------------------------------------
-	local btn = GwjUIPushButton.createInstance({
+	local btn = gwjui.UIPushButton.createInstance({
 		main_id = "button1",
 	})
 	btn:onButtonPressed(function()
@@ -91,7 +86,7 @@ function init(self)
 		TipsBanner.show("button1 clicked")
 	end)
 	--button2 -----------------------------------------------------------------------
-	local btn = GwjScaleButton.createInstance({
+	local btn = gwjui.ScaleButton.createInstance({
 		main_id = "button2",
 		maxScale = 1.1,
 	})
@@ -99,7 +94,7 @@ function init(self)
 		TipsBanner.show("button2 clicked")
 	end)
 	--button3 -----------------------------------------------------------------------
---	local btn = GwjPushButton.createInstance({
+--	local btn = gwjui.PushButton.createInstance({
 --		main_id = "button3/btn_bg",
 --		normal_id = "button3/btn_normal",
 --		clicked_id = "button3/btn_clicked",
@@ -107,12 +102,13 @@ function init(self)
 --	:onButtonClicked(function()
 --		TipsBanner.show("button3 clicked")
 --	end)
-	local btn = GwjDarkenButton.new({
+	local btn = gwjui.DarkenButton.new({
 		main_id = "button3/btn_bg",
 	})
 	:onButtonClicked(function()
 		TipsBanner.show("button3 clicked")
 	end)
+--	btn:setVisible(false)
 end
 
 function final(self)

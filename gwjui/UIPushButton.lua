@@ -3,25 +3,27 @@
 -- Start Date: 2018-05-16
 -- Description: PushButton
 
-local gwjui = require("gwjui.gwjui")
-local GwjInputObject = require("gwjui.GwjInputObject")
+local gwjui = require("gwjui.gwjui_impl")
+local InputObject = require("gwjui.InputObject")
 
-local clsGwjUIPushButton = gwjui.class("GwjUIPushButton", GwjInputObject)
+local clsUIPushButton = gwjui.class("UIPushButton", InputObject)
 if false then
-	GwjUIPushButton = clsGwjUIPushButton
+	UIPushButton = clsUIPushButton
 end
 
-function clsGwjUIPushButton:ctor(params)
-	clsGwjUIPushButton.super.ctor(self, params)
+function clsUIPushButton:ctor(params)
+	clsUIPushButton.super.ctor(self, params)
 
 	self.m_onButtonPressed = nil
 	self.m_onButtonReleased = nil
 	self.m_onButtonClicked = nil
 	self.m_pressed = false
+
+	self:setTouchEventListener(gwjui.handler(self, self.onTouch_))
 end
 
-function clsGwjUIPushButton:onTouch_(event)
---	print("GwjUIPushButton:onTouch_:", event.name)
+function clsUIPushButton:onTouch_(event)
+--	print("UIPushButton:onTouch_:", event.name)
 	if(event.name == "began") then
 		self.m_pressed = true
 		gwjui.callfunc(self.m_onButtonPressed)
@@ -38,24 +40,24 @@ function clsGwjUIPushButton:onTouch_(event)
 	end
 end
 
-function clsGwjUIPushButton:onButtonPressed(func)
+function clsUIPushButton:onButtonPressed(func)
 	self.m_onButtonPressed = func
 	return self
 end
 
-function clsGwjUIPushButton:onButtonReleased(func)
+function clsUIPushButton:onButtonReleased(func)
 	self.m_onButtonReleased = func
 	return self
 end
 
-function clsGwjUIPushButton:onButtonClicked(func)
+function clsUIPushButton:onButtonClicked(func)
 	self.m_onButtonClicked = func
 	return self
 end
 
 --判断坐标是否落在按钮上
-function clsGwjUIPushButton:hitTest(x, y)
+function clsUIPushButton:hitTest(x, y)
 	return gui.pick_node(self.m_mainNode, x, y)
 end
 
-return clsGwjUIPushButton
+return clsUIPushButton

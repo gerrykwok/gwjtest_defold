@@ -3,27 +3,27 @@
 -- Start Date: 2018-05-14
 -- Description: 模仿cocos2dx的listview
 
-local gwjui = require("gwjui.gwjui")
-local GwjInputObject = require("gwjui.GwjInputObject")
+local gwjui = require("gwjui.gwjui_impl")
+local gwjinput = require("gwjui.gwjinput")
+local InputObject = require("gwjui.InputObject")
 
-local clsGwjUIListView = gwjui.class("GwjUIListView", GwjInputObject)
+local clsUIListView = gwjui.class("UIListView", InputObject)
 if false then
-	GwjUIListView = clsGwjUIListView
+	UIListView = clsUIListView
 end
 
-clsGwjUIListView.DIRECTION_VERTICAL = 1
-clsGwjUIListView.DIRECTION_HORIZONTAL = 2
-clsGwjUIListView.DEFAULT_SHAKE_DISTANCE = 5
+clsUIListView.DIRECTION_VERTICAL = 1
+clsUIListView.DIRECTION_HORIZONTAL = 2
+clsUIListView.DEFAULT_SHAKE_DISTANCE = 5
 
-function clsGwjUIListView.createInstance(...)
-	return clsGwjUIListView.new(...)
-end
-
-function clsGwjUIListView:ctor(params)
-	clsGwjUIListView.super.ctor(self, params)
+function clsUIListView:ctor(params)
+	clsUIListView.super.ctor(self, params)
 	self.m_allItems = {}
-	self.m_direction = params.direction or clsGwjUIListView.DIRECTION_VERTICAL
-	self.m_nShake = clsGwjUIListView.DEFAULT_SHAKE_DISTANCE
+	self.m_direction = params.direction or clsUIListView.DIRECTION_VERTICAL
+	self.m_autoHideScrollBar = params.autoHideScrollBar
+	local scrollbarTrackId = params.scrollbarTrackId
+	local scrollbarThumbId = params.scrollbarThumbId
+	self.m_nShake = clsUIListView.DEFAULT_SHAKE_DISTANCE
 	self.m_scrollContentSize = gwjui.size(0, 0)
 	local size = gui.get_size(self.m_mainNode)
 	self.m_viewSize = gwjui.size(size.x, size.y)
@@ -33,19 +33,43 @@ function clsGwjUIListView:ctor(params)
 	--创建scrollnode
 	local node = gui.new_box_node(vmath.vector3(-anchor.x*size.x, -anchor.y*size.y, 0), vmath.vector3())
 	gui.set_parent(node, self.m_mainNode)
-	self.m_scrollNode = gui.new_box_node(vmath.vector3(0, size.y, 0), vmath.vector3())
+	self.m_scrollNode = gui.new_box_node(vmath.vector3(), vmath.vector3())
 	gui.set_parent(self.m_scrollNode, node)
+	--滚动条
+	if(scrollbarTrackId and scrollbarThumbId) then
+		self.m_scrollbarTrack = gui.get_node(scrollbarTrackId)
+		self.m_scrollbarThumb = gui.get_node(scrollbarThumbId)
+		gui.set_parent(self.m_scrollbarTrack, self.m_mainNode)
+		gui.set_parent(self.m_scrollbarThumb, self.m_scrollbarTrack)
+
+		local sizeTrack = gui.get_size(self.m_scrollbarTrack)
+		local sizeThumb = gui.get_size(self.m_scrollbarThumb)
+
+		local size = gui.get_size(self.m_scrollbarTrack)
+		size.y = self.m_viewSize.height
+		gui.set_size(self.m_scrollbarTrack, size)
+		gui.set_pivot(self.m_scrollbarTrack, gui.PIVOT_S)
+		gui.set_position(self.m_scrollbarTrack, vmath.vector3((1-anchor.x)*self.m_viewSize.width-math.max(sizeTrack.x, sizeThumb.x)/2, -anchor.y*self.m_viewSize.height, 0))
+
+		gui.set_position(self.m_scrollbarThumb, vmath.vector3(0, self.m_viewSize.height/2, 0))
+	end
 
 	self.m_speed = {x=0,y=0}
 	self.m_bBounce = true
+
+	self:setTouchEventListener(gwjui.handler(self, self.onTouch_))
+	self.m_updateFunc = gwjui.handler(self, self.update_)
+	if(gwjinput.s_recentlyInstance) then
+		gwjinput.s_recentlyInstance:scheduleUpdate(self.m_updateFunc)
+	end
 end
 
-function clsGwjUIListView:setBounceable(bBounceable)
+function clsUIListView:setBounceable(bBounceable)
 	self.m_bBounce = bBounceable
 end
 
-function clsGwjUIListView:isVertical()
-	return self.m_direction == clsGwjUIListView.DIRECTION_VERTICAL
+function clsUIListView:isVertical()
+	return self.m_direction == clsUIListView.DIRECTION_VERTICAL
 end
 
 local colors = {
@@ -56,7 +80,7 @@ local colors = {
 	vmath.vector4(1, 1, 0, 1),
 }
 local idxColor = 1
-function clsGwjUIListView:addItem(item_template_id, itemWidth, itemHeight, funcSetData)
+function clsUIListView:addItem(item_template_id, itemWidth, itemHeight, funcSetData)
 	item_template_id = gwjui.to_hash(item_template_id)
 	local clones = gui.clone_tree(gui.get_node(item_template_id))
 
@@ -99,10 +123,17 @@ function clsGwjUIListView:addItem(item_template_id, itemWidth, itemHeight, funcS
 	return item
 end
 
-function clsGwjUIListView:reload()
+function clsUIListView:removeAllItems()
+	for i,item in ipairs(self.m_allItems) do
+		gui.delete_node(item.node)
+	end
+	self.m_allItems = {}
+end
+
+function clsUIListView:reload()
 	local viewSize = self.m_viewSize
 	--计算内容的总高度或总宽度
-	if(self.m_direction == clsGwjUIListView.DIRECTION_VERTICAL) then
+	if(self.m_direction == clsUIListView.DIRECTION_VERTICAL) then
 		self.m_scrollContentSize.width = viewSize.width
 		local totalHeight = 0
 		for i,item in ipairs(self.m_allItems) do
@@ -120,7 +151,7 @@ function clsGwjUIListView:reload()
 --	print("scrollContentSize:", self.m_scrollContentSize.width, self.m_scrollContentSize.height)
 --	print("viewSize:", viewSize.width, viewSize.height)
 	--设定每个item的位置
-	if(self.m_direction == clsGwjUIListView.DIRECTION_VERTICAL) then
+	if(self.m_direction == clsUIListView.DIRECTION_VERTICAL) then
 		local x = viewSize.width / 2
 		local y = self.m_scrollContentSize.height
 		for i,item in ipairs(self.m_allItems) do
@@ -136,24 +167,34 @@ function clsGwjUIListView:reload()
 		end
 	end
 	gui.set_position(self.m_scrollNode, vmath.vector3(0, viewSize.height-self.m_scrollContentSize.height, 0))
+	--滚动条的长度
+	local bound = self:getScrollNodeRect()
+	local barH = self.m_viewSize.height*self.m_viewSize.height/bound.height
+	local size = gui.get_size(self.m_scrollbarThumb)
+	if barH < size.x then-- 保证bar不会太小
+		barH = size.x
+	end
+	size.y = barH
+	gui.set_size(self.m_scrollbarThumb, size)
 end
 
-function clsGwjUIListView:onTouch(listener)
+function clsUIListView:onTouch(listener)
 	self.m_onTouch = listener
 end
 
-function clsGwjUIListView:notifyListener_(event)
+function clsUIListView:notifyListener_(event)
 	if not self.m_onTouch then
 		return
 	end
 	self.m_onTouch(event)
 end
 
-function clsGwjUIListView:onTouch_(event)
+function clsUIListView:onTouch_(event)
 --	gwjui.printf("gwjgwj,event:%s", event.name)
 	if(event.name == "began") then
 		self.m_prevXY = gwjui.point(event.x, event.y)
 		self.m_bDrag = false
+		self:enableScrollBar()
 		gui.cancel_animation(self.m_scrollNode, "position")
 		self:notifyListener_({name="began", x=event.x, y=event.y})
 	elseif(event.name == "moved") then
@@ -163,9 +204,9 @@ function clsGwjUIListView:onTouch_(event)
 		self.m_bDrag = true
 		self.m_speed.x = event.x - event.prevX
 		self.m_speed.y = event.y - event.prevY
-		if(self.m_direction == clsGwjUIListView.DIRECTION_VERTICAL) then
+		if(self.m_direction == clsUIListView.DIRECTION_VERTICAL) then
 			self.m_speed.x = 0
-		elseif(self.m_direction == clsGwjUIListView.DIRECTION_HORIZONTAL) then
+		elseif(self.m_direction == clsUIListView.DIRECTION_HORIZONTAL) then
 			self.m_speed.y = 0
 		end
 		self:scrollBy(self.m_speed.x, self.m_speed.y)
@@ -174,6 +215,7 @@ function clsGwjUIListView:onTouch_(event)
 		if(self.m_bDrag) then
 			self.m_bDrag = false
 			self:scrollAuto()
+			self:disableScrollBar()
 			self:notifyListener_({name="ended", x=event.x, y=event.y})
 		else
 			--判断点中了哪个item
@@ -187,24 +229,24 @@ function clsGwjUIListView:onTouch_(event)
 	end
 end
 
-function clsGwjUIListView:scrollBy(x, y)
+function clsUIListView:scrollBy(x, y)
 	local pos = gui.get_position(self.m_scrollNode)
 	pos.x,pos.y = self:moveXY(pos.x, pos.y, x, y)
 	gui.set_position(self.m_scrollNode, pos)
 end
 
-function clsGwjUIListView:scrollTo(x, y)
+function clsUIListView:scrollTo(x, y)
 	gui.set_position(self.m_scrollNode, vmath.vector3(x, y, 0))
 end
 
-function clsGwjUIListView:scrollAuto()
+function clsUIListView:scrollAuto()
 	if self:twiningScroll() then
 		return
 	end
 	self:elasticScroll()
 end
 
-function clsGwjUIListView:twiningScroll()
+function clsUIListView:twiningScroll()
 	if self:isSideShow() then
 		-- printInfo("UIScrollView - side is show, so elastic scroll")
 		return false
@@ -222,7 +264,7 @@ function clsGwjUIListView:twiningScroll()
 	end)
 end
 
-function clsGwjUIListView:elasticScroll()
+function clsUIListView:elasticScroll()
 	local cascadeBound = self:getScrollNodeRect()
 	local disX, disY = 0, 0
 	local viewRect = self:getViewRectInSelf()
@@ -257,15 +299,15 @@ function clsGwjUIListView:elasticScroll()
 	end)
 end
 
-function clsGwjUIListView:isShake_(event)
-	if(self.m_direction == clsGwjUIListView.DIRECTION_VERTICAL) then
+function clsUIListView:isShake_(event)
+	if(self.m_direction == clsUIListView.DIRECTION_VERTICAL) then
 		return math.abs(event.y - self.m_prevXY.y) < self.m_nShake
 	else
 		return math.abs(event.x - self.m_prevXY.x) < self.m_nShake
 	end
 end
 
-function clsGwjUIListView:hitTest(event)
+function clsUIListView:hitTest(event)
 	for i,item in ipairs(self.m_allItems) do
 		if(gui.pick_node(item.node, event.x, event.y)) then
 			return item
@@ -273,7 +315,7 @@ function clsGwjUIListView:hitTest(event)
 	end
 end
 
-function clsGwjUIListView:moveXY(orgX, orgY, speedX, speedY)
+function clsUIListView:moveXY(orgX, orgY, speedX, speedY)
 	if(self.m_bBounce) then
 		return orgX + speedX, orgY + speedY--bounce
 	end
@@ -316,7 +358,7 @@ function clsGwjUIListView:moveXY(orgX, orgY, speedX, speedY)
 end
 
 -- 是否显示到边缘
-function clsGwjUIListView:isSideShow()
+function clsUIListView:isSideShow()
 	local bound = self:getScrollNodeRect()
 	local viewRect = self:getViewRectInSelf()
 	if(bound.x > viewRect.x
@@ -328,14 +370,59 @@ function clsGwjUIListView:isSideShow()
 	return false
 end
 
-function clsGwjUIListView:getScrollNodeRect()
+function clsUIListView:getScrollNodeRect()
 	local pos = gui.get_position(self.m_scrollNode)
 	local cascadeBound = gwjui.rect(pos.x, pos.y, self.m_scrollContentSize.width, self.m_scrollContentSize.height)
 	return cascadeBound
 end
 
-function clsGwjUIListView:getViewRectInSelf()
+function clsUIListView:getViewRectInSelf()
 	return gwjui.rect(0, 0, self.m_viewSize.width, self.m_viewSize.height)
 end
 
-return clsGwjUIListView
+function clsUIListView:update_(dt)
+	self:drawScrollBar()
+end
+
+function clsUIListView:enableScrollBar()
+	if(not self.m_autoHideScrollBar) then
+		return
+	end
+	if(self.m_scrollbarTrack) then
+		gui.set_color(self.m_scrollbarTrack, vmath.vector4(1, 1, 1, 1))
+	end
+	if(self.m_scrollbarThumb) then
+		gui.set_color(self.m_scrollbarThumb, vmath.vector4(1, 1, 1, 1))
+	end
+end
+
+function clsUIListView:disableScrollBar()
+	if(not self.m_autoHideScrollBar) then
+		return
+	end
+	if(self.m_scrollbarTrack) then
+		gui.animate(self.m_scrollbarTrack, "color.w", 0, gui.EASING_LINEAR, 0.3, 0, function()
+		end)
+		gui.animate(self.m_scrollbarThumb, "color.w", 0, gui.EASING_LINEAR, 0.3)
+	end
+end
+
+function clsUIListView:drawScrollBar()
+--	if not self.m_bDrag then
+--		return
+--	end
+	if(self.m_scrollbarThumb == nil) then
+		return
+	end
+
+	local bound = self:getScrollNodeRect()
+	local size = gui.get_size(self.m_scrollbarThumb)
+	size = gwjui.size(size.x, size.y)
+	local viewRect = self:getViewRectInSelf()
+	local posY = (viewRect.y - bound.y)*(viewRect.height - size.height)/(bound.height - viewRect.height) + viewRect.y + size.height/2
+	local pos = gui.get_position(self.m_scrollbarThumb)
+	pos.y = posY
+	gui.set_position(self.m_scrollbarThumb, pos)
+end
+
+return clsUIListView
