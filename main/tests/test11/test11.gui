@@ -3,6 +3,18 @@ fonts {
   name: "test_24"
   font: "/main/common/test_24.font"
 }
+fonts {
+  name: "test_16"
+  font: "/main/common/test_16.font"
+}
+fonts {
+  name: "test_32"
+  font: "/main/common/test_32.font"
+}
+fonts {
+  name: "test_48"
+  font: "/main/common/test_48.font"
+}
 textures {
   name: "test11"
   texture: "/main/tests/test11/test11.atlas"
@@ -15,7 +27,7 @@ background_color {
 }
 nodes {
   position {
-    x: 435.0
+    x: 606.0
     y: 411.0
     z: 0.0
     w: 1.0
@@ -69,7 +81,7 @@ nodes {
 }
 nodes {
   position {
-    x: 867.0
+    x: 941.0
     y: 407.0
     z: 0.0
     w: 1.0
@@ -123,7 +135,7 @@ nodes {
 }
 nodes {
   position {
-    x: 655.0
+    x: 777.0
     y: 103.0
     z: 0.0
     w: 1.0
@@ -141,7 +153,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 700.0
+    x: 600.0
     y: 150.0
     z: 0.0
     w: 1.0
@@ -1313,7 +1325,7 @@ nodes {
 nodes {
   position {
     x: 133.0
-    y: 470.0
+    y: 247.0
     z: 0.0
     w: 1.0
   }
@@ -1430,7 +1442,7 @@ nodes {
 nodes {
   position {
     x: 133.0
-    y: 317.0
+    y: 156.0
     z: 0.0
     w: 1.0
   }
@@ -1546,8 +1558,8 @@ nodes {
 }
 nodes {
   position {
-    x: 113.0
-    y: 123.0
+    x: 345.0
+    y: 173.0
     z: 0.0
     w: 1.0
   }
@@ -1747,6 +1759,114 @@ nodes {
   alpha: 0.0
   template_node_child: true
   size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 178.0
+    y: 484.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 300.0
+    y: 60.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "test11/input_bg"
+  id: "input_box1"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_CENTER
+  adjust_mode: ADJUST_MODE_FIT
+  layer: ""
+  inherit_alpha: true
+  slice9 {
+    x: 14.0
+    y: 14.0
+    z: 14.0
+    w: 14.0
+  }
+  clipping_mode: CLIPPING_MODE_NONE
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 1.0
+  template_node_child: false
+  size_mode: SIZE_MODE_MANUAL
+}
+nodes {
+  position {
+    x: 178.0
+    y: 378.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 300.0
+    y: 60.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "test11/input_bg"
+  id: "input_box2"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_CENTER
+  adjust_mode: ADJUST_MODE_FIT
+  layer: ""
+  inherit_alpha: true
+  slice9 {
+    x: 14.0
+    y: 14.0
+    z: 14.0
+    w: 14.0
+  }
+  clipping_mode: CLIPPING_MODE_NONE
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 1.0
+  template_node_child: false
+  size_mode: SIZE_MODE_MANUAL
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT

@@ -165,6 +165,11 @@ function gwjui.getGuiAnchorPoint(node)
 	end
 end
 
+function gwjui.getGuiContentSize(node)
+	local size = gui.get_size(node)
+	return gwjui.size(size.x, size.y)
+end
+
 --仅设定GUI节点的X或Y
 function gwjui.setGuiPos(node, pos)
 	pos = pos or {}

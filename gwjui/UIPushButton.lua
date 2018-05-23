@@ -19,6 +19,7 @@ function clsUIPushButton:ctor(params)
 	self.m_onButtonClicked = nil
 	self.m_pressed = false
 
+	self:setTouchEnabled(true)
 	self:setTouchEventListener(gwjui.handler(self, self.onTouch_))
 end
 

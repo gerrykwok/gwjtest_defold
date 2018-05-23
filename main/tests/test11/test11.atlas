@@ -22,6 +22,9 @@ images {
 images {
   image: "/main/tests/test11/images/back_normal.png"
 }
+images {
+  image: "/main/tests/test11/images/input_bg.png"
+}
 margin: 0
 extrude_borders: 0
 inner_padding: 0

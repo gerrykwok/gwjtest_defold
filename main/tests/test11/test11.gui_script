@@ -109,6 +109,24 @@ function init(self)
 		TipsBanner.show("button3 clicked")
 	end)
 --	btn:setVisible(false)
+	--input1 -----------------------------------------------------------------------
+	local input = gwjui.UIInput.new({
+		main_id = "input_box1",
+		text = "测试一下",
+		textColor = vmath.vector4(1, 0, 0, 1),
+		textFont = "test_24",
+		listener = function(event, edit)
+			ccprint("edit event:%s text=%s", tostring(event), edit:getText())
+		end,
+	})
+	--input2 -----------------------------------------------------------------------
+	local input = gwjui.UIInput.new({
+		main_id = "input_box2",
+		text = "test",
+		textColor = vmath.vector4(0, 1, 0, 1),
+		textFont = "test_16",
+		keyboardType = gui.KEYBOARD_TYPE_NUMBER_PAD,
+	})
 end
 
 function final(self)
@@ -116,15 +134,14 @@ function final(self)
 end
 
 function update(self, dt)
+	self.m_input:onUpdate(dt)
 end
 
 function on_message(self, message_id, message, sender)
 end
 
 function on_input(self, action_id, action)
-	if(action_id == hash("touch")) then
-		self.m_input:handleTouchEvent(action)
-	end
+	self.m_input:onInput(action_id, action)
 end
 
 function on_reload(self)

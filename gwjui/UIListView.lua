@@ -57,11 +57,10 @@ function clsUIListView:ctor(params)
 	self.m_speed = {x=0,y=0}
 	self.m_bBounce = true
 
+	self:setTouchEnabled(true)
 	self:setTouchEventListener(gwjui.handler(self, self.onTouch_))
 	self.m_updateFunc = gwjui.handler(self, self.update_)
-	if(gwjinput.s_recentlyInstance) then
-		gwjinput.s_recentlyInstance:scheduleUpdate(self.m_updateFunc)
-	end
+	gwjui.scheduleUpdate(self.m_updateFunc)
 end
 
 function clsUIListView:setBounceable(bBounceable)
@@ -168,14 +167,16 @@ function clsUIListView:reload()
 	end
 	gui.set_position(self.m_scrollNode, vmath.vector3(0, viewSize.height-self.m_scrollContentSize.height, 0))
 	--滚动条的长度
-	local bound = self:getScrollNodeRect()
-	local barH = self.m_viewSize.height*self.m_viewSize.height/bound.height
-	local size = gui.get_size(self.m_scrollbarThumb)
-	if barH < size.x then-- 保证bar不会太小
-		barH = size.x
+	if(self.m_scrollbarThumb) then
+		local bound = self:getScrollNodeRect()
+		local barH = self.m_viewSize.height*self.m_viewSize.height/bound.height
+		local size = gui.get_size(self.m_scrollbarThumb)
+		if barH < size.x then-- 保证bar不会太小
+			barH = size.x
+		end
+		size.y = barH
+		gui.set_size(self.m_scrollbarThumb, size)
 	end
-	size.y = barH
-	gui.set_size(self.m_scrollbarThumb, size)
 end
 
 function clsUIListView:onTouch(listener)
