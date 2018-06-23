@@ -6,6 +6,7 @@
 local gwjui = require("gwjui.gwjui_impl")
 local gwjinput = require("gwjui.gwjinput")
 local InputObject = require("gwjui.InputObject")
+local UIListViewItem = require("gwjui.UIListViewItem")
 
 local clsUIListView = gwjui.class("UIListView", InputObject)
 if false then
@@ -16,8 +17,19 @@ clsUIListView.DIRECTION_VERTICAL = 1
 clsUIListView.DIRECTION_HORIZONTAL = 2
 clsUIListView.DEFAULT_SHAKE_DISTANCE = 5
 
+--for debug only
+local colors = {
+	vmath.vector4(1, 1, 1, 1),
+	vmath.vector4(1, 0, 0, 1),
+	vmath.vector4(0, 1, 0, 1),
+	vmath.vector4(0, 0, 1, 1),
+	vmath.vector4(1, 1, 0, 1),
+}
+local idxColor = 1
+
 function clsUIListView:ctor(params)
 	clsUIListView.super.ctor(self, params)
+	gui.set_clipping_mode(self.m_mainNode, gui.CLIPPING_MODE_STENCIL)
 	self.m_allItems = {}
 	self.m_direction = params.direction or clsUIListView.DIRECTION_VERTICAL
 	self.m_autoHideScrollBar = params.autoHideScrollBar
@@ -71,60 +83,103 @@ function clsUIListView:isVertical()
 	return self.m_direction == clsUIListView.DIRECTION_VERTICAL
 end
 
-local colors = {
-	vmath.vector4(1, 1, 1, 1),
-	vmath.vector4(1, 0, 0, 1),
-	vmath.vector4(0, 1, 0, 1),
-	vmath.vector4(0, 0, 1, 1),
-	vmath.vector4(1, 1, 0, 1),
-}
-local idxColor = 1
-function clsUIListView:addItem(item_template_id, itemWidth, itemHeight, funcSetData)
-	item_template_id = gwjui.to_hash(item_template_id)
-	local clones = gui.clone_tree(gui.get_node(item_template_id))
-
-	if(funcSetData) then
-		funcSetData(clones)
-	end
-
-	local root = clones[item_template_id]
-	local wh = gui.get_size(root)
-	itemWidth = itemWidth or wh.x
-	itemHeight = itemHeight or wh.y
-
-	local wh = {}
-	if(self:isVertical()) then
-		wh.width = self.m_viewSize.width
-		wh.height = itemHeight
-	else
-		wh.width = itemWidth
-		wh.height = self.m_viewSize.height
-	end
-	local node = gui.new_box_node(vmath.vector3(), vmath.vector3(wh.width, wh.height, 0))
-	gui.set_parent(node, self.m_scrollNode)
-	gui.set_position(root, vmath.vector3())
-	gui.set_parent(root, node)
-	local test = false
-	if(test) then
-		gui.set_color(node, colors[idxColor])
-		idxColor = math.modf((idxColor-1+1) % (#colors)) + 1
-	else
-		gui.set_color(node, vmath.vector4(0, 0, 0, 1))
-		gui.set_blend_mode(node, gui.BLEND_ADD)
-	end
-	local item = {
-		node = node,
-		idx = #self.m_allItems + 1,
-		width = itemWidth,
-		height = itemHeight,
-	}
-	table.insert(self.m_allItems, item)
+function clsUIListView:newItem()
+	local item = UIListViewItem.new()
+	item:onSizeChange(gwjui.handler(self, self.itemSizeChangeListener))
 	return item
+end
+
+function clsUIListView:addItem(listItem, pos)
+	self:modifyItemSizeIf_(listItem)
+	if pos then
+		table.insert(self.m_allItems, pos, listItem)
+	else
+		table.insert(self.m_allItems, listItem)
+	end
+	gui.set_parent(listItem:getNode(), self.m_scrollNode)
+end
+
+function clsUIListView:modifyItemSizeIf_(listItem)
+	local w, h = listItem:getItemSize()
+
+	if self:isVertical() then
+		if w ~= self.m_viewSize.width then
+			listItem:setItemSize(self.m_viewSize.width, h)
+		end
+	else
+		if h ~= self.m_viewSize.height then
+			listItem:setItemSize(w, self.m_viewSize.height)
+		end
+	end
+end
+
+function clsUIListView:itemSizeChangeListener(listItem, sizeOld, sizeNew)
+	local itemPos = self:getItemPos(listItem)
+	if(itemPos == nil) then
+		return
+	end
+	local itemW, itemH = sizeNew.width - sizeOld.width, sizeNew.height - sizeOld.height
+	if(self.m_direction == clsUIListView.DIRECTION_VERTICAL) then
+		itemW = 0
+	else
+		itemH = 0
+	end
+	self.m_scrollContentSize.width = self.m_scrollContentSize.width + itemW
+	self.m_scrollContentSize.height = self.m_scrollContentSize.height + itemH
+	self:moveItems(itemPos, itemPos, itemW/2, itemH/2, false)
+	if(self.m_direction == clsUIListView.DIRECTION_VERTICAL) then
+		gwjui.moveNode(self.m_scrollNode, -itemW, -itemH)
+		self:moveItems(1, itemPos-1, itemW, itemH, false)
+	else
+		self:moveItems(itemPos+1, #self.m_allItems, itemW, itemH, false)
+	end
+end
+
+function clsUIListView:getItemPos(listItem)
+	for i,v in ipairs(self.m_allItems) do
+		if(v == listItem) then
+			return i
+		end
+	end
+end
+
+function clsUIListView:moveItems(beginIdx, endIdx, x, y, bAni)
+	if(beginIdx == 1 and endIdx == 0) then
+		self:elasticScroll();
+		return;
+	end
+
+	local posX, posY = 0, 0
+
+	local moveByParams = {x = x, y = y, time = 0.2}
+	for i=beginIdx, endIdx do
+		local node = self.m_allItems[i]:getNode()
+		local pos = gui.get_position(node)
+		if bAni then
+			if i == endIdx then
+				moveByParams.onComplete = function()
+					self:elasticScroll()
+				end
+			else
+				moveByParams.onComplete = nil
+			end
+			pos.x = pos.x + moveByParams.x
+			pos.y = pos.y + moveByParams.y
+			gui.animate(node, "position", pos, gui.EASING_LINEAR, moveByParams.time, 0, moveByParams.onComplete)
+		else
+			pos.x = pos.x + moveByParams.x
+			pos.y = pos.y + moveByParams.y
+			gui.set_position(node, pos)
+			if i == endIdx then
+				self:elasticScroll()
+			end
+		end
+	end
 end
 
 function clsUIListView:removeAllItems()
 	for i,item in ipairs(self.m_allItems) do
-		gui.delete_node(item.node)
+		gui.delete_node(item:getNode())
 	end
 	self.m_allItems = {}
 end
@@ -136,14 +191,16 @@ function clsUIListView:reload()
 		self.m_scrollContentSize.width = viewSize.width
 		local totalHeight = 0
 		for i,item in ipairs(self.m_allItems) do
-			totalHeight = totalHeight + item.height
+			local w,h = item:getItemSize()
+			totalHeight = totalHeight + h
 		end
 		self.m_scrollContentSize.height = totalHeight
 	else
 		self.m_scrollContentSize.height = viewSize.height
 		local totalWidth = 0
 		for i,item in ipairs(self.m_allItems) do
-			totalWidth = totalWidth + item.width
+			local w,h = item:getItemSize()
+			totalWidth = totalWidth + w
 		end
 		self.m_scrollContentSize.width = totalWidth
 	end
@@ -154,15 +211,17 @@ function clsUIListView:reload()
 		local x = viewSize.width / 2
 		local y = self.m_scrollContentSize.height
 		for i,item in ipairs(self.m_allItems) do
-			gui.set_position(item.node, vmath.vector3(x, y-item.height/2, 0))
-			y = y - item.height
+			local w,h = item:getItemSize()
+			gui.set_position(item:getNode(), vmath.vector3(x, y-h/2, 0))
+			y = y - h
 		end
 	else
 		local x = 0
 		local y = viewSize.height / 2
 		for i,item in ipairs(self.m_allItems) do
-			gui.set_position(item.node, vmath.vector3(x+item.width/2, y, 0))
-			x = x + item.width
+			local w,h = item:getItemSize()
+			gui.set_position(item:getNode(), vmath.vector3(x+w/2, y, 0))
+			x = x + w
 		end
 	end
 	gui.set_position(self.m_scrollNode, vmath.vector3(0, viewSize.height-self.m_scrollContentSize.height, 0))
@@ -174,6 +233,9 @@ function clsUIListView:reload()
 		if barH < size.x then-- 保证bar不会太小
 			barH = size.x
 		end
+		if(barH > self.m_viewSize.height) then--保证bar不会太大
+			barH = self.m_viewSize.height
+		end
 		size.y = barH
 		gui.set_size(self.m_scrollbarThumb, size)
 	end
@@ -181,6 +243,7 @@ end
 
 function clsUIListView:onTouch(listener)
 	self.m_onTouch = listener
+	return self
 end
 
 function clsUIListView:notifyListener_(event)
@@ -220,10 +283,10 @@ function clsUIListView:onTouch_(event)
 			self:notifyListener_({name="ended", x=event.x, y=event.y})
 		else
 			--判断点中了哪个item
-			local item = self:hitTest(event)
+			local item,idx = self:hitTest(event)
 			if(item) then
 				self:notifyListener_({name="clicked",
-					listView = self, itemPos = item.idx, item = item,
+					listView = self, itemPos = idx, item = item,
 					x=event.x, y=event.y})
 			end
 		end
@@ -310,8 +373,8 @@ end
 
 function clsUIListView:hitTest(event)
 	for i,item in ipairs(self.m_allItems) do
-		if(gui.pick_node(item.node, event.x, event.y)) then
-			return item
+		if(gui.pick_node(item:getNode(), event.x, event.y)) then
+			return item,i
 		end
 	end
 end
@@ -381,6 +444,10 @@ function clsUIListView:getViewRectInSelf()
 	return gwjui.rect(0, 0, self.m_viewSize.width, self.m_viewSize.height)
 end
 
+function clsUIListView:getViewRect()
+	return self:getViewRectInSelf()
+end
+
 function clsUIListView:update_(dt)
 	self:drawScrollBar()
 end
@@ -424,6 +491,10 @@ function clsUIListView:drawScrollBar()
 	local pos = gui.get_position(self.m_scrollbarThumb)
 	pos.y = posY
 	gui.set_position(self.m_scrollbarThumb, pos)
+end
+
+function clsUIListView:isContentMoved()
+	return self.m_bDrag
 end
 
 return clsUIListView

@@ -13,8 +13,18 @@ function clsPushButton:ctor(params)
 
 	local normal_id = params.normal_id
 	local clicked_id = params.clicked_id
-	self.m_nodeNormal = gui.get_node(normal_id)
-	self.m_nodeClicked = gui.get_node(clicked_id)
+	local normal_node = params.normal_node
+	local clicked_node = params.clicked_node
+	if(normal_node) then self.m_nodeNormal = normal_node
+	elseif(normal_id) then self.m_nodeNormal = gui.get_node(normal_id)
+	end
+	if(clicked_node) then self.m_nodeClicked = clicked_node
+	elseif(clicked_id) then self.m_nodeClicked = gui.get_node(clicked_id)
+	end
+
+	self.m_texNormal = params.texNormal
+	self.m_texClicked = params.texClicked
+	
 	self:setClicked_(false)
 
 	self.m_onPressed = nil
@@ -50,8 +60,12 @@ function clsPushButton:onButtonClicked(func)
 end
 
 function clsPushButton:setClicked_(clicked)
-	gui.set_enabled(self.m_nodeNormal, not clicked)
-	gui.set_enabled(self.m_nodeClicked, clicked)
+	if(self.m_texNormal and self.m_texClicked) then
+		gui.play_flipbook(self.m_mainNode, clicked and self.m_texClicked or self.m_texNormal)
+	else
+		gui.set_enabled(self.m_nodeNormal, not clicked)
+		gui.set_enabled(self.m_nodeClicked, clicked)
+	end
 end
 
 return clsPushButton

@@ -179,6 +179,15 @@ function gwjui.setGuiPos(node, pos)
 	gui.set_position(node, p)
 end
 
+function gwjui.moveNode(node, dx, dy)
+	dx = dx or 0
+	dy = dy or 0
+	local pos = gui.get_position(node)
+	pos.x = pos.x + dx
+	pos.y = pos.y + dy
+	gui.set_position(node, pos)
+end
+
 function gwjui.printf(...)
 	print(string.format(...))
 end
@@ -305,6 +314,10 @@ function gwjui.handler(obj, method)
 	return function(...)
 		return method(obj, ...)
 	end
+end
+
+function gwjui.color4b(r, g, b, a)
+	return vmath.vector4(r/255, g/255, b/255, a/255)
 end
 
 return gwjui

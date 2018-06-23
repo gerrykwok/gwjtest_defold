@@ -22,7 +22,15 @@ function init(self)
 		end
 	end)
 	for i=1,5 do
-		local item = listview:addItem(string.format("list_item%d", math.modf((i-1)%maxItemType)+1))
+		local item = listview:newItem()
+		local rootName = string.format("list_item%d", math.modf((i-1)%maxItemType)+1)
+		local clones = gui.clone_tree(gui.get_node(rootName))
+		item:addContent(clones[rootName])
+		gui.set_position(clones[rootName], vmath.vector3())
+		local size = gui.get_size(clones[rootName])
+		pprint(size)
+		item:setItemSize(size.x, size.y)
+		listview:addItem(item)
 	end
 	listview:reload()
 	--list2 ---------------------------------------------------------------------
@@ -44,13 +52,18 @@ function init(self)
 		local idx = math.modf((i-1)%maxItemType)+1
 		local itemId = string.format("list_item%d", idx)
 		local wh = gui.get_size(gui.get_node(itemId))
-		local item = listview:addItem(itemId, wh.x, wh.y+20, function(clones)
---			dump(clones, "clones")
-			local text = clones[string.format("idx%d", idx)]
-			if(text) then
-				gui.set_text(text, string.format("%d:", i))
-			end
-		end)
+		local item = listview:newItem()
+		local clones = gui.clone_tree(gui.get_node(itemId))
+		item:addContent(clones[itemId])
+		item:setItemSize(wh.x, wh.y+20)
+		
+		listview:addItem(item)
+
+		gui.set_position(clones[itemId], vmath.vector3())
+		local text = clones[string.format("idx%d", idx)]
+		if(text) then
+			gui.set_text(text, string.format("%d:", i))
+		end
 	end
 	listview:reload()
 	--list3 ---------------------------------------------------------------------
@@ -68,8 +81,14 @@ function init(self)
 		end
 	end)
 	for i=1,20 do
-		local item = list3:addItem(string.format("list_item%d", math.modf((i-1)%maxItemType)+1))
---		item.width = item.width + 10
+		local item = list3:newItem()
+		local name = string.format("list_item%d", math.modf((i-1)%maxItemType)+1)
+		local clones = gui.clone_tree(gui.get_node(name))
+		item:addContent(clones[name])
+		local size = gui.get_size(clones[name])
+		item:setItemSize(size.x, size.y)
+		list3:addItem(item)
+		gui.set_position(clones[name], vmath.vector3())
 	end
 	list3:reload()
 	--button1 -----------------------------------------------------------------------
@@ -138,6 +157,7 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+	self.m_input:on_message(message_id, message, sender)
 end
 
 function on_input(self, action_id, action)
