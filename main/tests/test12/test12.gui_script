@@ -1,0 +1,43 @@
+require("main.common.MiscUtil")
+local gwjui = require("gwjui.gwjui")
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.m_input = gwjui.input.createInstance()
+	--从相册选择图片
+	local btn = gwjui.ScaleButton.new({
+		main_id = "btn_get_local_picture",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		gwjui.printf("gwjgwj,get from gallery")
+		plmext.getLocalPicture("e:/test/test2/a.png", function() end)
+	end)
+	--摄像机获取图片
+	local btn = gwjui.ScaleButton.new({
+		main_id = "btn_get_camera_picture",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		gwjui.printf("gwjgwj,get from camera")
+	end)
+end
+
+function final(self)
+	self.m_input:final()
+end
+
+function update(self, dt)
+	self.m_input:onUpdate(dt)
+end
+
+function on_message(self, message_id, message, sender)
+	self.m_input:on_message(message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+	self.m_input:onInput(action_id, action)
+end
+
+function on_reload(self)
+end
