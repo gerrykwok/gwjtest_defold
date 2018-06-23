@@ -1,48 +1,17 @@
-script: "/main/tests/testcommon.gui_script"
+script: ""
+fonts {
+  name: "test_32"
+  font: "/main/common/test_32.font"
+}
+textures {
+  name: "common"
+  texture: "/main/common/common.atlas"
+}
 background_color {
   x: 0.0
   y: 0.0
   z: 0.0
   w: 0.0
-}
-nodes {
-  position {
-    x: 112.0
-    y: 607.0
-    z: 0.0
-    w: 1.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-    w: 1.0
-  }
-  size {
-    x: 200.0
-    y: 100.0
-    z: 0.0
-    w: 1.0
-  }
-  color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-    w: 1.0
-  }
-  type: TYPE_TEMPLATE
-  id: "back"
-  layer: ""
-  inherit_alpha: true
-  alpha: 1.0
-  template: "/main/common/button.gui"
-  template_node_child: false
 }
 nodes {
   position {
@@ -78,12 +47,11 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "common/button_normal"
-  id: "back/bg"
-  xanchor: XANCHOR_LEFT
-  yanchor: YANCHOR_TOP
+  id: "bg"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "back"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -96,9 +64,7 @@ nodes {
   clipping_visible: true
   clipping_inverted: false
   alpha: 1.0
-  overridden_fields: 12
-  overridden_fields: 13
-  template_node_child: true
+  template_node_child: false
   size_mode: SIZE_MODE_MANUAL
 }
 nodes {
@@ -134,9 +100,9 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "< back"
+  text: "<text>"
   font: "test_32"
-  id: "back/label"
+  id: "label"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -154,22 +120,15 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "back/bg"
+  parent: "bg"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
   outline_alpha: 1.0
   shadow_alpha: 1.0
-  overridden_fields: 8
-  template_node_child: true
+  template_node_child: false
   text_leading: 1.0
   text_tracking: 0.0
-}
-layers {
-  name: "below"
-}
-layers {
-  name: "text"
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT

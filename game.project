@@ -1,7 +1,6 @@
 [project]
 title = gwjtest
 version = 0.1
-dependencies = https://github.com/britzl/gooey/archive/master.zip
 
 [bootstrap]
 main_collection = /main/main.collectionc
