@@ -27,7 +27,7 @@ function init(self)
 	})
 	:onButtonClicked(function()
 		local localPath = sys.get_save_file("plm", "avatarout.png")
-		localPath = "/storage/emulated/0/avatarout.png"
+		--localPath = "/storage/emulated/0/avatarout.png"
 		gwjui.printf("gwjgwj,get from gallery,localPath=%s", localPath)
 		plmext.getPhoto(false, localPath, imageWidth, imageHeight, function(res)
 			gwjui.printf("gwjgwj,get photo res=%s(%s)", tostring(res), type(res))
@@ -42,7 +42,7 @@ function init(self)
 	:onButtonClicked(function()
 		gwjui.printf("gwjgwj,get from camera")
 		local localPath = sys.get_save_file("plm", "avatarout.png")
-		localPath = "/storage/emulated/0/avatarout.png"
+		--localPath = "/storage/emulated/0/avatarout.png"
 		gwjui.printf("gwjgwj,get from gallery,localPath=%s", localPath)
 		plmext.getPhoto(true, localPath, imageWidth, imageHeight, function(res)
 			gwjui.printf("gwjgwj,get photo res=%s(%s)", tostring(res), type(res))
