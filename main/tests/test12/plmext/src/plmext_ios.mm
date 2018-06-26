@@ -4,11 +4,7 @@
 #if defined(DM_PLATFORM_IOS)
 #include <AppKit/AppKit.h>
 
-void plm_take_photo(const char *localPath, int luaCallback)
-{
-}
-
-void plm_get_local_picture(const char *localPath, int luaCallback)
+void plm_get_photo(int fromCamera, const char *localPath, int width, int height, int luaCallback)
 {
 }
 

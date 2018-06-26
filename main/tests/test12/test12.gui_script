@@ -1,17 +1,38 @@
 require("main.common.MiscUtil")
 local gwjui = require("gwjui.gwjui")
+local TextureCache = require("gwjui.TextureCache")
+
+function onGetPhotoResult(self, res, path)
+	if(tostring(res) == "1") then
+		local textureId = TextureCache.getInstance():addImage(path)
+		if(textureId) then
+			local node = gui.get_node("head")
+			gui.set_texture(node, textureId)
+		end
+	end
+end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.m_input = gwjui.input.createInstance()
+	self.m_url = msg.url()
+	self.m_updateCount = 0
+
+	local imageWidth = 320
+	local imageHeight = 320
 	--从相册选择图片
 	local btn = gwjui.ScaleButton.new({
 		main_id = "btn_get_local_picture",
 		maxScale = 1.1,
 	})
 	:onButtonClicked(function()
-		gwjui.printf("gwjgwj,get from gallery")
-		plmext.getLocalPicture("e:/test/test2/a.png", function() end)
+		local localPath = sys.get_save_file("plm", "avatarout.png")
+		localPath = "/storage/emulated/0/avatarout.png"
+		gwjui.printf("gwjgwj,get from gallery,localPath=%s", localPath)
+		plmext.getPhoto(false, localPath, imageWidth, imageHeight, function(res)
+			gwjui.printf("gwjgwj,get photo res=%s(%s)", tostring(res), type(res))
+			msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
+		end)
 	end)
 	--摄像机获取图片
 	local btn = gwjui.ScaleButton.new({
@@ -20,6 +41,13 @@ function init(self)
 	})
 	:onButtonClicked(function()
 		gwjui.printf("gwjgwj,get from camera")
+		local localPath = sys.get_save_file("plm", "avatarout.png")
+		localPath = "/storage/emulated/0/avatarout.png"
+		gwjui.printf("gwjgwj,get from gallery,localPath=%s", localPath)
+		plmext.getPhoto(true, localPath, imageWidth, imageHeight, function(res)
+			gwjui.printf("gwjgwj,get photo res=%s(%s)", tostring(res), type(res))
+			msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
+		end)
 	end)
 end
 
@@ -29,10 +57,41 @@ end
 
 function update(self, dt)
 	self.m_input:onUpdate(dt)
+	--[[
+	if(self.m_updateCount > 0) then
+		self.m_updateCount = self.m_updateCount + 1
+		if(self.m_updateCount == 60) then
+			local localPath = self.m_localPath
+			local res = self.m_res
+			onGetPhotoResult(self, res, localPath)
+		end
+	end
+	]]
 end
 
 function on_message(self, message_id, message, sender)
 	self.m_input:on_message(message_id, message, sender)
+	if(message_id == hash("get_photo_result")) then
+		local localPath = message.path
+		local res = tonumber(message.res)
+		gwjui.dump(message, "get photo result")
+		TextureCache.getInstance():removeTextureForKey(localPath)
+		local count = 0
+		local function func()
+			gwjui.printf("func invoked")
+			count = count + 1
+			if(count >= 10) then
+				gwjui.unscheduleUpdate(func)
+				onGetPhotoResult(self, res, localPath)
+			end
+		end
+		gwjui.scheduleUpdate(func)
+		--[[
+		self.m_localPath = localPath
+		self.m_res = res
+		self.m_updateCount = 1
+		]]
+	end
 end
 
 function on_input(self, action_id, action)

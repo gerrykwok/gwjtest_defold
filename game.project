@@ -24,6 +24,7 @@ shared_state = 1
 app_icon_96x96 = /main/android/android_icon96.png
 package = org.evakwok.gwjtest
 iap_provider = 
+manifest = /main/tests/test12/plmext/src/android/AndroidManifest.xml
 
 [ios]
 bundle_identifier = org.evakwok.gwjtest

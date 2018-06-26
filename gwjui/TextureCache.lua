@@ -45,11 +45,23 @@ function clsTextureCache:addImage(filepath)
 
 		local img = image.load(data)
 		local texture_id = filepath
+		gwjui.printf("gwjgwj,new texture,id=%s", tostring(texture_id))
 		if gui.new_texture(texture_id, img.width, img.height, img.type, img.buffer) then
 			self.m_allTexture[texture_id] = true
 			return texture_id
+		else
+			gwjui.printf("gwjgwj,gui.new_texture error")
 		end
 	end
+end
+
+function clsTextureCache:removeTextureForKey(key)
+	if(not self.m_allTexture[key]) then
+		return
+	end
+	self.m_allTexture[key] = nil
+	gwjui.printf("gwjgwj,delete texture:%s", key)
+	gui.delete_texture(key)
 end
 
 return clsTextureCache

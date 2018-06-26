@@ -6,61 +6,54 @@
 #include "plmext.h"
 #include "tolua/tolua++.h"
 #include "tolua_fix.h"
+#include "LuaBasicConversions.h"
+#include "plmext_luastack.h"
 
-static int getLocalPicture(lua_State *L)
+static int getPhoto(lua_State *L)
 {
 	int argc;
 	tolua_Error tolua_err;
 
-	argc = lua_gettop(L);
-	if(argc != 2)
-	{
-		luaL_error(L, "%s has wrong number of arguments: %d, was expecting %d\n", "getLocalPicture", argc, 2);
-		return 0;
-	}
-
-	const char *localPath = luaL_checkstring(L, 1);
-	if(!toluafix_isfunction(L,2,"LUA_FUNCTION",0,&tolua_err))
-	{
-		tolua_error(L,"#ferror in function 'getLocalPicture'.",&tolua_err);
-		return 0;
-	}
-	LUA_FUNCTION luaCallback = toluafix_ref_function(L,2,0);
-
-	printf("getLocalPicture,localPath=%s,luaCallback=%d\n", localPath, luaCallback);
-	plm_get_local_picture(localPath, luaCallback);
-	return 0;
-}
-
-static int takePhoto(lua_State *L)
-{
-	int argc;
-	tolua_Error tolua_err;
+	LuaStack::getInstance()->init(L);
 
 	argc = lua_gettop(L);
-	if(argc != 2)
+	if(argc != 5)
 	{
-		luaL_error(L, "%s has wrong number of arguments: %d, was expecting %d\n", "getLocalPicture", argc, 2);
+		luaL_error(L, "%s has wrong number of arguments: %d, was expecting %d\n", "getPhoto", argc, 5);
 		return 0;
 	}
 
-	const char *localPath = luaL_checkstring(L, 1);
-	if(!toluafix_isfunction(L,2,"LUA_FUNCTION",0,&tolua_err))
+	bool isFromCamera;
+	int width, height;
+	bool ok;
+	ok = luaval_to_boolean(L, 1, &isFromCamera, "getPhoto");
+	if(!ok)
 	{
-		tolua_error(L,"#ferror in function 'getLocalPicture'.",&tolua_err);
+		tolua_error(L, "invalid arguments in function 'getPhoto'", NULL);
 		return 0;
 	}
-	LUA_FUNCTION luaCallback = toluafix_ref_function(L,2,0);
+	int fromCamera = isFromCamera ? 1 : 0;
+	const char *localPath = luaL_checkstring(L, 2);
+	width = luaL_checkint(L, 3);
+	height = luaL_checkint(L, 4);
 
-	plm_take_photo(localPath, luaCallback);
+	int idxFunc = 5;
+	if(!toluafix_isfunction(L,idxFunc,"LUA_FUNCTION",0,&tolua_err))
+	{
+		tolua_error(L,"#ferror in function 'getPhoto'.",&tolua_err);
+		return 0;
+	}
+	LUA_FUNCTION luaCallback = toluafix_ref_function(L,idxFunc,0);
+
+	//printf("getPhoto,localPath=%s,luaCallback=%d\n", localPath, luaCallback);
+	plm_get_photo(fromCamera, localPath, width, height, luaCallback);
 	return 0;
 }
 
 // Functions exposed to Lua
 static const luaL_reg Module_methods[] =
 {
-	{"getLocalPicture", getLocalPicture},
-	{"takePhoto", takePhoto},
+	{"getPhoto", getPhoto},
 	{0, 0}
 };
 
