@@ -45,7 +45,6 @@ function clsTextureCache:addImage(filepath)
 
 		local img = image.load(data)
 		local texture_id = filepath
-		gwjui.printf("gwjgwj,new texture,id=%s", tostring(texture_id))
 		if gui.new_texture(texture_id, img.width, img.height, img.type, img.buffer) then
 			self.m_allTexture[texture_id] = true
 			return texture_id

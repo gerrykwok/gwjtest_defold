@@ -57,16 +57,6 @@ end
 
 function update(self, dt)
 	self.m_input:onUpdate(dt)
-	--[[
-	if(self.m_updateCount > 0) then
-		self.m_updateCount = self.m_updateCount + 1
-		if(self.m_updateCount == 60) then
-			local localPath = self.m_localPath
-			local res = self.m_res
-			onGetPhotoResult(self, res, localPath)
-		end
-	end
-	]]
 end
 
 function on_message(self, message_id, message, sender)
@@ -78,19 +68,13 @@ function on_message(self, message_id, message, sender)
 		TextureCache.getInstance():removeTextureForKey(localPath)
 		local count = 0
 		local function func()
-			gwjui.printf("func invoked")
 			count = count + 1
-			if(count >= 10) then
+			if(count >= 4) then
 				gwjui.unscheduleUpdate(func)
 				onGetPhotoResult(self, res, localPath)
 			end
 		end
 		gwjui.scheduleUpdate(func)
-		--[[
-		self.m_localPath = localPath
-		self.m_res = res
-		self.m_updateCount = 1
-		]]
 	end
 end
 
