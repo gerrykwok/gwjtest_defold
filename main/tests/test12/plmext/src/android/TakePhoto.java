@@ -80,11 +80,13 @@ public class TakePhoto extends Activity
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		//Log.d(plmext.TAG, "onActivityResult_0, requestCode:"+requestCode+", resultCode:"+resultCode);
+		Log.d(plmext.TAG, "onActivityResult_0, requestCode:"+requestCode+", resultCode:"+resultCode);
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == ACT_RES_CAMERA_PHOTOS || requestCode == ACT_RES_LOCAL_PHOTOS)
 		{
 			if (resultCode != RESULT_OK) {
+				notifyAvatarGetResult(AVATAR_GET_RES_FAIL);
+				finish();
 				return;
 			}
 
