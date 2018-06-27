@@ -28,6 +28,8 @@ manifest = /main/tests/test12/plmext/src/android/AndroidManifest.xml
 
 [ios]
 bundle_identifier = org.evakwok.defold.gwjtest
+app_icon_114x114 = /main/android/android_icon96.png
+infoplist = /main/tests/test12/plmext/src/ios/Info.plist
 
 [collection_proxy]
 max_count = 128
