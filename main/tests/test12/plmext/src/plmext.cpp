@@ -9,7 +9,7 @@
 #include "LuaBasicConversions.h"
 #include "plmext_luastack.h"
 #if defined(DM_PLATFORM_ANDROID)
-#include "android/LuaJavaBridge.h"
+#include "android/CCLuaJavaBridge.h"
 #endif
 
 static int getPhoto(lua_State *L)
@@ -63,9 +63,6 @@ static const luaL_reg Module_methods[] =
 static void LuaInit(lua_State* L)
 {
 	int top = lua_gettop(L);
-#if defined(DM_PLATFORM_ANDROID)
-	LuaJavaBridge_ensureCompileIn();//为了安卓上编译时能把jni函数编译进so
-#endif
 
 	// Register lua names
 	luaL_register(L, MODULE_NAME, Module_methods);
@@ -73,6 +70,9 @@ static void LuaInit(lua_State* L)
 
 	lua_pop(L, 1);
 	assert(top == lua_gettop(L));
+#if defined(DM_PLATFORM_ANDROID)
+	LuaJavaBridge::luaopen_luaj(L);
+#endif
 }
 
 dmExtension::Result AppInitializeMyExtension(dmExtension::AppParams* params)

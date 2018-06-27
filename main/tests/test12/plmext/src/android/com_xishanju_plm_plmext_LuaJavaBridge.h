@@ -17,6 +17,22 @@ JNIEXPORT jint JNICALL Java_com_xishanju_plm_plmext_LuaJavaBridge_callLuaFunctio
 
 /*
  * Class:     com_xishanju_plm_plmext_LuaJavaBridge
+ * Method:    callLuaGlobalFunctionWithString
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_xishanju_plm_plmext_LuaJavaBridge_callLuaGlobalFunctionWithString
+  (JNIEnv *, jclass, jstring, jstring);
+
+/*
+ * Class:     com_xishanju_plm_plmext_LuaJavaBridge
+ * Method:    retainLuaFunction
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_xishanju_plm_plmext_LuaJavaBridge_retainLuaFunction
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_xishanju_plm_plmext_LuaJavaBridge
  * Method:    releaseLuaFunction
  * Signature: (I)I
  */

@@ -54,8 +54,6 @@ static jclass GetClass(JNIEnv* env, const char* classname)
 
 void plm_get_photo(int fromCamera, const char *localPath, int width, int height, int luaCallback)
 {
-//	Java_com_xishanju_plm_plmext_TakePhoto_ndkNotifyResult(NULL, NULL, 0, 0);//为了能在编译时能被编译进去
-	
 	AttachScope attachscope;
 	JNIEnv* env = attachscope.m_Env;
 
@@ -65,20 +63,5 @@ void plm_get_photo(int fromCamera, const char *localPath, int width, int height,
 	jstring jpath = env->NewStringUTF(localPath);
 	env->CallStaticVoidMethod(cls, dummy_method, dmGraphics::GetNativeAndroidActivity(), fromCamera, jpath, width, height, luaCallback);
 }
-
-//JNIEXPORT void JNICALL Java_com_xishanju_plm_plmext_TakePhoto_ndkNotifyResult(JNIEnv *env, jclass clz, jint luaCallback, jstring res)
-//{
-//	if(env == NULL)
-//	{
-//		return;
-//	}
-//
-//	const char *value_ = env->GetStringUTFChars(res, 0);
-//	LuaStack::getInstance()->pushString(value_);
-//	LuaStack::getInstance()->executeFunctionByHandler(luaCallback, 1);
-//	env->ReleaseStringUTFChars(res, value_);
-//
-//	LuaStack::getInstance()->removeScriptHandler(luaCallback);
-//}
 
 #endif

@@ -1,66 +1,19 @@
 require("main.common.MiscUtil")
 local gwjui = require("gwjui.gwjui")
-local TextureCache = require("gwjui.TextureCache")
+local test12 = require("main.tests.test12.test12")
 
-function onGetPhotoResult(self, res, path)
-	if(tostring(res) == "1") then
-		local textureId = TextureCache.getInstance():addImage(path)
-		if(textureId) then
-			local node = gui.get_node("head")
-			gui.set_texture(node, textureId)
-			self.m_localPath = path
-		end
-	end
-end
+local TextureCache = require("gwjui.TextureCache")
+local luaj = require("main.tests.test12.plmext.luaj")
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.m_input = gwjui.input.createInstance()
-	self.m_url = msg.url()
-	self.m_updateCount = 0
-	self.m_localPath = ""
-
-	local imageWidth = 320
-	local imageHeight = 320
-	--从相册选择图片
-	local btn = gwjui.ScaleButton.new({
-		main_id = "btn_get_local_picture",
-		maxScale = 1.1,
-	})
-	:onButtonClicked(function()
-		local localPath = sys.get_save_file("plm", "avatarout.png")
-		--localPath = "/storage/emulated/0/avatarout.png"
-		gwjui.printf("gwjgwj,get from gallery,localPath=%s", localPath)
-		plmext.getPhoto(false, localPath, imageWidth, imageHeight, function(res)
-			gwjui.printf("gwjgwj,get photo res=%s(%s)", tostring(res), type(res))
-			msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
-		end)
-	end)
-	--摄像机获取图片
-	local btn = gwjui.ScaleButton.new({
-		main_id = "btn_get_camera_picture",
-		maxScale = 1.1,
-	})
-	:onButtonClicked(function()
-		local localPath = sys.get_save_file("plm", "avatarout.png")
-		--localPath = "/storage/emulated/0/avatarout.png"
-		gwjui.printf("gwjgwj,get from camera,localPath=%s", localPath)
-		plmext.getPhoto(true, localPath, imageWidth, imageHeight, function(res)
-			gwjui.printf("gwjgwj,get photo res=%s(%s)", tostring(res), type(res))
-			msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
-		end)
-	end)
-	--上传头像按钮
-	local btn = gwjui.ScaleButton.new({
-		main_id = "btn_upload_head",
-		maxScale = 1.1,
-	})
-	:onButtonClicked(function()
-		gwjui.printf("upload head,path=%s", self.m_localPath)
-	end)
+	self.m_test = test12.new()
+	self.m_test:onEnter()
 end
 
 function final(self)
+	self.m_test:onExit()
 	self.m_input:final()
 end
 
@@ -70,21 +23,7 @@ end
 
 function on_message(self, message_id, message, sender)
 	self.m_input:on_message(message_id, message, sender)
-	if(message_id == hash("get_photo_result")) then
-		local localPath = message.path
-		local res = tonumber(message.res)
-		gwjui.dump(message, "get photo result")
-		TextureCache.getInstance():removeTextureForKey(localPath)
-		local count = 0
-		local function func()
-			count = count + 1
-			if(count >= 4) then
-				gwjui.unscheduleUpdate(func)
-				onGetPhotoResult(self, res, localPath)
-			end
-		end
-		gwjui.scheduleUpdate(func)
-	end
+	self.m_test:on_message(message_id, message, sender)
 end
 
 function on_input(self, action_id, action)
