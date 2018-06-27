@@ -28,7 +28,6 @@ function init(self)
 		item:addContent(clones[rootName])
 		gui.set_position(clones[rootName], vmath.vector3())
 		local size = gui.get_size(clones[rootName])
-		pprint(size)
 		item:setItemSize(size.x, size.y)
 		listview:addItem(item)
 	end

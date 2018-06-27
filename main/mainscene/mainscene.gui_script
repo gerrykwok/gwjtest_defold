@@ -35,8 +35,8 @@ function init(self)
 	})
 	listview:onTouch(function(event)
 		if(event.name == "clicked") then
-			ccprint("clicked:%d", event.itemPos)
-			msg.post("main:/go", "gotoTest", {name=event.itemPos})
+			--ccprint("clicked:%d", event.itemPos)
+			--msg.post("main:/go", "gotoTest", {name=event.itemPos})
 		elseif(event.name == "moved") then
 			if(contentDown) then
 				gui.animate(contentDown, "scale", vmath.vector3(1, 1, 1), gui.EASING_LINEAR, 0.2)
@@ -60,6 +60,10 @@ function init(self)
 			gui.animate(contentDown, "scale", vmath.vector3(1.1, 1.1, 1), gui.EASING_LINEAR, 0.2)
 		end)
 		obj:onButtonClicked(function()
+			gwjui.printf("gwjgwj,goto test %d", i)
+			if(not listview:isContentMoved()) then
+				msg.post("main:/go", "gotoTest", {name=i})
+			end
 		end)
 
 		item:setItemSize(viewRect.width, 60)

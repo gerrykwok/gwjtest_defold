@@ -134,4 +134,8 @@ end
 function clsInputObject:onReleaseKBCapture()
 end
 
+function clsInputObject:getUrl()
+	return self.m_url
+end
+
 return clsInputObject

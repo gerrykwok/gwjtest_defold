@@ -19,6 +19,9 @@ function gwjinput.setCaptureKeyboard(obj)
 	local old = gwjinput.s_inputCaptureKB
 	if(obj ~= gwjinput.s_inputCaptureKB) then
 		if(gwjinput.s_inputCaptureKB) then
+			if(tostring(msg.url()) ~= gwjinput.s_inputCaptureKB:getUrl()) then
+				return old
+			end
 			gwjinput.s_inputCaptureKB:onReleaseKBCapture()
 		end
 		gwjinput.s_inputCaptureKB = obj
