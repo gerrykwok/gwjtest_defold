@@ -14,6 +14,11 @@ void LuaStack::init(lua_State *L)
 	_state = L;
 }
 
+void LuaStack::removeScriptHandler(int nHandler)
+{
+	toluafix_remove_function_by_refid(_state, nHandler);
+}
+
 int LuaStack::executeGlobalFunction(const char* functionName)
 {
 	lua_getglobal(_state, functionName);       /* query function by name, stack: function */

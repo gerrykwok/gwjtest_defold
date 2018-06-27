@@ -170,6 +170,9 @@
         const char *res_ = [res UTF8String];
         LuaStack::getInstance()->pushString(res_);
         LuaStack::getInstance()->executeFunctionByHandler(m_luaCallback, 1);
+
+        LuaStack::getInstance()->removeScriptHandler(m_luaCallback);
+        m_luaCallback = -1;
     }
 }
 

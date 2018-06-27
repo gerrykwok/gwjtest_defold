@@ -15,6 +15,10 @@ public:
 	}
 
 	/**
+	@brief Remove Lua function reference
+	*/
+	virtual void removeScriptHandler(int nHandler);
+	/**
 	@brief Execute a scripted global function.
 	@brief The function should not take any parameters and should return an integer.
 	@param functionName String object holding the name of the function, in the global script environment, that is to be executed.
