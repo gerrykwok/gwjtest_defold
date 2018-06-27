@@ -274,13 +274,11 @@ public class TakePhoto extends Activity
 		return res;
 	}
 
-	static native void ndkNotifyResult(int luaCallback, String str);
 	private void notifyAvatarGetResult(final int res) {
 		Log.d(plmext.TAG, String.format(Locale.US, "notifyAvatarGetResult(),avatarCallback=%d,res=%d", avatarCallback, res));
 		if (avatarCallback >= 0) {
-//g			Cocos2dxLuaJavaBridge.callLuaFunctionWithString(avatarCallback, "" + res);
-//g			Cocos2dxLuaJavaBridge.releaseLuaFunction(avatarCallback);
-			ndkNotifyResult(avatarCallback, "" + res);
+			LuaJavaBridge.callLuaFunctionWithString(avatarCallback, "" + res);
+			LuaJavaBridge.releaseLuaFunction(avatarCallback);
 			avatarCallback = -1;
 		}
 	}

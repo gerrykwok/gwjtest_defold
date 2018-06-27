@@ -4,7 +4,7 @@ class LuaStack
 {
 public:
 	static LuaStack* getInstance();
-	void init(lua_State *L);
+	bool initWithLuaState(lua_State *L);
 
 	/**
 	@brief Method used to get a pointer to the lua_State that the script module is attached to.

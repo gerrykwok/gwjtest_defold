@@ -8,6 +8,7 @@ function onGetPhotoResult(self, res, path)
 		if(textureId) then
 			local node = gui.get_node("head")
 			gui.set_texture(node, textureId)
+			self.m_localPath = path
 		end
 	end
 end
@@ -17,6 +18,7 @@ function init(self)
 	self.m_input = gwjui.input.createInstance()
 	self.m_url = msg.url()
 	self.m_updateCount = 0
+	self.m_localPath = ""
 
 	local imageWidth = 320
 	local imageHeight = 320
@@ -47,6 +49,14 @@ function init(self)
 			gwjui.printf("gwjgwj,get photo res=%s(%s)", tostring(res), type(res))
 			msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
 		end)
+	end)
+	--上传头像按钮
+	local btn = gwjui.ScaleButton.new({
+		main_id = "btn_upload_head",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		gwjui.printf("upload head,path=%s", self.m_localPath)
 	end)
 end
 

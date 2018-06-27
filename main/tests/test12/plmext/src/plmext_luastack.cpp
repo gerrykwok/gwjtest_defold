@@ -9,9 +9,10 @@ LuaStack* LuaStack::getInstance()
 	return &g_luastack;
 }
 
-void LuaStack::init(lua_State *L)
+bool LuaStack::initWithLuaState(lua_State *L)
 {
 	_state = L;
+	return true;
 }
 
 void LuaStack::removeScriptHandler(int nHandler)

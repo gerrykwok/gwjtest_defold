@@ -8,13 +8,16 @@
 #include "tolua_fix.h"
 #include "LuaBasicConversions.h"
 #include "plmext_luastack.h"
+#if defined(DM_PLATFORM_ANDROID)
+#include "android/LuaJavaBridge.h"
+#endif
 
 static int getPhoto(lua_State *L)
 {
 	int argc;
 	tolua_Error tolua_err;
 
-	LuaStack::getInstance()->init(L);
+	LuaStack::getInstance()->initWithLuaState(L);
 
 	argc = lua_gettop(L);
 	if(argc != 5)
@@ -60,6 +63,9 @@ static const luaL_reg Module_methods[] =
 static void LuaInit(lua_State* L)
 {
 	int top = lua_gettop(L);
+#if defined(DM_PLATFORM_ANDROID)
+	LuaJavaBridge_ensureCompileIn();//为了安卓上编译时能把jni函数编译进so
+#endif
 
 	// Register lua names
 	luaL_register(L, MODULE_NAME, Module_methods);
