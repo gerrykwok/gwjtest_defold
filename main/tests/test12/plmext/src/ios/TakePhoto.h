@@ -23,6 +23,7 @@
 //    UIImagePickerController *curPicker;
 }
 
++(void)compileIn;
 +(void)takePicture:(NSDictionary*)dict;
 
 -(void)setViewController:(UIViewController*)controller;

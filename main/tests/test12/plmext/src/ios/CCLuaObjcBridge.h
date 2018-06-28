@@ -4,8 +4,6 @@
 
 #include "CCLuaBridge.h"
 
-NS_CC_BEGIN
-
 class LuaObjcBridge : public LuaBridge
 {
 public:
@@ -16,7 +14,5 @@ protected:
     
     static void pushValue(lua_State *L, void *val);
 };
-
-NS_CC_END
 
 #endif // __LUA_OBJC_BRIDGE_H_

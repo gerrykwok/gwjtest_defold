@@ -3,7 +3,7 @@
 #import <UIKit/UIKit.h>
 
 #import "TakePhoto.h"
-#import "../plmext_luastack.h"
+#import "CCLuaBridge.h"
 
 @implementation TakePhoto
 
@@ -11,6 +11,10 @@
 @synthesize m_viewController;
 @synthesize m_luaCallback;
 @synthesize choosenPhoto;
+
++(void)compileIn
+{
+}
 
 +(void)takePicture:(NSDictionary*)dict
 {
@@ -181,13 +185,22 @@
 
 -(void)notifyGetPhotoResult:(NSString*)res
 {
-    if(m_luaCallback >= 0)
-    {
-        const char *res_ = [res UTF8String];
-        LuaStack::getInstance()->pushString(res_);
-        LuaStack::getInstance()->executeFunctionByHandler(m_luaCallback, 1);
+//    if(m_luaCallback >= 0)
+//    {
+//        const char *res_ = [res UTF8String];
+//        LuaStack::getInstance()->pushString(res_);
+//        LuaStack::getInstance()->executeFunctionByHandler(m_luaCallback, 1);
+//
+//        LuaStack::getInstance()->removeScriptHandler(m_luaCallback);
+//        m_luaCallback = -1;
+//    }
 
-        LuaStack::getInstance()->removeScriptHandler(m_luaCallback);
+    if (m_luaCallback >= 0)
+    {
+        LuaBridge::pushLuaFunctionById(m_luaCallback);
+        LuaBridge::getStack()->pushString([res UTF8String]);
+        LuaBridge::getStack()->executeFunction(1);
+        //LuaBridge::getStack()->removeScriptHandler(m_luaCallback);
         m_luaCallback = -1;
     }
 }

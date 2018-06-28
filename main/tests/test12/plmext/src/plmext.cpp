@@ -12,47 +12,10 @@
 #include "android/CCLuaJavaBridge.h"
 #include "android/plmext_android.h"
 #endif
-
-//static int getPhoto(lua_State *L)
-//{
-//	int argc;
-//	tolua_Error tolua_err;
-//
-//	LuaStack::getInstance()->initWithLuaState(L);
-//
-//	argc = lua_gettop(L);
-//	if(argc != 5)
-//	{
-//		luaL_error(L, "%s has wrong number of arguments: %d, was expecting %d\n", "getPhoto", argc, 5);
-//		return 0;
-//	}
-//
-//	bool isFromCamera;
-//	int width, height;
-//	bool ok;
-//	ok = luaval_to_boolean(L, 1, &isFromCamera, "getPhoto");
-//	if(!ok)
-//	{
-//		tolua_error(L, "invalid arguments in function 'getPhoto'", NULL);
-//		return 0;
-//	}
-//	int fromCamera = isFromCamera ? 1 : 0;
-//	const char *localPath = luaL_checkstring(L, 2);
-//	width = luaL_checkint(L, 3);
-//	height = luaL_checkint(L, 4);
-//
-//	int idxFunc = 5;
-//	if(!toluafix_isfunction(L,idxFunc,"LUA_FUNCTION",0,&tolua_err))
-//	{
-//		tolua_error(L,"#ferror in function 'getPhoto'.",&tolua_err);
-//		return 0;
-//	}
-//	LUA_FUNCTION luaCallback = toluafix_ref_function(L,idxFunc,0);
-//
-//	//printf("getPhoto,localPath=%s,luaCallback=%d\n", localPath, luaCallback);
-//	plm_get_photo(fromCamera, localPath, width, height, luaCallback);
-//	return 0;
-//}
+#if defined(DM_PLATFORM_IOS)
+#include "ios/CCLuaObjcBridge.h"
+#include "ios/plmext_ios.h"
+#endif
 
 static int test(lua_State *L)
 {
@@ -62,7 +25,6 @@ static int test(lua_State *L)
 // Functions exposed to Lua
 static const luaL_reg Module_methods[] =
 {
-//	{"getPhoto", getPhoto},
 	{"test", test},
 	{0, 0}
 };
@@ -85,12 +47,12 @@ static void LuaInit(lua_State* L)
 
 #if defined(DM_PLATFORM_IOS)
 	LuaObjcBridge::luaopen_luaoc(L);
+	plm_compile_in();
 #endif	
 }
 
 dmExtension::Result AppInitializeMyExtension(dmExtension::AppParams* params)
 {
-	printf("gwjgwj,app_init\n");
 	return dmExtension::RESULT_OK;
 }
 
@@ -113,7 +75,5 @@ dmExtension::Result FinalizeMyExtension(dmExtension::Params* params)
 }
 
 // Defold SDK uses a macro for setting up extension entry points:
-//
 // DM_DECLARE_EXTENSION(symbol, name, app_init, app_final, init, update, on_event, final)
-
 DM_DECLARE_EXTENSION(plmext, LIB_NAME, AppInitializeMyExtension, AppFinalizeMyExtension, InitializeMyExtension, 0, 0, FinalizeMyExtension)

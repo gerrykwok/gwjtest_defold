@@ -77,8 +77,6 @@ function test12:on_message(message_id, message, sender)
 end
 
 function test12:onGetPhoto(fromCamera)
-	gwjui.printf("LuaJavaBridge=%s(%s)", tostring(LuaJavaBridge), type(LuaJavaBridge))
-
 	local imageWidth = 320
 	local imageHeight = 320
 	local localPath = sys.get_save_file("plm", "avatarout.png")
@@ -86,6 +84,7 @@ function test12:onGetPhoto(fromCamera)
 	local source = fromCamera and "camera" or "gallery"
 	gwjui.printf("gwjgwj,get from %s,localPath=%s", source, localPath)
 	if(device.platform == "android") then
+		gwjui.printf("LuaJavaBridge=%s(%s)", tostring(LuaJavaBridge), type(LuaJavaBridge))
 		--getPhoto(Context ctx, int fromCamera, String localPath, int width, int height, int luaCallbackFunction)
 		local javaClassName = "com/xishanju/plm/plmext/plmext"
 		local javaMethodName = "getPhoto"
@@ -101,7 +100,8 @@ function test12:onGetPhoto(fromCamera)
 		}
 		local javaMethodSig = "(ILjava/lang/String;III)V"
 		luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
-	else
+	elseif(device.platform == "ios") then
+		gwjui.printf("LuaObjcBridge=%s(%s)", tostring(LuaObjcBridge), type(LuaObjcBridge))
 		local args = {
 			fromCamera = fromCamera and 1 or 0,--是否从摄像头获取
 			path = localPath,

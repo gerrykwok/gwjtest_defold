@@ -25,17 +25,14 @@
 #ifndef __LUA_BRIDGE_H_
 #define __LUA_BRIDGE_H_
 
+#include <dmsdk/sdk.h>
+
 #include <string>
 #include <map>
-#include "CCLuaEngine.h"
-
-extern "C" {
-#include "lua.h"
-}
+//#include "CCLuaEngine.h"
+#include "../plmext_luastack.h"
 
 using namespace std;
-
-NS_CC_BEGIN
 
 typedef enum {
     kLuaBridgeErrorOk                   = 0,
@@ -65,7 +62,5 @@ protected:
     static lua_State *s_luaState;
     static int        s_newFunctionId;
 };
-
-NS_CC_END
 
 #endif // __LUA_BRIDGE_H_

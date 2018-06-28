@@ -20,18 +20,21 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- ****************************************************************************/
+****************************************************************************/
+
+#if defined(DM_PLATFORM_IOS)
 
 #include "CCLuaBridge.h"
-
-NS_CC_BEGIN
+#include "../plmext.h"
+#define CCLOG    PLMEXT_printf
 
 lua_State *LuaBridge::s_luaState = NULL;
 int        LuaBridge::s_newFunctionId = 0;
 
 LuaStack *LuaBridge::getStack(void)
 {
-    return LuaEngine::getInstance()->getLuaStack();
+//    return LuaEngine::getInstance()->getLuaStack();
+    return LuaStack::getInstance();
 }
 
 int LuaBridge::pushLuaFunctionById(int functionId)
@@ -242,4 +245,4 @@ int LuaBridge::retainLuaFunction(lua_State *L, int functionIndex, int *retainCou
     return functionId;
 }
 
-NS_CC_END
+#endif

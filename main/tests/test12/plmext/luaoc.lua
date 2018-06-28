@@ -34,6 +34,10 @@ local luaoc = {}
 
 local callStaticMethod = LuaObjcBridge and LuaObjcBridge.callStaticMethod
 
+local function printError(msg)
+    print(msg)
+end
+
 -- start --
 
 --------------------------------

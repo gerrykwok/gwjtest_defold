@@ -1,3 +1,6 @@
+#ifndef __PLMEXT_LUASTACK_H__
+#define __PLMEXT_LUASTACK_H__
+
 #include <dmsdk/sdk.h>
 
 class LuaStack
@@ -52,3 +55,5 @@ protected:
 	lua_State *_state;
 	int _callFromLua;
 };
+
+#endif
