@@ -14,6 +14,7 @@
 #endif
 #if defined(DM_PLATFORM_IOS)
 #include "ios/CCLuaObjcBridge.h"
+#include "plmext/ios/plmext_ios.h"
 #endif
 
 static int test(lua_State *L)
@@ -46,6 +47,7 @@ static void LuaInit(lua_State* L)
 
 #if defined(DM_PLATFORM_IOS)
 	LuaObjcBridge::luaopen_luaoc(L);
+	plm_compile_in();
 #endif
 }
 
