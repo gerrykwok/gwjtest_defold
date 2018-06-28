@@ -82,6 +82,10 @@ static void LuaInit(lua_State* L)
 	LuaJavaBridge::luaopen_luaj(L);
 	plm_set_activity_to_java();
 #endif
+
+#if defined(DM_PLATFORM_IOS)
+	LuaObjcBridge::luaopen_luaoc(L);
+#endif	
 }
 
 dmExtension::Result AppInitializeMyExtension(dmExtension::AppParams* params)

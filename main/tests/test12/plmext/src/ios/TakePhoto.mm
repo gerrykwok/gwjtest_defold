@@ -1,17 +1,9 @@
-//
-//  TakePhoto.m
-//
-//
-//
-
 #if defined(DM_PLATFORM_IOS)
+
+#import <UIKit/UIKit.h>
 
 #import "TakePhoto.h"
 #import "../plmext_luastack.h"
-//g #import "cocos2d.h"
-//#import "CmgeUtils.h"
-//#import "data/UserData.h"
-//#import "ZjhConfig.h"
 
 @implementation TakePhoto
 
@@ -19,6 +11,30 @@
 @synthesize m_viewController;
 @synthesize m_luaCallback;
 @synthesize choosenPhoto;
+
++(void)takePicture:(NSDictionary*)dict
+{
+    int fromCamera = [[dict objectForKey:@"fromCamera"] intValue];
+    NSString *path = [dict objectForKey:@"path"];
+    int width = [[dict objectForKey:@"width"] intValue];
+    int height = [[dict objectForKey:@"height"] intValue];
+    int luaCallback = [[dict objectForKey:@"callback"] intValue];
+
+    UIWindow *window = dmGraphics::GetNativeiOSUIWindow();
+    UIViewController *controller = window.rootViewController;
+
+    TakePhoto* takePhoto=[[TakePhoto alloc] init];
+    [takePhoto setViewController:controller];
+    [takePhoto setSavePath:path];
+    takePhoto.m_luaCallback = luaCallback;
+    [takePhoto setOutputWidth:width andHeight:height];
+
+    if (fromCamera) {
+        [takePhoto snapImageSourceTypeCamera];
+    }else{
+        [takePhoto snapImageSourceTypePhotoLibrary];
+    }
+}
 
 -(id)init {
     if((self = [super init])) {

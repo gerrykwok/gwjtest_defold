@@ -7,8 +7,6 @@
 
 typedef int LUA_FUNCTION;
 
-//void plm_get_photo(int fromCamera, const char *localPath, int width, int height, int luaCallback);
-
 #if defined(DM_PLATFORM_ANDROID)
 
 #define PLMEXT_LOG_TAG			"plmext"

@@ -3,6 +3,7 @@ local gwjui = require("gwjui.gwjui")
 
 local TextureCache = require("gwjui.TextureCache")
 local luaj = require("main.tests.test12.plmext.luaj")
+local luaoc = require("main.tests.test12.plmext.luaoc")
 
 local device = {}
 local info = sys.get_sys_info()
@@ -101,10 +102,16 @@ function test12:onGetPhoto(fromCamera)
 		local javaMethodSig = "(ILjava/lang/String;III)V"
 		luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
 	else
---		plmext.getPhoto(fromCamera, localPath, imageWidth, imageHeight, function(res)
---			gwjui.printf("gwjgwj,get photo res=%s(%s)", tostring(res), type(res))
---			msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
---		end)
+		local args = {
+			fromCamera = fromCamera and 1 or 0,--是否从摄像头获取
+			path = localPath,
+			width = imageWidth,
+			height = imageHeight,
+			callback = function(res)
+				msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
+			end
+		}
+		luaoc.callStaticMethod("TakePhoto", "takePicture", args)
 	end
 end
 

@@ -23,6 +23,8 @@
 //    UIImagePickerController *curPicker;
 }
 
++(void)takePicture:(NSDictionary*)dict;
+
 -(void)setViewController:(UIViewController*)controller;
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info;
