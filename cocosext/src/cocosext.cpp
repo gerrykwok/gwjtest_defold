@@ -1,20 +1,19 @@
-#define LIB_NAME "plmext"
-#define MODULE_NAME "plmext"
+#define LIB_NAME "cocosext"
+#define MODULE_NAME "cocosext"
 
 // include the Defold SDK
 #include <dmsdk/sdk.h>
-#include "plmext.h"
+#include "cocosext.h"
 #include "tolua/tolua++.h"
 #include "tolua_fix.h"
 #include "LuaBasicConversions.h"
-#include "plmext_luastack.h"
+#include "CCLuaStack.h"
 #if defined(DM_PLATFORM_ANDROID)
 #include "android/CCLuaJavaBridge.h"
-#include "android/plmext_android.h"
+#include "android/cocosext_android.h"
 #endif
 #if defined(DM_PLATFORM_IOS)
 #include "ios/CCLuaObjcBridge.h"
-#include "ios/plmext_ios.h"
 #endif
 
 static int test(lua_State *L)
@@ -42,21 +41,20 @@ static void LuaInit(lua_State* L)
 	assert(top == lua_gettop(L));
 #if defined(DM_PLATFORM_ANDROID)
 	LuaJavaBridge::luaopen_luaj(L);
-	plm_set_activity_to_java();
+	cocosext_set_activity_to_java();
 #endif
 
 #if defined(DM_PLATFORM_IOS)
 	LuaObjcBridge::luaopen_luaoc(L);
-	plm_compile_in();
-#endif	
+#endif
 }
 
-dmExtension::Result AppInitializeMyExtension(dmExtension::AppParams* params)
+dmExtension::Result cocosext_AppInit(dmExtension::AppParams* params)
 {
 	return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result InitializeMyExtension(dmExtension::Params* params)
+dmExtension::Result cocosext_Init(dmExtension::Params* params)
 {
 	// Init Lua
 	LuaInit(params->m_L);
@@ -64,16 +62,16 @@ dmExtension::Result InitializeMyExtension(dmExtension::Params* params)
 	return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result AppFinalizeMyExtension(dmExtension::AppParams* params)
+dmExtension::Result cocosext_AppFinal(dmExtension::AppParams* params)
 {
 	return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result FinalizeMyExtension(dmExtension::Params* params)
+dmExtension::Result cocosext_Final(dmExtension::Params* params)
 {
 	return dmExtension::RESULT_OK;
 }
 
 // Defold SDK uses a macro for setting up extension entry points:
 // DM_DECLARE_EXTENSION(symbol, name, app_init, app_final, init, update, on_event, final)
-DM_DECLARE_EXTENSION(plmext, LIB_NAME, AppInitializeMyExtension, AppFinalizeMyExtension, InitializeMyExtension, 0, 0, FinalizeMyExtension)
+DM_DECLARE_EXTENSION(cocosext, LIB_NAME, cocosext_AppInit, cocosext_AppFinal, cocosext_Init, 0, 0, cocosext_Final)

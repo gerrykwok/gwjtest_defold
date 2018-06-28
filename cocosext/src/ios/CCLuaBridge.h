@@ -30,7 +30,7 @@
 #include <string>
 #include <map>
 //#include "CCLuaEngine.h"
-#include "../plmext_luastack.h"
+#include "../CCLuaStack.h"
 
 using namespace std;
 

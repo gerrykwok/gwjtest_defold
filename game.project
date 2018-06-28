@@ -24,12 +24,12 @@ shared_state = 1
 app_icon_96x96 = /main/android/android_icon96.png
 package = org.evakwok.defold.gwjtest
 iap_provider = 
-manifest = /main/tests/test12/plmext/src/android/AndroidManifest.xml
+manifest = /cocosext/src/plmext/android/AndroidManifest.xml
 
 [ios]
 bundle_identifier = org.evakwok.defold.gwjtest
 app_icon_114x114 = /main/android/android_icon96.png
-infoplist = /main/tests/test12/plmext/src/ios/Info.plist
+infoplist = /cocosext/src/plmext/ios/Info.plist
 
 [collection_proxy]
 max_count = 128

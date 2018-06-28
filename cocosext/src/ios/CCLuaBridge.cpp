@@ -25,8 +25,8 @@
 #if defined(DM_PLATFORM_IOS)
 
 #include "CCLuaBridge.h"
-#include "../plmext.h"
-#define CCLOG    PLMEXT_printf
+#include "../cocosext.h"
+#define CCLOG    COCOSEXT_printf
 
 lua_State *LuaBridge::s_luaState = NULL;
 int        LuaBridge::s_newFunctionId = 0;

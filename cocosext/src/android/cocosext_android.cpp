@@ -3,11 +3,11 @@
 
 #if defined(DM_PLATFORM_ANDROID)
 
-#include "../plmext.h"
-#include "../plmext_luastack.h"
-#include "plmext_android.h"
+#include "../cocosext.h"
+#include "../CCLuaStack.h"
+#include "cocosext_android.h"
 #include "JniHelper.h"
-#include "com_xishanju_plm_plmext_LuaJavaBridge.h"
+#include "com_xishanju_defold_cocosext_LuaJavaBridge.h"
 
 static JNIEnv* Attach()
 {
@@ -54,7 +54,7 @@ static jclass GetClass(JNIEnv* env, const char* classname)
 	return outcls;
 }
 
-void plm_set_activity_to_java()
+void cocosext_set_activity_to_java()
 {
 	JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
 	cocos2d::JniHelper::setJavaVM(vm);
@@ -62,16 +62,16 @@ void plm_set_activity_to_java()
 	AttachScope attachscope;
 	JNIEnv* env = attachscope.m_Env;
 
-	jclass cls = GetClass(env, "com.xishanju.plm.plmext.LuaJavaBridge");
+	jclass cls = GetClass(env, "com.xishanju.defold.cocosext.GlobalContext");
 
 	jmethodID dummy_method = env->GetStaticMethodID(cls, "setActivity", "(Landroid/content/Context;)V");
 	env->CallStaticVoidMethod(cls, dummy_method, dmGraphics::GetNativeAndroidActivity());
 
 	//为了保证jni函数能编译进so
-	Java_com_xishanju_plm_plmext_LuaJavaBridge_callLuaFunctionWithString(NULL, NULL, 0, NULL);
-	Java_com_xishanju_plm_plmext_LuaJavaBridge_callLuaGlobalFunctionWithString(NULL, NULL, NULL, NULL);
-	Java_com_xishanju_plm_plmext_LuaJavaBridge_retainLuaFunction(NULL, NULL, 0);
-	Java_com_xishanju_plm_plmext_LuaJavaBridge_releaseLuaFunction(NULL, NULL, 0);
+	Java_com_xishanju_defold_cocosext_LuaJavaBridge_callLuaFunctionWithString(NULL, NULL, 0, NULL);
+	Java_com_xishanju_defold_cocosext_LuaJavaBridge_callLuaGlobalFunctionWithString(NULL, NULL, NULL, NULL);
+	Java_com_xishanju_defold_cocosext_LuaJavaBridge_retainLuaFunction(NULL, NULL, 0);
+	Java_com_xishanju_defold_cocosext_LuaJavaBridge_releaseLuaFunction(NULL, NULL, 0);
 }
 
 #endif

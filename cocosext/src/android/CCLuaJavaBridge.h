@@ -24,6 +24,7 @@ using namespace std;
 #define LUAJ_ERR_EXCEPTION_OCCURRED (-4)
 #define LUAJ_ERR_VM_THREAD_DETACHED (-5)
 #define LUAJ_ERR_VM_FAILURE         (-6)
+#define LUAJ_ERR_CLASS_NOT_FOUND    (-7)
 
 #define LUAJ_REGISTRY_FUNCTION      "luaj_function_id"          // table[function] = id
 #define LUAJ_REGISTRY_RETAIN        "luaj_function_id_retain"   // table[id] = retain count

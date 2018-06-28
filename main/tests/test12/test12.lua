@@ -2,8 +2,8 @@ require("main.common.MiscUtil")
 local gwjui = require("gwjui.gwjui")
 
 local TextureCache = require("gwjui.TextureCache")
-local luaj = require("main.tests.test12.plmext.luaj")
-local luaoc = require("main.tests.test12.plmext.luaoc")
+local luaj = require("cocosext.luaj")
+local luaoc = require("cocosext.luaoc")
 
 local device = {}
 local info = sys.get_sys_info()
@@ -63,22 +63,25 @@ function test12:on_message(message_id, message, sender)
 		local localPath = message.path
 		local res = tonumber(message.res)
 		gwjui.dump(message, "get photo result")
-		TextureCache.getInstance():removeTextureForKey(localPath)
-		local count = 0
-		local function func()
-			count = count + 1
-			if(count >= 4) then
-				gwjui.unscheduleUpdate(func)
-				self:onGetPhotoResult(res, localPath)
+		if(tostring(res) == "1") then
+			TextureCache.getInstance():removeTextureForKey(localPath)
+			local count = 0
+			local function func()
+				count = count + 1
+				if(count >= 4) then
+					gwjui.unscheduleUpdate(func)
+					self:onGetPhotoResult(res, localPath)
+				end
 			end
+			gwjui.scheduleUpdate(func)
 		end
-		gwjui.scheduleUpdate(func)
 	end
 end
 
 function test12:onGetPhoto(fromCamera)
 	local imageWidth = 320
 	local imageHeight = 320
+	gwjui.printf("gwjgwj,onGetPhoto")
 	local localPath = sys.get_save_file("plm", "avatarout.png")
 	--localPath = "/storage/emulated/0/avatarout.png"
 	local source = fromCamera and "camera" or "gallery"

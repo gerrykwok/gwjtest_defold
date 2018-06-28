@@ -1,5 +1,5 @@
-#ifndef __PLMEXT_LUASTACK_H__
-#define __PLMEXT_LUASTACK_H__
+#ifndef __CC_LUASTACK_H__
+#define __CC_LUASTACK_H__
 
 #include <dmsdk/sdk.h>
 

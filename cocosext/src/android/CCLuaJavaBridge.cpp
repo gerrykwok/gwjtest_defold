@@ -477,14 +477,15 @@ bool LuaJavaBridge::CallInfo::getMethodInfo(void)
             return false;
     }
 //	m_classID = m_env->FindClass(m_className.c_str());//gwj
-//	if(m_classID == NULL) m_env->ExceptionClear();//gwj
-    m_classID = GetClass(m_env, m_className.c_str());//g
+	m_classID = GetClass(m_env, m_className.c_str());//g
 //    jstring _jstrClassName = m_env->NewStringUTF(m_className.c_str());
 //    m_classID = (jclass) m_env->CallObjectMethod(cocos2d::JniHelper::classloader, cocos2d::JniHelper::loadclassMethod_methodID, _jstrClassName);
 //    m_env->DeleteLocalRef(_jstrClassName);
 
     if (NULL == m_classID) {
         LOGD("Classloader failed to find class of %s", m_className.c_str());
+        m_env->ExceptionClear();
+        m_error = LUAJ_ERR_CLASS_NOT_FOUND;
         return false;//gwj
     }
 
