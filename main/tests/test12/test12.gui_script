@@ -1,9 +1,5 @@
-require("main.common.MiscUtil")
 local gwjui = require("gwjui.gwjui")
 local test12 = require("main.tests.test12.test12")
-
-local TextureCache = require("gwjui.TextureCache")
-local luaj = require("main.tests.test12.plmext.luaj")
 
 function init(self)
 	msg.post(".", "acquire_input_focus")

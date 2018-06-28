@@ -7,7 +7,7 @@
 
 typedef int LUA_FUNCTION;
 
-void plm_get_photo(int fromCamera, const char *localPath, int width, int height, int luaCallback);
+//void plm_get_photo(int fromCamera, const char *localPath, int width, int height, int luaCallback);
 
 #if defined(DM_PLATFORM_ANDROID)
 

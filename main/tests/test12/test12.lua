@@ -1,4 +1,8 @@
+require("main.common.MiscUtil")
 local gwjui = require("gwjui.gwjui")
+
+local TextureCache = require("gwjui.TextureCache")
+local luaj = require("main.tests.test12.plmext.luaj")
 
 local device = {}
 local info = sys.get_sys_info()
@@ -90,27 +94,17 @@ function test12:onGetPhoto(fromCamera)
 			imageWidth,
 			imageHeight,
 			function(res)
-				-- printAndroid("TakePhoto:_getPhoto(), res:"..res)
-				if res=="1" then
-					cc.Director:getInstance():getTextureCache():removeTextureForKey(localPath)
-					local data={}
-					data.logoLocalPath=localPath--自定义头像本地存储全路径
-					data.logoUrl=networkUrl--自定义头像网络相对地址
-					data.logoFileName=fn--自定义头像本地名称
-					self.onGet(data)
-				else
-					TipsBanner.show("获取头像失败")
-				end
-				self:close()
+				gwjui.printf("gwjgwj,getPhoto res=%s", tostring(res))
+				msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
 			end
 		}
 		local javaMethodSig = "(ILjava/lang/String;III)V"
 		luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
 	else
-		plmext.getPhoto(fromCamera, localPath, imageWidth, imageHeight, function(res)
-			gwjui.printf("gwjgwj,get photo res=%s(%s)", tostring(res), type(res))
-			msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
-		end)
+--		plmext.getPhoto(fromCamera, localPath, imageWidth, imageHeight, function(res)
+--			gwjui.printf("gwjgwj,get photo res=%s(%s)", tostring(res), type(res))
+--			msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
+--		end)
 	end
 end
 

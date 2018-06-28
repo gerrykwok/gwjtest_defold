@@ -167,6 +167,20 @@ inline vector<string> jArray2stdVector(JNIEnv* env, jobject jArray)
 	return v;
 }
 
+static jclass GetClass(JNIEnv* env, const char* classname)
+{
+    jclass activity_class = env->FindClass("android/app/NativeActivity");
+    jmethodID get_class_loader = env->GetMethodID(activity_class,"getClassLoader", "()Ljava/lang/ClassLoader;");
+    jobject cls = env->CallObjectMethod(dmGraphics::GetNativeAndroidActivity(), get_class_loader);
+    jclass class_loader = env->FindClass("java/lang/ClassLoader");
+    jmethodID find_class = env->GetMethodID(class_loader, "loadClass", "(Ljava/lang/String;)Ljava/lang/Class;");
+
+    jstring str_class_name = env->NewStringUTF(classname);
+    jclass outcls = (jclass)env->CallObjectMethod(cls, find_class, str_class_name);
+    env->DeleteLocalRef(str_class_name);
+    return outcls;
+}
+
 LuaJavaBridge::CallInfo::~CallInfo(void)
 {
     switch (m_returnType)
@@ -462,8 +476,9 @@ bool LuaJavaBridge::CallInfo::getMethodInfo(void)
             m_error = LUAJ_ERR_VM_FAILURE;
             return false;
     }
-	m_classID = m_env->FindClass(m_className.c_str());//gwj
-	if(m_classID == NULL) m_env->ExceptionClear();//gwj
+//	m_classID = m_env->FindClass(m_className.c_str());//gwj
+//	if(m_classID == NULL) m_env->ExceptionClear();//gwj
+    m_classID = GetClass(m_env, m_className.c_str());//g
 //    jstring _jstrClassName = m_env->NewStringUTF(m_className.c_str());
 //    m_classID = (jclass) m_env->CallObjectMethod(cocos2d::JniHelper::classloader, cocos2d::JniHelper::loadclassMethod_methodID, _jstrClassName);
 //    m_env->DeleteLocalRef(_jstrClassName);

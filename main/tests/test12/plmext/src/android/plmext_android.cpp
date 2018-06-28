@@ -6,6 +6,8 @@
 #include "../plmext.h"
 #include "../plmext_luastack.h"
 #include "plmext_android.h"
+#include "JniHelper.h"
+#include "com_xishanju_plm_plmext_LuaJavaBridge.h"
 
 static JNIEnv* Attach()
 {
@@ -52,16 +54,24 @@ static jclass GetClass(JNIEnv* env, const char* classname)
 	return outcls;
 }
 
-void plm_get_photo(int fromCamera, const char *localPath, int width, int height, int luaCallback)
+void plm_set_activity_to_java()
 {
+	JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
+	cocos2d::JniHelper::setJavaVM(vm);
+	
 	AttachScope attachscope;
 	JNIEnv* env = attachscope.m_Env;
 
-	jclass cls = GetClass(env, "com.xishanju.plm.plmext.plmext");
+	jclass cls = GetClass(env, "com.xishanju.plm.plmext.LuaJavaBridge");
 
-	jmethodID dummy_method = env->GetStaticMethodID(cls, "getPhoto", "(Landroid/content/Context;ILjava/lang/String;III)V");
-	jstring jpath = env->NewStringUTF(localPath);
-	env->CallStaticVoidMethod(cls, dummy_method, dmGraphics::GetNativeAndroidActivity(), fromCamera, jpath, width, height, luaCallback);
+	jmethodID dummy_method = env->GetStaticMethodID(cls, "setActivity", "(Landroid/content/Context;)V");
+	env->CallStaticVoidMethod(cls, dummy_method, dmGraphics::GetNativeAndroidActivity());
+
+	//为了保证jni函数能编译进so
+	Java_com_xishanju_plm_plmext_LuaJavaBridge_callLuaFunctionWithString(NULL, NULL, 0, NULL);
+	Java_com_xishanju_plm_plmext_LuaJavaBridge_callLuaGlobalFunctionWithString(NULL, NULL, NULL, NULL);
+	Java_com_xishanju_plm_plmext_LuaJavaBridge_retainLuaFunction(NULL, NULL, 0);
+	Java_com_xishanju_plm_plmext_LuaJavaBridge_releaseLuaFunction(NULL, NULL, 0);
 }
 
 #endif
