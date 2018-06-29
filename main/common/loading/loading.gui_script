@@ -1,0 +1,33 @@
+local gwjui = require("gwjui.gwjui")
+local LoadingView = require("main.common.loading.LoadingView")
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.m_input = gwjui.input.createInstance()
+	self.m_view = nil
+end
+
+function final(self)
+	self.m_view:onExit()
+	self.m_input:final()
+end
+
+function update(self, dt)
+	self.m_input:onUpdate(dt)
+end
+
+function on_message(self, message_id, message, sender)
+	self.m_input:on_message(message_id, message, sender)
+	if(message_id == hash("on_create")) then
+		self.m_view = LoadingView.s_instCreating
+		LoadingView.s_instCreating = nil
+		self.m_view:onEnter()
+	end
+end
+
+function on_input(self, action_id, action)
+	self.m_input:onInput(action_id, action)
+end
+
+function on_reload(self)
+end

@@ -1,0 +1,9 @@
+images {
+  image: "/main/common/loading/image/activity_indicator.png"
+}
+images {
+  image: "/main/common/loading/image/loadingdi.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 2

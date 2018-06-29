@@ -5,6 +5,7 @@ local TextureCache = require("gwjui.TextureCache")
 local luaj = require("cocosext.luaj")
 local luaoc = require("cocosext.luaoc")
 local TipsBanner = require("main.common.tipsbanner.tipsbanner")
+local LoadingView = require("main.common.loading.LoadingView")
 
 local device = {}
 local info = sys.get_sys_info()
@@ -75,6 +76,7 @@ function test12:on_message(message_id, message, sender)
 			gwjui.scheduleUpdate(func)
 		end
 	elseif(message_id == hash("upload_result")) then
+		self:setLoadingView(false)
 		local str = string.format("上传结果:%s", tostring(message.res))
 		TipsBanner.show(str)
 	end
@@ -140,6 +142,7 @@ function test12:onClickUpload()
 	local key = string.format("gwjtest/test_%d.jpg", os.time())
 	if(localPath == "") then return end
 	if(device.platform == "android") then
+		self:setLoadingView(true)
 		local javaClassName = "com/xishanju/plm/plmext/UploadHead"
 		local javaMethodName = "uploadHead"
 		local javaParams = {
@@ -155,6 +158,7 @@ function test12:onClickUpload()
 		local javaMethodSig = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V"
 		luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
 	elseif(device.platform == "ios") then
+		self:setLoadingView(true)
 		local args = {
 			token = qiniu_token,
 			filepath = localPath,
@@ -184,6 +188,19 @@ function test12:onClickUpload()
 			end
 		}
 		luaoc.callStaticMethod("AppController", "uploadHead", args)
+	end
+end
+
+function test12:setLoadingView(flag)
+	if(flag) then
+		if(self.m_loading == nil) then
+			self.m_loading = LoadingView.show()
+		end
+	else
+		if(self.m_loading) then
+			self.m_loading:close()
+			self.m_loading = nil
+		end
 	end
 end
 
