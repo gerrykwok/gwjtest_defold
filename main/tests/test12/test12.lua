@@ -4,6 +4,7 @@ local gwjui = require("gwjui.gwjui")
 local TextureCache = require("gwjui.TextureCache")
 local luaj = require("cocosext.luaj")
 local luaoc = require("cocosext.luaoc")
+local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 
 local device = {}
 local info = sys.get_sys_info()
@@ -50,9 +51,7 @@ function test12:onEnter()
 		main_id = "btn_upload_head",
 		maxScale = 1.1,
 	})
-	:onButtonClicked(function()
-		gwjui.printf("upload head,path=%s", self.m_localPath)
-	end)
+	:onButtonClicked(gwjui.handler(self, self.onClickUpload))
 end
 
 function test12:onExit()
@@ -75,6 +74,9 @@ function test12:on_message(message_id, message, sender)
 			end
 			gwjui.scheduleUpdate(func)
 		end
+	elseif(message_id == hash("upload_result")) then
+		local str = string.format("上传结果:%s", tostring(message.res))
+		TipsBanner.show(str)
 	end
 end
 
@@ -82,7 +84,7 @@ function test12:onGetPhoto(fromCamera)
 	local imageWidth = 320
 	local imageHeight = 320
 	gwjui.printf("gwjgwj,onGetPhoto")
-	local localPath = sys.get_save_file("plm", "avatarout.png")
+	local localPath = sys.get_save_file("plm", "avatarout.jpg")
 	--localPath = "/storage/emulated/0/avatarout.png"
 	local source = fromCamera and "camera" or "gallery"
 	gwjui.printf("gwjgwj,get from %s,localPath=%s", source, localPath)
@@ -126,6 +128,62 @@ function test12:onGetPhotoResult(res, path)
 			gui.set_texture(node, textureId)
 			self.m_localPath = path
 		end
+	end
+end
+
+function test12:onClickUpload()
+	--牌乐门所用的token
+	--local qiniu_token = "oYOp_cUtKDHNJv9fQ1e5eYuo8FAce3q_RakmZC-A:Jd83YHh2JhLLkmJR0Ivle5F4uSo=:eyJzY29wZSI6ImFuZGVnYW1lLXRlc3QiLCJkZWFkbGluZSI6MTU1Mzk4MTQ5MX0="
+	local qiniu_token = "34kE2v75Sx0LwsTZRZz8fDEUqpolcgYWL87f9FRo:zB39WK-Wi29Bm9FfvTC2lMazYkg=:eyJzY29wZSI6Imd3anRlc3QiLCJkZWFkbGluZSI6MTU3NzgwODAwMH0="
+	gwjui.printf("upload head,path=%s", self.m_localPath)
+	local localPath = self.m_localPath or ""
+	local key = string.format("gwjtest/test_%d.jpg", os.time())
+	if(localPath == "") then return end
+	if(device.platform == "android") then
+		local javaClassName = "com/xishanju/plm/plmext/UploadHead"
+		local javaMethodName = "uploadHead"
+		local javaParams = {
+			qiniu_token,
+			localPath,
+			key,
+			function(res)
+				gwjui.printf("gwjgwj,res=%s", tostring(res))
+				msg.post(self.m_url, "upload_result", {res=res})
+			end
+		}
+		--String token, String path, String name, final int luaCallbackFunction
+		local javaMethodSig = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V"
+		luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
+	elseif(device.platform == "ios") then
+		local args = {
+			token = qiniu_token,
+			filepath = localPath,
+			key = key,
+			callback = function(res)
+				gwjui.printf("gwjgwj,ios upload photo res:"..res)
+				--[[
+				local success=false
+				if res then
+					local resJson=json.decode(res)
+					if resJson and resJson.result==0 then
+						success=true
+					end
+				end
+				if success then
+					DBManager.updateImage(ImageManager.getImageIdForAvatar(User.userId), self.logoFileName)
+					-- self:_saveHeadData(self.defaultHeadList:getCurLogoId(), self.logoUrl)
+					--已经上传成功，接着保存到数据库
+					self.logoLocalPath=nil
+					self:save()
+				else
+					TipsBanner.show("上传头像失败")
+					self:setLoadingView(false)
+					self.uploadlHeadFail=true
+				end
+				]]
+			end
+		}
+		luaoc.callStaticMethod("AppController", "uploadHead", args)
 	end
 end
 
