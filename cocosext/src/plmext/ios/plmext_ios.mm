@@ -6,10 +6,12 @@
 
 #import "plmext_ios.h"
 #import "TakePhoto.h"
+#import "UploadImageBridge.h"
 
 void plm_compile_in()
 {
 	[TakePhoto compileIn];
+	[UploadImageBridge compileIn];
 }
 
 #endif
