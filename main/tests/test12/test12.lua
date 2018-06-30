@@ -136,6 +136,8 @@ end
 function test12:onClickUpload()
 	--牌乐门所用的token
 	--local qiniu_token = "oYOp_cUtKDHNJv9fQ1e5eYuo8FAce3q_RakmZC-A:Jd83YHh2JhLLkmJR0Ivle5F4uSo=:eyJzY29wZSI6ImFuZGVnYW1lLXRlc3QiLCJkZWFkbGluZSI6MTU1Mzk4MTQ5MX0="
+	--伟基测试的token和域名
+	local url_prefix = "http://pb2pekr3y.bkt.clouddn.com"
 	local qiniu_token = "34kE2v75Sx0LwsTZRZz8fDEUqpolcgYWL87f9FRo:zB39WK-Wi29Bm9FfvTC2lMazYkg=:eyJzY29wZSI6Imd3anRlc3QiLCJkZWFkbGluZSI6MTU3NzgwODAwMH0="
 	gwjui.printf("upload head,path=%s", self.m_localPath)
 	local localPath = self.m_localPath or ""
