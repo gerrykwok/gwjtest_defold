@@ -112,7 +112,7 @@ TOLUA_API void tolua_error (lua_State* L, const char* msg, tolua_Error* err)
         }
     }
     else
-        luaL_error(L,msg);
+        luaL_error(L,"%s",msg);
 }
 
 /* the equivalent of lua_is* for usertable */

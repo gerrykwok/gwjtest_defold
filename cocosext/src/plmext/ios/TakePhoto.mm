@@ -124,7 +124,7 @@
         
         UIImage *image = [info objectForKey:@"UIImagePickerControllerEditedImage"];
 
-        NSLog(@"image,Orientation=%ld,wh=%f,%f", image.imageOrientation, image.size.width, image.size.height);
+        NSLog(@"image,Orientation=%d,wh=%f,%f", (int)image.imageOrientation, image.size.width, image.size.height);
         
         CGSize reSize = CGSizeMake(m_outWidth, m_outHeight);
         UIImage * imageReSize = [self reSizeImage:image toSize:reSize];

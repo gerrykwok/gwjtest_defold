@@ -165,29 +165,16 @@ function test12:onClickUpload()
 			key = key,
 			callback = function(res)
 				gwjui.printf("gwjgwj,ios upload photo res:"..res)
-				--[[
-				local success=false
-				if res then
-					local resJson=json.decode(res)
-					if resJson and resJson.result==0 then
-						success=true
-					end
-				end
-				if success then
-					DBManager.updateImage(ImageManager.getImageIdForAvatar(User.userId), self.logoFileName)
-					-- self:_saveHeadData(self.defaultHeadList:getCurLogoId(), self.logoUrl)
-					--已经上传成功，接着保存到数据库
-					self.logoLocalPath=nil
-					self:save()
+				local data = json.decode(res)
+				if(data and data.result == 0) then
+					res = "1"
 				else
-					TipsBanner.show("上传头像失败")
-					self:setLoadingView(false)
-					self.uploadlHeadFail=true
+					res = "0"
 				end
-				]]
+				msg.post(self.m_url, "upload_result", {res=res})
 			end
 		}
-		luaoc.callStaticMethod("AppController", "uploadHead", args)
+		luaoc.callStaticMethod("UploadImageBridge", "uploadImage", args)
 	end
 end
 
