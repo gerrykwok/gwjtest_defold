@@ -25,6 +25,7 @@ local test12 = gwjui.class("test12")
 
 function test12:ctor()
 	--modify1
+	--modify2
 end
 
 function test12:onEnter()
