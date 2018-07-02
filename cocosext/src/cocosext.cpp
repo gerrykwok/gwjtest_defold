@@ -16,6 +16,9 @@
 #include "ios/CCLuaObjcBridge.h"
 #include "plmext/ios/plmext_ios.h"
 #endif
+#if defined(DM_PLATFORM_WINDOWS)
+#include "plmext/win32/plmext_win32.h"
+#endif
 
 static int test(lua_State *L)
 {
@@ -32,7 +35,6 @@ static const luaL_reg Module_methods[] =
 static void LuaInit(lua_State* L)
 {
 	int top = lua_gettop(L);
-
 	// Register lua names
 	luaL_register(L, MODULE_NAME, Module_methods);
 	toluafix_open(L);
@@ -48,6 +50,10 @@ static void LuaInit(lua_State* L)
 #if defined(DM_PLATFORM_IOS)
 	LuaObjcBridge::luaopen_luaoc(L);
 	plm_compile_in();
+#endif
+
+#if defined(DM_PLATFORM_WINDOWS)
+	plmext_win32_init(L);
 #endif
 }
 
