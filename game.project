@@ -31,6 +31,20 @@ bundle_identifier = org.evakwok.defold.gwjtest
 app_icon_114x114 = /platform/android/android_icon96.png
 infoplist = /cocosext/src/plmext/ios/Info.plist
 launch_image_2436x1125 = /platform/ios/launch_2436x1125.png
+launch_image_320x480 = /platform/ios/launch_320x480.png
+launch_image_640x960 = /platform/ios/launch_640x960.png
+launch_image_640x1136 = /platform/ios/launch_640x1136.png
+launch_image_750x1334 = /platform/ios/launch_750x1334.png
+launch_image_1334x750 = /platform/ios/launch_1334x750.png
+launch_image_768x1024 = /platform/ios/launch_768x1024.png
+launch_image_1536x2048 = /platform/ios/launch_1536x2048.png
+launch_image_1024x768 = /platform/ios/launch_1024x768.png
+launch_image_1242x2208 = /platform/ios/launch_1242x2208.png
+launch_image_2208x1242 = /platform/ios/launch_2208x1242.png
+launch_image_2048x1536 = /platform/ios/launch_2048x1536.png
+launch_image_2048x2732 = /platform/ios/launch_2048x2732.png
+launch_image_2732x2048 = /platform/ios/launch_2732x2048.png
+launch_image_1125x2436 = /platform/ios/launch_1125x2436.png
 
 [collection_proxy]
 max_count = 128

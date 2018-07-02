@@ -26,9 +26,9 @@ import com.xishanju.defold.cocosext.*;
 
 public class TakePhoto extends Activity
 {
-	private int avatarCallback = -1;
-	private String avatarLocalPath;
-	private String camarafilepath;
+	private int m_avatarCallback = -1;
+	private String m_avatarLocalPath;
+	private String m_camarafilepath;
 	private int m_imageWidth;
 	private int m_imageHeight;
 
@@ -50,11 +50,11 @@ public class TakePhoto extends Activity
 
 		Intent iii = getIntent();
 		m_fromCamera = iii.getBooleanExtra("fromCamera", false);
-		avatarLocalPath = iii.getStringExtra("localPath");
+		m_avatarLocalPath = iii.getStringExtra("localPath");
 		m_imageWidth = iii.getIntExtra("imageWidth", 64);
 		m_imageHeight = iii.getIntExtra("imageHeight", 64);
-		avatarCallback = iii.getIntExtra("luaCallback", -1);
-		camarafilepath = getAvatorPath();
+		m_avatarCallback = iii.getIntExtra("luaCallback", -1);
+		m_camarafilepath = getAvatorPath();
 
 		Log.d(plmext.TAG, "TakePhoto1.onCreate,fromCamera="+m_fromCamera);
 
@@ -64,7 +64,7 @@ public class TakePhoto extends Activity
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
 			//intent.putExtra("crop", "true");
-			//intent.putExtra("output", Uri.fromFile(new File(camarafilepath)));
+			//intent.putExtra("output", Uri.fromFile(new File(m_camarafilepath)));
 			//intent.putExtra("outputX", 160);
 			//intent.putExtra("outputY", 160);
 			//intent.putExtra("outputFormat", "PNG");
@@ -75,7 +75,7 @@ public class TakePhoto extends Activity
 		else
 		{
 			Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-			i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(camarafilepath)));
+			i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(m_camarafilepath)));
 			startActivityForResult(i, ACT_RES_CAMERA_PHOTOS);
 		}
 	}
@@ -102,7 +102,7 @@ public class TakePhoto extends Activity
 			{
 				//从相机选择会执行这里
 				Log.d(plmext.TAG, "data is null");
-				this.cropImageFromUri(Uri.fromFile(new File(camarafilepath)));
+				this.cropImageFromUri(Uri.fromFile(new File(m_camarafilepath)));
 
 			}
 			// boolean mirrorX = (requestCode == ACT_RES_CAMERA_PHOTOS);//
@@ -114,14 +114,14 @@ public class TakePhoto extends Activity
 				//在模拟器andy中，通过文件管理在DCIM目录下，会出现裁剪结果无法保存到camarafilepath,这个时候就move过去。目前只在这个模拟器遇到过
 				Log.d(plmext.TAG, data.getData().toString());
 				String realFilePath = getRealFilePath(data.getData());
-				if(realFilePath.endsWith(camarafilepath))
+				if(realFilePath.endsWith(m_camarafilepath))
 				{
 					Log.d(plmext.TAG, "need not to move");
 				}
 				else
 				{
 					File srcFile = new File(realFilePath);
-					File destFile = new File(camarafilepath);
+					File destFile = new File(m_camarafilepath);
 					srcFile.renameTo(destFile);
 				}
 
@@ -130,12 +130,12 @@ public class TakePhoto extends Activity
 			{
 				Log.d(plmext.TAG, "crop no uri");
 			}
-			Log.i(plmext.TAG, "camarafilepath:" + camarafilepath+", avatarLocalPath:"+avatarLocalPath);
+			Log.i(plmext.TAG, "camarafilepath:" + m_camarafilepath+", avatarLocalPath:"+m_avatarLocalPath);
 
-			testFile(camarafilepath);
+			testFile(m_camarafilepath);
 
 			boolean mirrorX = false;
-			boolean res = saveAsAvatar(camarafilepath, avatarLocalPath, mirrorX);
+			boolean res = saveAsAvatar(m_camarafilepath, m_avatarLocalPath, mirrorX);
 			notifyAvatarGetResult(res ? AVATAR_GET_RES_SUCCES : AVATAR_GET_RES_FAIL);
 			finish();
 		}
@@ -163,7 +163,7 @@ public class TakePhoto extends Activity
 
 	private void cropImageFromUri(Uri uri)
 	{
-		if(camarafilepath == null)
+		if(m_camarafilepath == null)
 			return;
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
@@ -173,8 +173,8 @@ public class TakePhoto extends Activity
 		intent.putExtra("outputX", m_imageWidth);
 		intent.putExtra("outputY", m_imageHeight);
 		intent.putExtra("scale", true);
-		Log.d(plmext.TAG, "path=file://"+camarafilepath);
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(camarafilepath)));
+		Log.d(plmext.TAG, "path=file://"+m_camarafilepath);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(m_camarafilepath)));
 		intent.putExtra("return-data", false);
 		intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
 		intent.putExtra("noFaceDetection", true); // no face detection
@@ -277,11 +277,11 @@ public class TakePhoto extends Activity
 	}
 
 	private void notifyAvatarGetResult(final int res) {
-		Log.d(plmext.TAG, String.format(Locale.US, "notifyAvatarGetResult(),avatarCallback=%d,res=%d", avatarCallback, res));
-		if (avatarCallback >= 0) {
-			LuaJavaBridge.callLuaFunctionWithString(avatarCallback, "" + res);
-			LuaJavaBridge.releaseLuaFunction(avatarCallback);
-			avatarCallback = -1;
+		Log.d(plmext.TAG, String.format(Locale.US, "notifyAvatarGetResult(),avatarCallback=%d,res=%d", m_avatarCallback, res));
+		if (m_avatarCallback >= 0) {
+			LuaJavaBridge.callLuaFunctionWithString(m_avatarCallback, "" + res);
+			LuaJavaBridge.releaseLuaFunction(m_avatarCallback);
+			m_avatarCallback = -1;
 		}
 	}
 }
