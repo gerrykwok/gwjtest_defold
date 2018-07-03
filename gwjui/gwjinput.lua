@@ -53,12 +53,13 @@ end
 
 --在gui_script的final中调用此函数
 function gwjinput:final()
-	for k,obj in pairs(self.m_allObjects) do
+	local allObj = self.m_allObjects
+	self.m_allObjects = {}
+	for k,obj in pairs(allObj) do
 		if(obj.onExit) then
 			obj:onExit()
 		end
 	end
-	self.m_allObjects = {}
 	self.m_allObjCaptured = {}
 	gwjinput.s_objSwallowTouch = nil
 	self.m_allUpdateFunc = {}

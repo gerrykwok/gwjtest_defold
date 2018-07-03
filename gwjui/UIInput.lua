@@ -210,4 +210,8 @@ function clsUIInput:getText()
 	return self.m_text
 end
 
+function clsUIInput:setText(text)
+	return self:setText_(text)
+end
+
 return clsUIInput

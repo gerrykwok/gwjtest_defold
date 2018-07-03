@@ -11,6 +11,19 @@ gwjui.UIInput = require("gwjui.UIInput")
 gwjui.TextureCache = require("gwjui.TextureCache")
 gwjui.UICheckBoxButtonGroup = require("gwjui.UICheckBoxButtonGroup")
 
+local info = sys.get_sys_info()
+local sysName = info.system_name
+--gwjui.printf("gwjgwj,system_name=%s", sysName)
+if(sysName == "Android") then
+	gwjui.platform = "android"
+elseif(sysName == "iPhone OS") then
+	gwjui.platform = "ios"
+elseif(sysName == "Windows") then
+	gwjui.platform = "windows"
+elseif(sysName == "Darwin") then
+	gwjui.platform = "mac"
+end
+
 function gwjui.scheduleUpdate(func)
 	local input = gwjui.input.getCurrentInput()
 	if(input) then
