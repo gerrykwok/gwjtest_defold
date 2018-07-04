@@ -1,0 +1,9 @@
+images {
+  image: "/main/tests/test13/images/bg.png"
+}
+images {
+  image: "/main/tests/test13/images/logo.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0
