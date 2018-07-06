@@ -3,6 +3,10 @@ fonts {
   name: "test_32"
   font: "/main/common/test_32.font"
 }
+fonts {
+  name: "test_48"
+  font: "/main/common/test_48.font"
+}
 textures {
   name: "test13"
   texture: "/main/tests/test13/test13.atlas"
@@ -272,7 +276,7 @@ nodes {
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
   text: "zoom"
-  font: "test_32"
+  font: "test_48"
   id: "text1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE

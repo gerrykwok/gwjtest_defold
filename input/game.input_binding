@@ -4,7 +4,11 @@ key_trigger {
 }
 key_trigger {
   input: KEY_ESC
-  action: "key_escape"
+  action: "key_android_back"
+}
+key_trigger {
+  input: KEY_BACK
+  action: "key_android_back"
 }
 mouse_trigger {
   input: MOUSE_BUTTON_1

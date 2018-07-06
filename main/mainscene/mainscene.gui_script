@@ -1,5 +1,6 @@
 require("main.common.MiscUtil")
 local gwjui = require("gwjui.gwjui")
+local Constants = require("main.common.constants")
 
 --以下语句为了defold能把.lua打包
 local alltest =
@@ -95,10 +96,12 @@ function on_message(self, message_id, message, sender)
 	self.m_input:on_message(message_id, message, sender)
 end
 
-local ACTION_ID_KEY_ESCAPE = hash("key_escape")
 function on_input(self, action_id, action)
+	if(action_id) then
+		--gwjui.printf("on_input:%s,pressed:%s,released:%s", tostring(action_id), tostring(action.pressed), tostring(action.released))
+	end
 	self.m_input:onInput(action_id, action)
-	if(action_id == ACTION_ID_KEY_ESCAPE and action.released) then
+	if(action_id == Constants.ACTION_ANDROID_BACK and action.released) then
 		msg.post("@system:", "exit", {code=0})
 	end
 end
