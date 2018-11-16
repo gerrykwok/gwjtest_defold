@@ -24,12 +24,12 @@ shared_state = 1
 app_icon_96x96 = /platform/android/android_icon96.png
 package = org.evakwok.defold.gwjtest
 iap_provider = 
-manifest = /cocosext/src/plmext/android/AndroidManifest.xml
+manifest = /extension/plmext/src/android/AndroidManifest.xml
 
 [ios]
 bundle_identifier = org.evakwok.defold.gwjtest
 app_icon_114x114 = /platform/android/android_icon96.png
-infoplist = /cocosext/src/plmext/ios/Info.plist
+infoplist = /extension/plmext/src/ios/Info.plist
 launch_image_2436x1125 = /platform/ios/launch_2436x1125.png
 launch_image_320x480 = /platform/ios/launch_320x480.png
 launch_image_640x960 = /platform/ios/launch_640x960.png
@@ -51,7 +51,4 @@ max_count = 128
 
 [library]
 include_dirs = gwjui
-
-[native_extension]
-app_manifest = /game.appmanifest
 

@@ -2,8 +2,8 @@ require("main.common.MiscUtil")
 local gwjui = require("gwjui.gwjui")
 
 local TextureCache = require("gwjui.TextureCache")
-local luaj = require("cocosext.luaj")
-local luaoc = require("cocosext.luaoc")
+local luaj = require("extension.cocosext.luaj")
+local luaoc = require("extension.cocosext.luaoc")
 local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 local LoadingView = require("main.common.loading.LoadingView")
 

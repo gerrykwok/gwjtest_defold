@@ -22,7 +22,7 @@ import android.graphics.Matrix;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.ImageColumns;
 
-import com.xishanju.defold.cocosext.*;
+//import com.xishanju.defold.cocosext.*;
 
 public class TakePhoto extends Activity
 {

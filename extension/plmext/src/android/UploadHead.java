@@ -16,7 +16,7 @@ import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 
-import com.xishanju.defold.cocosext.*;
+//import com.xishanju.defold.cocosext.*;
 
 //        //————http上传,指定zone的具体区域——
 //        //Zone.zone0:华东

@@ -14,11 +14,14 @@
 #endif
 #if defined(DM_PLATFORM_IOS)
 #include "ios/CCLuaObjcBridge.h"
-#include "plmext/ios/plmext_ios.h"
 #endif
-#if defined(DM_PLATFORM_WINDOWS)
-#include "plmext/win32/plmext_win32.h"
-#endif
+
+//plmext
+//#if defined(DM_PLATFORM_IOS)
+//#include "plmext/ios/plmext_ios.h"
+//#elif defined(DM_PLATFORM_WINDOWS)
+//#include "plmext/win32/plmext_win32.h"
+//#endif
 
 static int test(lua_State *L)
 {
@@ -49,20 +52,22 @@ static void LuaInit(lua_State* L)
 
 #if defined(DM_PLATFORM_IOS)
 	LuaObjcBridge::luaopen_luaoc(L);
-	plm_compile_in();
 #endif
 
-#if defined(DM_PLATFORM_WINDOWS)
-	plmext_win32_init(L);
-#endif
+	//plmext
+//#if defined(DM_PLATFORM_IOS)
+//	plm_compile_in();
+//#elif defined(DM_PLATFORM_WINDOWS)
+//	plmext_win32_init(L);
+//#endif
 }
 
-dmExtension::Result cocosext_AppInit(dmExtension::AppParams* params)
+static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
 	return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result cocosext_Init(dmExtension::Params* params)
+static dmExtension::Result ext_Init(dmExtension::Params* params)
 {
 	// Init Lua
 	LuaInit(params->m_L);
@@ -70,16 +75,16 @@ dmExtension::Result cocosext_Init(dmExtension::Params* params)
 	return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result cocosext_AppFinal(dmExtension::AppParams* params)
+static dmExtension::Result ext_AppFinal(dmExtension::AppParams* params)
 {
 	return dmExtension::RESULT_OK;
 }
 
-dmExtension::Result cocosext_Final(dmExtension::Params* params)
+static dmExtension::Result ext_Final(dmExtension::Params* params)
 {
 	return dmExtension::RESULT_OK;
 }
 
 // Defold SDK uses a macro for setting up extension entry points:
 // DM_DECLARE_EXTENSION(symbol, name, app_init, app_final, init, update, on_event, final)
-DM_DECLARE_EXTENSION(cocosext, LIB_NAME, cocosext_AppInit, cocosext_AppFinal, cocosext_Init, 0, 0, cocosext_Final)
+DM_DECLARE_EXTENSION(cocosext, LIB_NAME, ext_AppInit, ext_AppFinal, ext_Init, 0, 0, ext_Final)

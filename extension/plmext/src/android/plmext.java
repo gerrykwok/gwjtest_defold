@@ -7,15 +7,21 @@ import android.content.ComponentName;
 import android.os.Environment;
 import android.app.Activity;
 
-import com.xishanju.defold.cocosext.*;
+//import com.xishanju.defold.cocosext.*;
+import com.mob.MobSDK;
 
 public class plmext
 {
 	public static final String TAG = "plmext";
 
+	public static void init(Context ctx)
+	{
+		MobSDK.init(ctx);
+	}
+
 	public static void getPhoto(int fromCamera, String localPath, int width, int height, int luaCallbackFunction)
 	{
-		Context ctx = GlobalContext.s_context;
+		Context ctx = (Context)LuaJavaBridge.getMainActivity();
 		//Log.i(TAG, "localPath:" + localPath + ", luaCallbackFunction:" + luaCallbackFunction);
 
 		Intent iii = new Intent(ctx, TakePhoto.class);

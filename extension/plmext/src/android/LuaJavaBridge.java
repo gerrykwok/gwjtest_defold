@@ -1,4 +1,5 @@
-package com.xishanju.defold.cocosext;
+//package com.xishanju.defold.cocosext;
+package com.xishanju.plm.plmext;
 
 public class LuaJavaBridge
 {
@@ -6,4 +7,6 @@ public class LuaJavaBridge
 	public static native int callLuaGlobalFunctionWithString(String luaFunctionName, String value);
 	public static native int retainLuaFunction(int luaFunctionId);
 	public static native int releaseLuaFunction(int luaFunctionId);
+
+	public static native Object getMainActivity();
 }

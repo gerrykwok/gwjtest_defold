@@ -39,6 +39,14 @@ JNIEXPORT jint JNICALL Java_com_xishanju_defold_cocosext_LuaJavaBridge_retainLua
 JNIEXPORT jint JNICALL Java_com_xishanju_defold_cocosext_LuaJavaBridge_releaseLuaFunction
   (JNIEnv *, jclass, jint);
 
+/*
+ * Class:     com_xishanju_defold_cocosext_LuaJavaBridge
+ * Method:    getMainActivity
+ * Signature: ()Ljava/lang/Object;
+ */
+JNIEXPORT jobject JNICALL Java_com_xishanju_defold_cocosext_LuaJavaBridge_getMainActivity
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

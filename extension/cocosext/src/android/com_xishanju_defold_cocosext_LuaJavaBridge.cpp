@@ -40,4 +40,12 @@ JNIEXPORT jint JNICALL Java_com_xishanju_defold_cocosext_LuaJavaBridge_releaseLu
 	return LuaJavaBridge::releaseLuaFunctionById(luaFunctionId);
 }
 
+JNIEXPORT jobject JNICALL Java_com_xishanju_defold_cocosext_LuaJavaBridge_getMainActivity
+	(JNIEnv *env, jclass cls)
+{
+	if(env == NULL) return 0;
+	jobject obj = dmGraphics::GetNativeAndroidActivity();
+	return obj;
+}
+
 #endif

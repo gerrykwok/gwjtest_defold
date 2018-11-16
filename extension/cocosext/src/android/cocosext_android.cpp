@@ -26,19 +26,18 @@ static bool Detach(JNIEnv* env)
 	return !exception;
 }
 
-namespace {
-	struct AttachScope
+class AttachScope
+{
+public:
+	JNIEnv* m_Env;
+	AttachScope() : m_Env(Attach())
 	{
-		JNIEnv* m_Env;
-		AttachScope() : m_Env(Attach())
-		{
-		}
-		~AttachScope()
-		{
-			Detach(m_Env);
-		}
-	};
-}
+	}
+	~AttachScope()
+	{
+		Detach(m_Env);
+	}
+};
 
 static jclass GetClass(JNIEnv* env, const char* classname)
 {
@@ -54,24 +53,38 @@ static jclass GetClass(JNIEnv* env, const char* classname)
 	return outcls;
 }
 
-void cocosext_set_activity_to_java()
+void cocosext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...)
 {
-	JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
-	cocos2d::JniHelper::setJavaVM(vm);
-	
 	AttachScope attachscope;
 	JNIEnv* env = attachscope.m_Env;
 
-	jclass cls = GetClass(env, "com.xishanju.defold.cocosext.GlobalContext");
+	jclass cls = GetClass(env, clazz);
+	jmethodID dummy_method = env->GetStaticMethodID(cls, method, signature);
+	va_list ap;
+	va_start(ap, signature);
+	env->CallStaticVoidMethodV(cls, dummy_method, ap);
+	va_end(ap);
+}
 
-	jmethodID dummy_method = env->GetStaticMethodID(cls, "setActivity", "(Landroid/content/Context;)V");
-	env->CallStaticVoidMethod(cls, dummy_method, dmGraphics::GetNativeAndroidActivity());
+void cocosext_set_activity_to_java()
+{
+	cocos2d::JniHelper::setJavaVM(dmGraphics::GetNativeAndroidJavaVM());
+
+//	AttachScope attachscope;
+//	JNIEnv* env = attachscope.m_Env;
+//
+//	jclass cls = GetClass(env, "com.xishanju.defold.cocosext.GlobalContext");
+//
+//	jmethodID dummy_method = env->GetStaticMethodID(cls, "setActivity", "(Landroid/content/Context;)V");
+//	env->CallStaticVoidMethod(cls, dummy_method, dmGraphics::GetNativeAndroidActivity());
+	cocosext_call_java_static_void_method("com.xishanju.defold.cocosext.GlobalContext", "setActivity", "(Landroid/content/Context;)V", dmGraphics::GetNativeAndroidActivity());
 
 	//为了保证jni函数能编译进so
 	Java_com_xishanju_defold_cocosext_LuaJavaBridge_callLuaFunctionWithString(NULL, NULL, 0, NULL);
 	Java_com_xishanju_defold_cocosext_LuaJavaBridge_callLuaGlobalFunctionWithString(NULL, NULL, NULL, NULL);
 	Java_com_xishanju_defold_cocosext_LuaJavaBridge_retainLuaFunction(NULL, NULL, 0);
 	Java_com_xishanju_defold_cocosext_LuaJavaBridge_releaseLuaFunction(NULL, NULL, 0);
+	Java_com_xishanju_defold_cocosext_LuaJavaBridge_getMainActivity(NULL, NULL);
 }
 
 #endif
