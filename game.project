@@ -52,3 +52,6 @@ max_count = 128
 [library]
 include_dirs = gwjui
 
+[native_extension]
+app_manifest = /game.appmanifest
+

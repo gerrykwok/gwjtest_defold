@@ -17,7 +17,7 @@ static const luaL_reg Module_methods[] =
 
 void plmext_win32_init(lua_State *L)
 {
-	int top = lua_gettop(L);
+//	int top = lua_gettop(L);
 	// Register lua names
 	luaL_register(L, "plmextWin32", Module_methods);
 	lua_pop(L, 1);
