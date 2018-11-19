@@ -15,8 +15,6 @@
 #include "android/LuaJavaBridge_jni.h"
 #endif
 
-#include <functional>
-
 extern void cocosext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...);
 
 static int test(lua_State *L)
