@@ -51,6 +51,12 @@ function test14:onClickWechatLogin()
 		local javaMethodSig = "(II)V"
 		local ok, res = luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
 	elseif(sysName == "iPhone OS") then
+		local args = {
+			callback = function(res)
+				self:onWechatLoginResult(res)
+			end,
+		}
+		luaoc.callStaticMethod("PlatformWechat", "login", args)
 	elseif(sysName == "Windows") then
 	elseif(sysName == "Darwin") then
 	end

@@ -1,9 +1,9 @@
+#if defined(DM_PLATFORM_IOS)
 
 #import "PlatformWechat.h"
-/*
 #import <ShareSDK/ShareSDK.h>
 #import <ShareSDKExtension/ShareSDK+Extension.h>
-#import "CocosLua.h"
+#import "../lua/CocosLua.h"
 #import "NSString+ShareUtil.h"
 #import "ShareData.h"
 #import "ShareSdkConstant.h"
@@ -251,4 +251,5 @@ NSString *WEICHAT_UID_PREFIX = @"wechat_";
 }
 
 @end
-*/
+
+#endif//#if defined(DM_PLATFORM_IOS)

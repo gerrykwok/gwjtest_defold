@@ -4,3 +4,11 @@ platforms:
     armv7-android:
         context:
             flags:      ["-std=c++11"]
+
+    arm64-ios:
+        context:
+            frameworks: ["JavaScriptCore"]
+
+    armv7-ios:
+        context:
+            frameworks: ["JavaScriptCore"]
