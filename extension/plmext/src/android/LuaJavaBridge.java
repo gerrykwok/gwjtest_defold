@@ -7,6 +7,5 @@ public class LuaJavaBridge
 	public static native int callLuaGlobalFunctionWithString(String luaFunctionName, String value);
 	public static native int retainLuaFunction(int luaFunctionId);
 	public static native int releaseLuaFunction(int luaFunctionId);
-
-	public static native Object getMainActivity();
+	public static native void runOnGLThread(Runnable pRunnable);
 }

@@ -1,6 +1,7 @@
 [project]
 title = gwjtest
 version = 0.1
+bundle_resources = /bundle_res
 
 [bootstrap]
 main_collection = /main/main.collectionc
@@ -22,7 +23,7 @@ shared_state = 1
 
 [android]
 app_icon_96x96 = /platform/android/android_icon96.png
-package = org.evakwok.defold.gwjtest
+package = cn.com.xishanju.qyq
 iap_provider = 
 manifest = /extension/plmext/src/android/AndroidManifest.xml
 
@@ -51,4 +52,7 @@ max_count = 128
 
 [library]
 include_dirs = gwjui
+
+[native_extension]
+app_manifest = /game.appmanifest
 

@@ -13,15 +13,17 @@ import com.mob.MobSDK;
 public class plmext
 {
 	public static final String TAG = "plmext";
+	public static Context s_context;
 
 	public static void init(Context ctx)
 	{
+		s_context = ctx;
 		MobSDK.init(ctx);
 	}
 
 	public static void getPhoto(int fromCamera, String localPath, int width, int height, int luaCallbackFunction)
 	{
-		Context ctx = (Context)LuaJavaBridge.getMainActivity();
+		Context ctx = s_context;
 		//Log.i(TAG, "localPath:" + localPath + ", luaCallbackFunction:" + luaCallbackFunction);
 
 		Intent iii = new Intent(ctx, TakePhoto.class);

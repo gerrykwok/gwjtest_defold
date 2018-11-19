@@ -11,6 +11,14 @@
 #include "win32/plmext_win32.h"
 #endif
 
+#if defined(DM_PLATFORM_ANDROID)
+#include "android/LuaJavaBridge_jni.h"
+#endif
+
+#include <functional>
+
+extern void cocosext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...);
+
 static int test(lua_State *L)
 {
 	return 0;
@@ -41,6 +49,9 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
+#if defined(DM_PLATFORM_ANDROID)
+	cocosext_call_java_static_void_method("com.xishanju.plm.plmext.plmext", "init", "(Landroid/content/Context;)V", dmGraphics::GetNativeAndroidActivity());
+#endif
 	return dmExtension::RESULT_OK;
 }
 
@@ -59,6 +70,14 @@ static dmExtension::Result ext_AppFinal(dmExtension::AppParams* params)
 
 static dmExtension::Result ext_Final(dmExtension::Params* params)
 {
+	//保证函数能编译进so
+#if defined(DM_PLATFORM_ANDROID)
+	DEF_JNI_FUNCTION(callLuaFunctionWithString)(NULL, NULL, 0, NULL);
+	DEF_JNI_FUNCTION(callLuaGlobalFunctionWithString)(NULL, NULL, NULL, NULL);
+	DEF_JNI_FUNCTION(retainLuaFunction)(NULL, NULL, 0);
+	DEF_JNI_FUNCTION(releaseLuaFunction)(NULL, NULL, 0);
+	DEF_JNI_FUNCTION(runOnGLThread)(NULL, NULL, NULL);
+#endif
 	return dmExtension::RESULT_OK;
 }
 

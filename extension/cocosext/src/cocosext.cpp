@@ -16,12 +16,9 @@
 #include "ios/CCLuaObjcBridge.h"
 #endif
 
-//plmext
-//#if defined(DM_PLATFORM_IOS)
-//#include "plmext/ios/plmext_ios.h"
-//#elif defined(DM_PLATFORM_WINDOWS)
-//#include "plmext/win32/plmext_win32.h"
-//#endif
+#include <functional>
+
+static void COCOSEXT_update();
 
 static int test(lua_State *L)
 {
@@ -53,13 +50,6 @@ static void LuaInit(lua_State* L)
 #if defined(DM_PLATFORM_IOS)
 	LuaObjcBridge::luaopen_luaoc(L);
 #endif
-
-	//plmext
-//#if defined(DM_PLATFORM_IOS)
-//	plm_compile_in();
-//#elif defined(DM_PLATFORM_WINDOWS)
-//	plmext_win32_init(L);
-//#endif
 }
 
 static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
@@ -71,7 +61,7 @@ static dmExtension::Result ext_Init(dmExtension::Params* params)
 {
 	// Init Lua
 	LuaInit(params->m_L);
-	printf("Registered %s Extension\n", MODULE_NAME);
+	COCOSEXT_printf("Registered %s Extension\n", MODULE_NAME);
 	return dmExtension::RESULT_OK;
 }
 
@@ -85,6 +75,56 @@ static dmExtension::Result ext_Final(dmExtension::Params* params)
 	return dmExtension::RESULT_OK;
 }
 
+static dmExtension::Result ext_update(dmExtension::Params *params)
+{
+	COCOSEXT_update();
+	return dmExtension::RESULT_OK;
+}
+
+struct COCOSEXT_CALLBACK
+{
+	std::function<void(void)> m_callback;
+	bool m_hasCallback;
+};
+
+#define COCOSEXT_MAX_CALLBACK		64
+static COCOSEXT_CALLBACK g_allCallback[COCOSEXT_MAX_CALLBACK];
+
+void COCOSEXT_runOnGLThread(const std::function<void(void)> &callback)
+{
+	COCOSEXT_CALLBACK *pCB = g_allCallback;
+	COCOSEXT_CALLBACK *pEnd = pCB + COCOSEXT_MAX_CALLBACK;
+	bool hasEmpty = false;
+	while(pCB < pEnd)
+	{
+		if(!pCB->m_hasCallback)
+		{
+			pCB->m_callback = callback;
+			pCB->m_hasCallback = true;
+			hasEmpty = true;
+			break;
+		}
+		pCB++;
+	}
+	if(!hasEmpty)
+	COCOSEXT_error("not enough slot to store callback");
+}
+
+void COCOSEXT_update()
+{
+	COCOSEXT_CALLBACK *pCB = g_allCallback;
+	COCOSEXT_CALLBACK *pEnd = pCB + COCOSEXT_MAX_CALLBACK;
+	while(pCB < pEnd)
+	{
+		if(pCB->m_hasCallback)
+		{
+			pCB->m_callback();
+			pCB->m_hasCallback = false;
+		}
+		pCB++;
+	}
+}
+
 // Defold SDK uses a macro for setting up extension entry points:
 // DM_DECLARE_EXTENSION(symbol, name, app_init, app_final, init, update, on_event, final)
-DM_DECLARE_EXTENSION(cocosext, LIB_NAME, ext_AppInit, ext_AppFinal, ext_Init, 0, 0, ext_Final)
+DM_DECLARE_EXTENSION(cocosext, LIB_NAME, ext_AppInit, ext_AppFinal, ext_Init, ext_update, 0, ext_Final)

@@ -18,10 +18,12 @@ function init(self)
 --		local urlId = msg.url(url)
 --		ccprint("urlId=%s", tostring(urlId))
 --	end
+	--[[
 	ccprint("ext1=%s", tostring(ext1))
 	ccprint("ext2=%s", tostring(ext2))
 	local msg = ext2.test()
 	ccprint("msg=%s", msg)
+	]]
 end
 
 function final(self)

@@ -8,6 +8,7 @@
 #include "cocosext_android.h"
 #include "JniHelper.h"
 #include "com_xishanju_defold_cocosext_LuaJavaBridge.h"
+#include "CCLuaJavaBridge.h"
 
 static JNIEnv* Attach()
 {
@@ -70,21 +71,40 @@ void cocosext_set_activity_to_java()
 {
 	cocos2d::JniHelper::setJavaVM(dmGraphics::GetNativeAndroidJavaVM());
 
-//	AttachScope attachscope;
-//	JNIEnv* env = attachscope.m_Env;
-//
-//	jclass cls = GetClass(env, "com.xishanju.defold.cocosext.GlobalContext");
-//
-//	jmethodID dummy_method = env->GetStaticMethodID(cls, "setActivity", "(Landroid/content/Context;)V");
-//	env->CallStaticVoidMethod(cls, dummy_method, dmGraphics::GetNativeAndroidActivity());
-	cocosext_call_java_static_void_method("com.xishanju.defold.cocosext.GlobalContext", "setActivity", "(Landroid/content/Context;)V", dmGraphics::GetNativeAndroidActivity());
-
 	//为了保证jni函数能编译进so
+	LuaJavaBridge_callLuaFunctionById(-1, NULL);
+	LuaJavaBridge_callLuaGlobalFunction(NULL, NULL);
+	LuaJavaBridge_retainLuaFunctionById(-1);
+	LuaJavaBridge_releaseLuaFunctionById(-1);
+	
 	Java_com_xishanju_defold_cocosext_LuaJavaBridge_callLuaFunctionWithString(NULL, NULL, 0, NULL);
 	Java_com_xishanju_defold_cocosext_LuaJavaBridge_callLuaGlobalFunctionWithString(NULL, NULL, NULL, NULL);
 	Java_com_xishanju_defold_cocosext_LuaJavaBridge_retainLuaFunction(NULL, NULL, 0);
 	Java_com_xishanju_defold_cocosext_LuaJavaBridge_releaseLuaFunction(NULL, NULL, 0);
-	Java_com_xishanju_defold_cocosext_LuaJavaBridge_getMainActivity(NULL, NULL);
+}
+
+int LuaJavaBridge_callLuaFunctionById(int functionId, const char *value)
+{
+	if(functionId < 0) return 0;
+	return LuaJavaBridge::callLuaFunctionById(functionId, value);
+}
+
+int LuaJavaBridge_callLuaGlobalFunction(const char *luaFunctionName, const char *value)
+{
+	if(luaFunctionName == NULL) return 0;
+	return LuaJavaBridge::callLuaGlobalFunction(luaFunctionName, value);
+}
+
+int LuaJavaBridge_retainLuaFunctionById(int luaFunctionId)
+{
+	if(luaFunctionId < 0) return 0;
+	return LuaJavaBridge::retainLuaFunctionById(luaFunctionId);
+}
+
+int LuaJavaBridge_releaseLuaFunctionById(int luaFunctionId)
+{
+	if(luaFunctionId < 0) return 0;
+	return LuaJavaBridge::releaseLuaFunctionById(luaFunctionId);
 }
 
 #endif

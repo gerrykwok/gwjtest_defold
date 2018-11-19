@@ -1,6 +1,13 @@
 #!/bin/sh
 
 # 根据LuaJavaBridge.java生成对应的.h
+
+scriptpath=${BASH_SOURCE[0]}
+scriptdir="$( cd "$( dirname "$scriptpath" )" && pwd )"
+scriptname=$(basename $scriptpath)
+
+#echo scriptdir=$scriptdir,scriptname=$scriptname
+cd $scriptdir
                     
 classname=LuaJavaBridge
 
