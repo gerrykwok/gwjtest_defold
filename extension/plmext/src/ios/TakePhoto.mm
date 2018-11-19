@@ -3,7 +3,7 @@
 #import <UIKit/UIKit.h>
 
 #import "TakePhoto.h"
-#import "../../ios/CCLuaBridge.h"
+#import "CCLuaBridge.h"
 
 @implementation TakePhoto
 

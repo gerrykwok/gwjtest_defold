@@ -1,8 +1,8 @@
 #if defined(DM_PLATFORM_IOS)
 
 #import "CocosLua.h"
-#import "../../../cocosext.h"
-#import "../../../ios/CCLuaBridge.h"
+#import "../../plmext.h"
+#import "../CCLuaBridge.h"
 
 @implementation CocosLua
 
@@ -24,7 +24,7 @@
 	lua_getglobal(state, funcName);       /* query function by name, stack: function */
 	if (!lua_isfunction(state, -1))
 	{
-		COCOSEXT_printf("[LUA ERROR] name '%s' does not represent a Lua function", funcName);
+		LOG_printf("[LUA ERROR] name '%s' does not represent a Lua function", funcName);
 		lua_pop(state, 1);
 	}
 	else
