@@ -20,6 +20,10 @@ public class PlatformWechat
 		plmext.s_wxApi.sendReq(req);
 	}
 
+	public static void logout()
+	{
+	}
+
 	public static void notifyLoginResult(int errCode, String errStr, String code, String lang, String country)
 	{
 		String str;
