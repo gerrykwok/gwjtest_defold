@@ -8,42 +8,25 @@ import android.content.Intent;
 import android.content.ComponentName;
 import android.os.Environment;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 
-import com.mob.MobSDK;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.wechat.friends.Wechat;
-import cn.sharesdk.wechat.moments.WechatMoments;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 public class plmext
 {
 	public static final String TAG = "plmext";
 	public static Context s_context;
+	public static IWXAPI s_wxApi;
 
 	public static void init(Context ctx)
 	{
-		String mob_appId = "1299624a6383f";
 		String wechatAppId = "wxc0acf2068b5dd7a3";
-		String wechatAppSecret = "20aa71045fee2ea0f82c1b4ed643af8b";
 
 		s_context = ctx;
-		MobSDK.init(ctx, mob_appId);
-
-		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("Id", "4");
-		info.put("SortId", "4");
-		info.put("AppId", wechatAppId);
-		info.put("AppSecret", wechatAppSecret);
-		info.put("BypassApproval", "false");
-		info.put("Enable", "true");
-		ShareSDK.setPlatformDevInfo(Wechat.NAME, info);
-		HashMap<String, Object> info2 = new HashMap<String, Object>();
-		info2.put("Id", "5");
-		info2.put("SortId", "5");
-		info2.put("AppId", wechatAppId);
-		info2.put("AppSecret", wechatAppSecret);
-		info2.put("BypassApproval", "false");
-		info2.put("Enable", "true");
-		ShareSDK.setPlatformDevInfo(WechatMoments.NAME, info2);
+		s_wxApi = WXAPIFactory.createWXAPI(ctx, null);
+		s_wxApi.registerApp(wechatAppId);
 	}
 
 	public static void getPhoto(int fromCamera, String localPath, int width, int height, int luaCallbackFunction)
@@ -59,5 +42,19 @@ public class plmext
 		iii.putExtra("luaCallback", luaCallbackFunction);
 		Activity act = (Activity)ctx;
 		act.startActivity(iii);
+	}
+
+	public static boolean isAppInstalled(String pkgName)
+	{
+		PackageManager pm =  s_context.getPackageManager();
+		try {
+			pm.getPackageInfo(pkgName, 0);
+			return true;
+		} catch (NameNotFoundException e) {
+			return false;
+		} catch (Exception e)
+		{
+			return false;
+		}
 	}
 }

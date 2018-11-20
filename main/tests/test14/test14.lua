@@ -1,6 +1,7 @@
 local gwjui = require("gwjui.gwjui")
 local luaj = require("extension.cocosext.luaj")
 local luaoc = require("extension.cocosext.luaoc")
+local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 
 local test14 = gwjui.class("test14")
 
@@ -30,8 +31,16 @@ end
 
 function test14:on_message(message_id, message, sender)
 	if(message_id == hash("wechat_login_res")) then
-		gui.set_text(gui.get_node("text_wechat_nickname"), message.userInfo.nickname);
-		gui.set_text(gui.get_node("text_wechat_icon_url"), message.userInfo.profileImage);
+		if(message.errCode == 0) then
+			gui.set_text(gui.get_node("text_wechat_login_code"), message.code)
+			gui.set_text(gui.get_node("text_wechat_login_lang"), message.lang)
+			gui.set_text(gui.get_node("text_wechat_login_country"), message.country)
+		elseif(message.errCode == -2) then
+			TipsBanner.show("用户取消微信登录")
+		else
+			local str = string.format("微信登录失败,errCode=%d,errStr=%s", message.errCode, message.errStr)
+			TipsBanner.show(str)
+		end
 	end
 end
 
@@ -43,12 +52,11 @@ function test14:onClickWechatLogin()
 		local javaClassName = "com/xishanju/plm/plmext/PlatformWechat"
 		local javaMethodName = "login"
 		local javaParams = {
-			4,
 			function(res)
 				self:onWechatLoginResult(res)
 			end,
 		}
-		local javaMethodSig = "(II)V"
+		local javaMethodSig = "(I)V"
 		local ok, res = luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
 	elseif(sysName == "iPhone OS") then
 		local args = {

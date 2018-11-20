@@ -1,4 +1,3 @@
-//package com.xishanju.defold.cocosext;
 package com.xishanju.plm.plmext;
 
 public class LuaJavaBridge
