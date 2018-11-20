@@ -15,7 +15,7 @@
 #include "android/LuaJavaBridge_jni.h"
 #endif
 
-extern void cocosext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...);
+void plmext_onAppInit();
 
 static int test(lua_State *L)
 {
@@ -47,9 +47,7 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
-#if defined(DM_PLATFORM_ANDROID)
-	cocosext_call_java_static_void_method("com.xishanju.plm.plmext.plmext", "init", "(Landroid/content/Context;)V", dmGraphics::GetNativeAndroidActivity());
-#endif
+	plmext_onAppInit();
 	return dmExtension::RESULT_OK;
 }
 

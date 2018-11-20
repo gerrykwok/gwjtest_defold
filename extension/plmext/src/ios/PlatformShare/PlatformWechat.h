@@ -15,14 +15,4 @@
  */
 + (void)logout;
 
-/**
- * 判断客户端是否安装微信
- */
-+ (int)isClientInstalled;
-
-/**
- * 微信分享
- */
-+ (void)share:(NSDictionary *)params;
-
 @end

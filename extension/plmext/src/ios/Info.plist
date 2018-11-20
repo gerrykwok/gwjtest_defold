@@ -113,11 +113,22 @@
                                 {{#url-schemes}}<string>{{.}}</string>{{/url-schemes}}
                         </array>
                 </dict>
+                <dict>
+                    <key>CFBundleTypeRole</key>
+        			<string>Editor</string>
+        			<key>CFBundleURLName</key>
+        			<string>wechat</string>
+        			<key>CFBundleURLSchemes</key>
+        			<array>
+        				<string>wxc0acf2068b5dd7a3</string>
+        			</array>
+        		</dict>
         </array>
 
         <key>LSApplicationQueriesSchemes</key>
         <array>
                 {{#application-queries-schemes}}<string>{{.}}</string>{{/application-queries-schemes}}
+                <string>wechat</string>
         </array>
 
         <key>NSAppTransportSecurity</key>

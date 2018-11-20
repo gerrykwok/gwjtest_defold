@@ -23,4 +23,8 @@ void plmext_win32_init(lua_State *L)
 	lua_pop(L, 1);
 }
 
+void plmext_onAppInit()
+{
+}
+
 #endif
