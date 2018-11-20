@@ -7,7 +7,6 @@
 #include "../CCLuaStack.h"
 #include "cocosext_android.h"
 #include "JniHelper.h"
-#include "com_xishanju_defold_cocosext_LuaJavaBridge.h"
 #include "CCLuaJavaBridge.h"
 
 static JNIEnv* Attach()
@@ -67,20 +66,15 @@ void cocosext_call_java_static_void_method(const char *clazz, const char *method
 	va_end(ap);
 }
 
-void cocosext_set_activity_to_java()
+void cocosext_android_init()
 {
 	cocos2d::JniHelper::setJavaVM(dmGraphics::GetNativeAndroidJavaVM());
 
 	//为了保证jni函数能编译进so
-	LuaJavaBridge_callLuaFunctionById(-1, NULL);
-	LuaJavaBridge_callLuaGlobalFunction(NULL, NULL);
-	LuaJavaBridge_retainLuaFunctionById(-1);
-	LuaJavaBridge_releaseLuaFunctionById(-1);
-	
-	Java_com_xishanju_defold_cocosext_LuaJavaBridge_callLuaFunctionWithString(NULL, NULL, 0, NULL);
-	Java_com_xishanju_defold_cocosext_LuaJavaBridge_callLuaGlobalFunctionWithString(NULL, NULL, NULL, NULL);
-	Java_com_xishanju_defold_cocosext_LuaJavaBridge_retainLuaFunction(NULL, NULL, 0);
-	Java_com_xishanju_defold_cocosext_LuaJavaBridge_releaseLuaFunction(NULL, NULL, 0);
+//	LuaJavaBridge_callLuaFunctionById(-1, NULL);
+//	LuaJavaBridge_callLuaGlobalFunction(NULL, NULL);
+//	LuaJavaBridge_retainLuaFunctionById(-1);
+//	LuaJavaBridge_releaseLuaFunctionById(-1);
 }
 
 int LuaJavaBridge_callLuaFunctionById(int functionId, const char *value)

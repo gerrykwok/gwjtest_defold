@@ -44,7 +44,7 @@ static void LuaInit(lua_State* L)
 	assert(top == lua_gettop(L));
 #if defined(DM_PLATFORM_ANDROID)
 	LuaJavaBridge::luaopen_luaj(L);
-	cocosext_set_activity_to_java();
+	cocosext_android_init();
 #endif
 
 #if defined(DM_PLATFORM_IOS)
