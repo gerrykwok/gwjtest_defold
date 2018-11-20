@@ -10,8 +10,6 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.framework.PlatformActionListener;
 
-//import com.xishanju.defold.cocosext.*;
-
 public class PlatformWechat implements PlatformActionListener
 {
 	public static final String WEICHAT_UID_PREFIX = "wechat_";
