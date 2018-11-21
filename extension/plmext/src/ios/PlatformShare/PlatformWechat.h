@@ -6,6 +6,11 @@
 }
 
 /**
+* compile in
+*/
++(void)compileIn;
+
+/**
  * 微信登录
  */
 + (void)login:(NSDictionary *)params;

@@ -6,9 +6,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	//	NSLog(@"gwjgwj,didFinishLaunchingWithOptions");
+	NSLog(@"gwjgwj,didFinishLaunchingWithOptions");
 	NSString *wechatAppId = @"wxc0acf2068b5dd7a3";
 	[WXApi registerApp:wechatAppId];
+	NSLog(@"gwjgwj,wxapi,registerApp end");
 	return YES;
 }
 

@@ -8,7 +8,9 @@ platforms:
     arm64-ios:
         context:
             frameworks: ["JavaScriptCore"]
+            libs:       ["sqlite3"]
 
     armv7-ios:
         context:
             frameworks: ["JavaScriptCore"]
+            libs:       ["sqlite3"]

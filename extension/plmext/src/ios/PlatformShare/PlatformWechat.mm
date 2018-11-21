@@ -8,6 +8,10 @@
 
 @implementation PlatformWechat
 
++(void)compileIn
+{
+}
+
 + (void)login:(NSDictionary *)params {
     int callback = [params[@"callback"] intValue];
 

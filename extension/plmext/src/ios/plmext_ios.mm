@@ -8,6 +8,7 @@
 #import "TakePhoto.h"
 #import "UploadImageBridge.h"
 #import "AppController.h"
+#import "PlatformShare/PlatformWechat.h"
 
 static AppController* g_appDelegate;
 void plmext_onAppInit()
@@ -21,6 +22,7 @@ void plm_compile_in()
 {
 	[TakePhoto compileIn];
 	[UploadImageBridge compileIn];
+	[PlatformWechat compileIn];
 }
 
 void plmext_ios_nslog(const char *msg, ...)
