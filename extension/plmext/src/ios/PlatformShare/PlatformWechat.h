@@ -20,4 +20,6 @@
  */
 + (void)logout;
 
++ (void)notifyLoginResult:(int)errCode errStr:(NSString*)errStr code:(NSString*)code;
+
 @end

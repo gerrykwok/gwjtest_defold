@@ -1,6 +1,7 @@
 #if defined(DM_PLATFORM_IOS)
 
 #import "AppController.h"
+#import "PlatformShare/PlatformWechat.h"
 
 @implementation AppController
 
@@ -23,14 +24,25 @@
 	return [WXApi handleOpenURL:url delegate:self];
 }
 
+//用此方法，上面两个方法就不会被回调
+-(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+	return [WXApi handleOpenURL:url delegate:self];
+}
+
 -(void) onReq:(BaseReq*)reqonReq
 {
 }
 
 -(void) onResp:(BaseResp*)resp
 {
-	SendAuthResp *authResp = (SendAuthResp*)resp;
-	NSLog(@"gwjgwj,onResp:%@", authResp);
+	//这里怎么判断微信登录取消了，或者出错了?
+	if([resp isKindOfClass:[SendAuthResp class]])
+	{
+		SendAuthResp *authResp = (SendAuthResp*)resp;
+		NSLog(@"gwjgwj,onResp:code:%@,state:%@,lang:%@,country:%@", authResp.code, authResp.state, authResp.lang, authResp.country);
+		[PlatformWechat notifyLoginResult:0 errStr:@"" code:authResp.code];
+	}
 }
 
 @end

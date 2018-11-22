@@ -7,10 +7,12 @@ platforms:
 
     arm64-ios:
         context:
-            frameworks: ["JavaScriptCore"]
-            libs:       ["sqlite3"]
+            frameworks: ["JavaScriptCore", "SystemConfiguration", "Security", "CoreTelephony", "CFNetwork"]
+            libs:       ["z", "sqlite3", "c++"]
+            linkFlags:  ["-ObjC"]
 
     armv7-ios:
         context:
-            frameworks: ["JavaScriptCore"]
-            libs:       ["sqlite3"]
+            frameworks: ["JavaScriptCore", "SystemConfiguration", "Security", "CoreTelephony", "CFNetwork"]
+            libs:       ["z", "sqlite3", "c++"]
+            linkFlags:  ["-ObjC"]
