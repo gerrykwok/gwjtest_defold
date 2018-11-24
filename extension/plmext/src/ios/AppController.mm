@@ -7,10 +7,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	NSLog(@"gwjgwj,didFinishLaunchingWithOptions");
 	NSString *wechatAppId = @"wxc0acf2068b5dd7a3";
 	[WXApi registerApp:wechatAppId];
-	NSLog(@"gwjgwj,wxapi,registerApp end");
 	return YES;
 }
 
@@ -40,7 +38,7 @@
 	if([resp isKindOfClass:[SendAuthResp class]])
 	{
 		SendAuthResp *authResp = (SendAuthResp*)resp;
-		NSLog(@"gwjgwj,onResp:code:%@,state:%@,lang:%@,country:%@", authResp.code, authResp.state, authResp.lang, authResp.country);
+		// NSLog(@"gwjgwj,onResp:code:%@,state:%@,lang:%@,country:%@", authResp.code, authResp.state, authResp.lang, authResp.country);
 		[PlatformWechat notifyLoginResult:0 errStr:@"" code:authResp.code];
 	}
 }
