@@ -8,8 +8,14 @@
 
 static int test(lua_State *L)
 {
-	dmLogDebug("gwjgwj,test,lua_state=0x%x", L);
-	printf("fffff,lua_state=0x%lx\n", (unsigned long)L);
+	dmLogDebug("gwjgwj,log debug");//不显示
+	dmLogError("gwjgwj,log error");//显示成红色
+	dmLogFatal("gwjgwj,log fatal");//显示成白色
+	dmLogInfo("gwjgwj,log info")//显示成白色
+	dmLogUserDebug("gwjgwj,log user debug");//显示成蓝色
+	dmLogWarning("gwjgwj,log warning");//显示成橙色
+
+	dmLogInfo("gwjgwj,test,lua_state=0x%x", L);
 	return 0;
 }
 
