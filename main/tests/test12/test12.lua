@@ -53,6 +53,14 @@ function test12:onEnter()
 		maxScale = 1.1,
 	})
 	:onButtonClicked(gwjui.handler(self, self.onClickUpload))
+	--测试按钮
+	local btn = gwjui.ScaleButton.new({
+		main_id = "btn_test",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		testext.test()
+	end)
 end
 
 function test12:onExit()

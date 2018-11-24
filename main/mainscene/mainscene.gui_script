@@ -63,8 +63,8 @@ function init(self)
 			gui.animate(contentDown, "scale", vmath.vector3(1.1, 1.1, 1), gui.EASING_LINEAR, 0.2)
 		end)
 		obj:onButtonClicked(function()
-			gwjui.printf("gwjgwj,goto test %d", i)
 			if(not listview:isContentMoved()) then
+				gwjui.printf("gwjgwj,goto test %d", i)
 				msg.post("main:/go", "gotoTest", {name=i})
 			end
 		end)
