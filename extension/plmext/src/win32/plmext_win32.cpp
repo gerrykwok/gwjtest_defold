@@ -1,7 +1,6 @@
-// include the Defold SDK
-#include <dmsdk/sdk.h>
-
 #if defined(DM_PLATFORM_WINDOWS)
+
+#include <dmsdk/sdk.h>
 
 static int test(lua_State *L)
 {

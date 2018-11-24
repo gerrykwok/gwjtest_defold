@@ -3,7 +3,6 @@
 #define MODULE_NAME "testext"
 
 #include <dmsdk/sdk.h>
-//#define DLIB_LOG_DOMAIN "MyOwnDomain"
 //#include <dmsdk/dlib/log.h>
 
 static int test(lua_State *L)
@@ -15,7 +14,7 @@ static int test(lua_State *L)
 	dmLogUserDebug("gwjgwj,log user debug");//显示成蓝色
 	dmLogWarning("gwjgwj,log warning");//显示成橙色
 
-	dmLogInfo("gwjgwj,test,lua_state=0x%x", L);
+	dmLogInfo("gwjgwj,test,lua_state=0x%lx", (unsigned long)L);
 	return 0;
 }
 

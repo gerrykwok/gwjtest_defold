@@ -1,8 +1,6 @@
 #define LIB_NAME "plmext"
 #define MODULE_NAME "plmext"
 
-// include the Defold SDK
-#include <dmsdk/sdk.h>
 #include "plmext.h"
 
 #if defined(DM_PLATFORM_IOS)
