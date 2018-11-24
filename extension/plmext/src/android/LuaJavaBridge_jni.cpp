@@ -48,7 +48,6 @@ JNIEXPORT void JNICALL DEF_JNI_FUNCTION(runOnGLThread)(JNIEnv *env, jclass cls, 
 	if(env == NULL) return;
 	jobject runnable2 = env->NewGlobalRef(runnable);
 	COCOSEXT_runOnGLThread([=]() {
-//		LOG_printf("gwjgwj,runnable=0x%x", runnable2);
 		JavaVM *vm = dmGraphics::GetNativeAndroidJavaVM();
 		JNIEnv *env2;
 		vm->AttachCurrentThread(&env2, NULL);

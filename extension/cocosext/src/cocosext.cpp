@@ -61,7 +61,7 @@ static dmExtension::Result ext_Init(dmExtension::Params* params)
 {
 	// Init Lua
 	LuaInit(params->m_L);
-	COCOSEXT_printf("Registered %s Extension\n", MODULE_NAME);
+	dmLogInfo("Registered %s Extension", MODULE_NAME);
 	return dmExtension::RESULT_OK;
 }
 
@@ -107,7 +107,7 @@ void COCOSEXT_runOnGLThread(const std::function<void(void)> &callback)
 		pCB++;
 	}
 	if(!hasEmpty)
-	COCOSEXT_error("not enough slot to store callback");
+	dmLogError("not enough slot to store callback");
 }
 
 void COCOSEXT_update()

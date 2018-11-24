@@ -24,7 +24,7 @@
 	lua_getglobal(state, funcName);       /* query function by name, stack: function */
 	if (!lua_isfunction(state, -1))
 	{
-		LOG_printf("[LUA ERROR] name '%s' does not represent a Lua function", funcName);
+		dmLogError("[LUA ERROR] name '%s' does not represent a Lua function", funcName);
 		lua_pop(state, 1);
 	}
 	else

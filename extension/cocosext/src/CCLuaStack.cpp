@@ -25,7 +25,7 @@ int LuaStack::executeGlobalFunction(const char* functionName)
 	lua_getglobal(_state, functionName);       /* query function by name, stack: function */
 	if (!lua_isfunction(_state, -1))
 	{
-		COCOSEXT_error("[LUA ERROR] name '%s' does not represent a Lua function", functionName);
+		dmLogError("[LUA ERROR] name '%s' does not represent a Lua function", functionName);
 		lua_pop(_state, 1);
 		return 0;
 	}
@@ -77,7 +77,7 @@ bool LuaStack::pushFunctionByHandler(int nHandler)
 	toluafix_get_function_by_refid(_state, nHandler);                  /* L: ... func */
 	if (!lua_isfunction(_state, -1))
 	{
-		COCOSEXT_error("[LUA ERROR] function refid '%d' does not reference a Lua function", nHandler);
+		dmLogError("[LUA ERROR] function refid '%d' does not reference a Lua function", nHandler);
 		lua_pop(_state, 1);
 		return false;
 	}
@@ -89,7 +89,7 @@ int LuaStack::executeFunction(int numArgs)
 	int functionIndex = -(numArgs + 1);
 	if (!lua_isfunction(_state, functionIndex))
 	{
-		COCOSEXT_error("value at stack [%d] is not function", functionIndex);
+		dmLogError("value at stack [%d] is not function", functionIndex);
 		lua_pop(_state, numArgs + 1); // remove function and arguments
 		return 0;
 	}
@@ -114,7 +114,7 @@ int LuaStack::executeFunction(int numArgs)
 	{
 		if (traceback == 0)
 		{
-			COCOSEXT_error("[LUA ERROR] %s", lua_tostring(_state, - 1));        /* L: ... error */
+			dmLogError("[LUA ERROR] %s", lua_tostring(_state, - 1));        /* L: ... error */
 			lua_pop(_state, 1); // remove error message from stack
 		}
 		else                                                            /* L: ... G error */

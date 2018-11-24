@@ -4,7 +4,7 @@
 
 #include <dmsdk/sdk.h>
 //#define DLIB_LOG_DOMAIN "MyOwnDomain"
-#include <dmsdk/dlib/log.h>
+//#include <dmsdk/dlib/log.h>
 
 static int test(lua_State *L)
 {

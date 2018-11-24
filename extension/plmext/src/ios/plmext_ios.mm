@@ -25,14 +25,4 @@ void plm_compile_in()
 	[PlatformWechat compileIn];
 }
 
-void plmext_ios_nslog(const char *msg, ...)
-{
-	char str[2048];
-	va_list ap;
-	va_start(ap, msg);
-	vsnprintf(str, sizeof(str), msg, ap);
-	va_end(ap);
-	NSLog(@"%s", str);
-}
-
 #endif

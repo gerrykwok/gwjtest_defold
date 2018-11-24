@@ -26,7 +26,7 @@
 
 #include "CCLuaBridge.h"
 #include "../cocosext.h"
-#define CCLOG    COCOSEXT_printf
+#define CCLOG    dmLogInfo
 
 lua_State *LuaBridge::s_luaState = NULL;
 int        LuaBridge::s_newFunctionId = 0;
