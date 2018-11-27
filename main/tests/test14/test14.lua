@@ -1,6 +1,4 @@
 local gwjui = require("gwjui.gwjui")
-local luaj = require("extension.cocosext.luaj")
-local luaoc = require("extension.cocosext.luaoc")
 local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 
 local test14 = gwjui.class("test14")
@@ -46,28 +44,9 @@ end
 
 function test14:onClickWechatLogin()
 	gwjui.printf("login wechat")
-	local sysName = sys.get_sys_info().system_name
-	--ccprint("gwjgwj,system_name=%s", sysName)
-	if(sysName == "Android") then
-		local javaClassName = "com/xishanju/plm/plmext/PlatformWechat"
-		local javaMethodName = "login"
-		local javaParams = {
-			function(res)
-				self:onWechatLoginResult(res)
-			end,
-		}
-		local javaMethodSig = "(I)V"
-		local ok, res = luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
-	elseif(sysName == "iPhone OS") then
-		local args = {
-			callback = function(res)
-				self:onWechatLoginResult(res)
-			end,
-		}
-		luaoc.callStaticMethod("PlatformWechat", "login", args)
-	elseif(sysName == "Windows") then
-	elseif(sysName == "Darwin") then
-	end
+	wechat.login(function(script, res)
+		self:onWechatLoginResult(res)
+	end)
 end
 
 function test14:onWechatLoginResult(res)

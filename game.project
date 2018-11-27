@@ -25,7 +25,7 @@ shared_state = 1
 app_icon_96x96 = /platform/android/android_icon96.png
 package = cn.com.xishanju.qyq
 iap_provider = 
-manifest = /extension/plmext/src/android/AndroidManifest.xml
+manifest = /platform/android/AndroidManifest.xml
 
 [ios]
 bundle_identifier = cn.com.xishanju.qyq
