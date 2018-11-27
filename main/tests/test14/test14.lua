@@ -49,14 +49,15 @@ function test14:onWechatLoginResult(res)
 end
 
 function test14:setLoginInfo(t)
-	if(message.errCode == 0) then
+	local errCode = t.errCode
+	if(errCode == 0) then
 		gui.set_text(gui.get_node("text_wechat_login_code"), t.code)
 		gui.set_text(gui.get_node("text_wechat_login_lang"), t.lang)
 		gui.set_text(gui.get_node("text_wechat_login_country"), t.country)
-	elseif(message.errCode == -2) then
+	elseif(errCode == -2) then
 		TipsBanner.show("用户取消微信登录")
 	else
-		local str = string.format("微信登录失败,errCode=%d,errStr=%s", message.errCode, message.errStr)
+		local str = string.format("微信登录失败,errCode=%d,errStr=%s", errCode, t.errStr)
 		TipsBanner.show(str)
 	end
 end
