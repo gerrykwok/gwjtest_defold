@@ -30,7 +30,7 @@ manifest = /platform/android/AndroidManifest.xml
 [ios]
 bundle_identifier = cn.com.xishanju.qyq
 app_icon_114x114 = /platform/android/android_icon96.png
-infoplist = /extension/plmext/src/ios/Info.plist
+infoplist = /platform/ios/Info.plist
 launch_image_2436x1125 = /platform/ios/launch_2436x1125.png
 launch_image_320x480 = /platform/ios/launch_320x480.png
 launch_image_640x960 = /platform/ios/launch_640x960.png

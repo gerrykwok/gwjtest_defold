@@ -30,9 +30,7 @@ end
 function test14:on_message(message_id, message, sender)
 	if(message_id == hash("wechat_login_res")) then
 		if(message.errCode == 0) then
-			gui.set_text(gui.get_node("text_wechat_login_code"), message.code)
-			gui.set_text(gui.get_node("text_wechat_login_lang"), message.lang)
-			gui.set_text(gui.get_node("text_wechat_login_country"), message.country)
+			self:setLoginInfo(message)
 		elseif(message.errCode == -2) then
 			TipsBanner.show("用户取消微信登录")
 		else
@@ -53,25 +51,19 @@ function test14:onWechatLoginResult(res)
 	gwjui.printf("wechat login res=%s", tostring(res))
 	local t = json.decode(res)
 	gwjui.dump(t, "tttttt", 100)
---	gui.set_text(gui.get_node("text_wechat_nickname"), t.userInfo.nickname);
---	gui.set_text(gui.get_node("text_wechat_icon_url"), t.userInfo.profileImage);
-	msg.post(self.m_url, "wechat_login_res", t)
+	self:setLoginInfo(t)
+--	msg.post(self.m_url, "wechat_login_res", t)
+end
+
+function test14:setLoginInfo(t)
+	gui.set_text(gui.get_node("text_wechat_login_code"), t.code)
+	gui.set_text(gui.get_node("text_wechat_login_lang"), t.lang)
+	gui.set_text(gui.get_node("text_wechat_login_country"), t.country)
 end
 
 function test14:onClickWechatLogout()
 	gwjui.printf("logout wechat")
-	local sysName = sys.get_sys_info().system_name
-	--ccprint("gwjgwj,system_name=%s", sysName)
-	if(sysName == "Android") then
-		local javaClassName = "com/xishanju/plm/plmext/PlatformWechat"
-		local javaMethodName = "logout"
-		local javaParams = {}
-		local javaMethodSig = "()V"
-		local ok, res = luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
-	elseif(sysName == "iPhone OS") then
-	elseif(sysName == "Windows") then
-	elseif(sysName == "Darwin") then
-	end
+	wechat.logout()
 end
 
 return test14
