@@ -6,6 +6,7 @@ void wechat_onAppInit();
 void wechat_login();
 void wechat_logout();
 void wechat_notifyLoginResult(const char *res);
+void wechat_onUpdate();
 
 //注册一个lua callback
 //返回id

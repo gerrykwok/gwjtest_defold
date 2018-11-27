@@ -50,19 +50,7 @@ public class PlatformWechat
 		{
 			str = String.format(Locale.US, "{\"errCode\":%d, \"errStr\":\"%s\"}", errCode, errStr);
 		}
-		final String res = str;
-//		LuaJavaBridge.runOnGLThread(new Runnable() {
-//			@Override
-//			public void run() {
-//				if(s_loginCallback >= 0)
-//				{
-//					LuaJavaBridge.callLuaFunctionWithString(s_loginCallback, res);
-//					LuaJavaBridge.releaseLuaFunction(s_loginCallback);
-//					s_loginCallback = -1;
-//				}
-//			}
-//		});
-		notifyLua(res);
+		notifyLua(str);
 	}
 
 	public static native void notifyLua(String value);

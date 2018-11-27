@@ -29,14 +29,7 @@ end
 
 function test14:on_message(message_id, message, sender)
 	if(message_id == hash("wechat_login_res")) then
-		if(message.errCode == 0) then
-			self:setLoginInfo(message)
-		elseif(message.errCode == -2) then
-			TipsBanner.show("用户取消微信登录")
-		else
-			local str = string.format("微信登录失败,errCode=%d,errStr=%s", message.errCode, message.errStr)
-			TipsBanner.show(str)
-		end
+		self:setLoginInfo(message)
 	end
 end
 
@@ -50,15 +43,22 @@ end
 function test14:onWechatLoginResult(res)
 	gwjui.printf("wechat login res=%s", tostring(res))
 	local t = json.decode(res)
-	gwjui.dump(t, "tttttt", 100)
+	gwjui.dump(t, "gwjgwj,login result", 100)
 	self:setLoginInfo(t)
 --	msg.post(self.m_url, "wechat_login_res", t)
 end
 
 function test14:setLoginInfo(t)
-	gui.set_text(gui.get_node("text_wechat_login_code"), t.code)
-	gui.set_text(gui.get_node("text_wechat_login_lang"), t.lang)
-	gui.set_text(gui.get_node("text_wechat_login_country"), t.country)
+	if(message.errCode == 0) then
+		gui.set_text(gui.get_node("text_wechat_login_code"), t.code)
+		gui.set_text(gui.get_node("text_wechat_login_lang"), t.lang)
+		gui.set_text(gui.get_node("text_wechat_login_country"), t.country)
+	elseif(message.errCode == -2) then
+		TipsBanner.show("用户取消微信登录")
+	else
+		local str = string.format("微信登录失败,errCode=%d,errStr=%s", message.errCode, message.errStr)
+		TipsBanner.show(str)
+	end
 end
 
 function test14:onClickWechatLogout()
