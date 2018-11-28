@@ -7,7 +7,7 @@
         <key>CFBundleDevelopmentRegion</key>
         <string>en</string>
         <key>CFBundleDisplayName</key>
-        <string>牌乐门HD</string>
+        <string>{{project.appname}}</string>
         <key>CFBundleExecutable</key>
         <string>{{project.title}}</string>
         <key>CFBundleIconFiles</key>
@@ -281,6 +281,6 @@
                 </dict>
         </array>
         <key>NSCameraUsageDescription</key>
-        <string>是否允许{{project.title}}使用你的相机？</string>
+        <string>是否允许{{project.appname}}使用你的相机？</string>
 </dict>
 </plist>
