@@ -1,6 +1,7 @@
 #pragma once
 
 #include <dmsdk/sdk.h>
+#include <functional>
 
 void wechat_onAppInit();
 void wechat_login();
@@ -17,3 +18,5 @@ extern void ext_unregisterLuaCallback(int callbackId);
 extern void ext_invokeLuaCallbackWithString(int callbackId, const char *value);
 //调用java代码
 extern void ext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...);
+//在update线程中执行代码
+extern void ext_performInUpdateThread(const std::function<void(void)> &func);

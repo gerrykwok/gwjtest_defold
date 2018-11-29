@@ -1,4 +1,6 @@
 #include <dmsdk/sdk.h>
+#include <mutex>
+#include <vector>
 #include "luacallback.h"
 
 struct LuaCallbackInfo
@@ -113,4 +115,30 @@ void ext_invokeLuaCallbackWithString(int callbackId, const char *value)
 		return;
 	}
 	InvokeCallbackWithString(pCbk, value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+static std::mutex g_performMutex;
+static std::vector<std::function<void(void)>> g_functionsToPerform;
+
+void ext_performInUpdateThread(const std::function<void(void)> &func)
+{
+	g_performMutex.lock();
+	g_functionsToPerform.push_back(func);
+	g_performMutex.unlock();
+}
+
+void ext_onUpdate()
+{
+	if( !g_functionsToPerform.empty() ) {
+		g_performMutex.lock();
+		// fixed #4123: Save the callback functions, they must be invoked after 'g_performMutex.unlock()', otherwise if new functions are added in callback, it will cause thread deadlock.
+		auto temp = g_functionsToPerform;
+		g_functionsToPerform.clear();
+		g_performMutex.unlock();
+		for(const auto &func : temp) {
+			func();
+		}
+	}
 }

@@ -73,17 +73,6 @@ static dmExtension::Result ext_Final(dmExtension::Params* params)
 	return dmExtension::RESULT_OK;
 }
 
-#if defined(DM_PLATFORM_ANDROID)
-static dmExtension::Result ext_update(dmExtension::Params *params)
-{
-	wechat_onUpdate();
-	return dmExtension::RESULT_OK;
-}
-#define EXT_UPDATE				ext_update
-#else
-#define EXT_UPDATE				0
-#endif
-
 // Defold SDK uses a macro for setting up extension entry points:
 // DM_DECLARE_EXTENSION(symbol, name, app_init, app_final, init, update, on_event, final)
-DM_DECLARE_EXTENSION(EXTENSION_NAME, LIB_NAME, ext_AppInit, ext_AppFinal, ext_Init, EXT_UPDATE, 0, ext_Final)
+DM_DECLARE_EXTENSION(EXTENSION_NAME, LIB_NAME, ext_AppInit, ext_AppFinal, ext_Init, 0, 0, ext_Final)

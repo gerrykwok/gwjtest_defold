@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 //注册一个lua callback
 //返回id
 int ext_registerLuaCallback(lua_State* L, int index);
@@ -9,3 +11,5 @@ void ext_unregisterLuaCallback(int callbackId);
 void ext_invokeLuaCallbackWithString(int callbackId, const char *value);
 //调用java代码
 void ext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...);
+//在update线程中执行代码
+void ext_performInUpdateThread(const std::function<void(void)> &func);

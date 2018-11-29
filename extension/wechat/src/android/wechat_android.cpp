@@ -6,14 +6,11 @@
 
 #define WECHAT_CLASS	"com.xishanju.plm.wechat.PlatformWechat"
 
-static std::function<void(void)> g_func;
-static bool g_funcValid = false;
-
 //com.xishanju.plm.wechat.PlatformWechat
 extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_PlatformWechat_notifyLua(JNIEnv *env, jclass clz, jstring value)
 {
 	jstring value2 = (jstring)env->NewGlobalRef(value);
-	g_func = [=](){
+	auto func = [=](){
 		JavaVM *vm = dmGraphics::GetNativeAndroidJavaVM();
 		JNIEnv *env2;
 		vm->AttachCurrentThread(&env2, NULL);
@@ -23,7 +20,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_PlatformWechat_no
 		env2->DeleteGlobalRef(value2);
 		vm->DetachCurrentThread();
 	};
-	g_funcValid = true;
+	ext_performInUpdateThread(func);
 }
 
 void wechat_onAppInit()
@@ -39,15 +36,6 @@ void wechat_login()
 void wechat_logout()
 {
 	ext_call_java_static_void_method(WECHAT_CLASS, "logout", "()V");
-}
-
-void wechat_onUpdate()
-{
-	if(g_funcValid)
-	{
-		g_func();
-		g_funcValid = false;
-	}
 }
 
 #endif
