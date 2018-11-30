@@ -47,6 +47,22 @@ static jclass GetClass(JNIEnv* env, const char* classname)
 	return outcls;
 }
 
+static jstring stoJstring(JNIEnv* env, const char *pat)
+{
+	//定义java String类 strClass
+	jclass strClass = env->FindClass("java/lang/String");
+	//获取java String类方法String(byte[],String)的构造器,用于将本地byte[]数组转换为一个新String
+	jmethodID ctorID = env->GetMethodID(strClass, "<init>", "([BLjava/lang/String;)V");
+	jbyteArray bytes = env->NewByteArray(strlen(pat));//建立byte数组
+	env->SetByteArrayRegion(bytes, 0, strlen(pat), (jbyte*)pat);//将char* 转换为byte数组
+	jstring encoding = env->NewStringUTF("utf-8");// 设置String, 保存语言类型,用于byte数组转换至String时的参数
+	jstring ret = (jstring)env->NewObject(strClass, ctorID, bytes, encoding);//将byte数组转换为java String,并输出
+	env->DeleteLocalRef(strClass);
+	env->DeleteLocalRef(bytes);
+	env->DeleteLocalRef(encoding);
+	return ret;
+}
+
 void ext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...)
 {
 	AttachScope attachscope;
@@ -58,6 +74,23 @@ void ext_call_java_static_void_method(const char *clazz, const char *method, con
 	va_start(ap, signature);
 	env->CallStaticVoidMethodV(cls, dummy_method, ap);
 	va_end(ap);
+}
+
+std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params)
+{
+	AttachScope attachscope;
+	JNIEnv* env = attachscope.m_Env;
+
+	jclass cls = GetClass(env, clazz);
+	jmethodID dummy_method = env->GetStaticMethodID(cls, method, "(Ljava/lang/String;)Ljava/lang/String;");
+	jstring str = stoJstring(env, params);
+	jstring retjs = (jstring)env->CallStaticObjectMethod(cls, dummy_method, str);
+	env->DeleteLocalRef(str);
+
+	const char *stringBuff = env->GetStringUTFChars(retjs, 0);
+	std::string retStr = stringBuff;
+	env->ReleaseStringUTFChars(retjs, stringBuff);
+	return retStr;
 }
 
 #endif

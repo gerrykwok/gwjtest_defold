@@ -37,6 +37,11 @@ static const luaL_reg Module_methods[] =
 {
 	{"login", wechatLogin},
 	{"logout", wechatLogout},
+#if defined(DM_PLATFORM_ANDROID)
+	{"shareWithIntent", wechat_shareWithIntent},
+#elif defined(DM_PLATFORM_IOS)
+	{"shareWithIosSystem", wechat_shareWithIosSystem},
+#endif
 	{0, 0}
 };
 

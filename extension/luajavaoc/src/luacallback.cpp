@@ -1,4 +1,5 @@
 #include <dmsdk/sdk.h>
+#include <math.h>
 #include <mutex>
 #include <vector>
 #include "luacallback.h"
@@ -80,7 +81,7 @@ int ext_registerLuaCallback(lua_State* L, int index)
 {
 	int top = lua_gettop(L);
 	LuaCallbackInfo cbk;
-	RegisterCallback(L, 1, &cbk);
+	RegisterCallback(L, index, &cbk);
 	if (g_callbacks.Full()) {
 		g_callbacks.SetCapacity(g_callbacks.Capacity() + 8);
 	}
@@ -115,6 +116,84 @@ void ext_invokeLuaCallbackWithString(int callbackId, const char *value)
 		return;
 	}
 	InvokeCallbackWithString(pCbk, value);
+}
+
+std::string ext_jsonFromLuaTable(lua_State *L, int index)
+{
+	int top = lua_gettop(L);
+	std::string sKey, sValue;
+	std::string sRet;
+	char buf[32];
+	lua_Number fValue;
+
+	sRet = "{";
+	lua_pushnil(L);  /* first key */
+	while(lua_next(L, index-1) != 0)
+	{
+		/* 'key' is at index -2 and 'value' at index -1 */
+		switch(lua_type(L, -2))
+		{
+		case LUA_TNIL:
+			sKey = "nil";
+			break;
+		case LUA_TBOOLEAN:
+			sKey = lua_toboolean(L, -2) ? "true" : "false";
+			break;
+		case LUA_TNUMBER:
+			sprintf(buf, "%d", (int)lua_tonumber(L, -2));
+			sKey = buf;
+			break;
+		case LUA_TSTRING:
+			sKey = lua_tostring(L, -2);
+			break;
+		default:
+			sKey = "";
+			break;
+		}
+
+		switch(lua_type(L, -1))
+		{
+		case LUA_TBOOLEAN:
+			sValue = lua_toboolean(L, -1) ? "true" : "false";
+			break;
+		case LUA_TNUMBER:
+			fValue = lua_tonumber(L, -1);
+			if(floor(fValue) == fValue)
+				sprintf(buf, "%d", (int)fValue);
+			else
+				sprintf(buf, "%f", fValue);
+			sValue = buf;
+			break;
+		case LUA_TSTRING:
+			sValue = (std::string)"\"" + lua_tostring(L, -1) + (std::string)"\"";
+			break;
+		case LUA_TFUNCTION:
+			sprintf(buf, "%d", ext_registerLuaCallback(L, -1));
+			sValue = buf;
+			break;
+		case LUA_TTABLE:
+			sValue = ext_jsonFromLuaTable(L, -1);
+			break;
+		default:
+			sValue = "\"\"";
+			break;
+		}
+		
+//		dmLogInfo("%s - %s", lua_typename(L, lua_type(L, -2)), lua_typename(L, lua_type(L, -1)));
+//		dmLogInfo("\"%s\":%s", sKey.c_str(), sValue.c_str());
+		if(sRet.length() > 1)
+			sRet += ", ";
+		sRet += "\"";
+		sRet += sKey;
+		sRet += "\":";
+		sRet += sValue;
+
+		lua_pop(L, 1);  /* removes 'value'; keeps 'key' for next iteration */
+	}
+
+	assert(top + 0 == lua_gettop(L));
+	sRet += "}";
+	return sRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////

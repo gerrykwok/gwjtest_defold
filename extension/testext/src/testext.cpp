@@ -3,7 +3,9 @@
 #define MODULE_NAME "testext"
 
 #include <dmsdk/sdk.h>
-//#include <dmsdk/dlib/log.h>
+#include <string>
+
+extern std::string ext_jsonFromLuaTable(lua_State *L, int index);
 
 static int test(lua_State *L)
 {
@@ -15,7 +17,10 @@ static int test(lua_State *L)
 	dmLogWarning("gwjgwj,log warning");//显示成橙色
 
 	dmLogInfo("gwjgwj,test,lua_state=0x%lx", (unsigned long)L);
-	return 0;
+
+	std::string ret = ext_jsonFromLuaTable(L, -1);
+	lua_pushstring(L, ret.c_str());
+	return 1;
 }
 
 static const luaL_reg Module_methods[] =

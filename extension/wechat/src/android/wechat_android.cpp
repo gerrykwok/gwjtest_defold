@@ -38,4 +38,12 @@ void wechat_logout()
 	ext_call_java_static_void_method(WECHAT_CLASS, "logout", "()V");
 }
 
+int wechat_shareWithIntent(lua_State *L)
+{
+	std::string param = ext_jsonFromLuaTable(L, -1);
+	std::string ret = ext_callJavaStaticMethod("com.xishanju.plm.wechat.ShareUtil", "shareWithIntent", param.c_str());
+	lua_pushstring(L, ret.c_str());
+	return 1;
+}
+
 #endif

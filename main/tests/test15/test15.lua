@@ -32,6 +32,49 @@ end
 
 function test15:onClickShareSystem()
 	gwjui.printf("gwjgwj,share system")
+	--[[
+	local ret = testext.test({
+		abc = 1,
+		def = "2",
+		nickname = "郭伟基",
+		[100] = 5,
+		10,
+		callback = function()
+		end,
+		extras = {
+			["android.intent.extra.TITLE"] = "the title",
+			["android.intent.extra.TEXT"] = "the text",
+			uid = 12345,
+		},
+	})
+	gwjui.dump(ret, "ret")
+	]]
+	local sysName = sys.get_sys_info().system_name
+	if(sysName == "Android") then
+		local Intent = {
+			EXTRA_TITLE = "android.intent.extra.TITLE",
+			EXTRA_TEXT = "android.intent.extra.TEXT",
+			EXTRA_SUBJECT = "android.intent.extra.SUBJECT",
+		}
+		local pkgName = "com.tencent.mm"
+		local clsName = "com.tencent.mm.ui.tools.ShareImgUI"
+		pkgName = "org.xianliao"
+		clsName = "org.sugram.base.LaunchActivity"
+		local extras = {}
+--		extras[Intent.EXTRA_SUBJECT] = "分享title"
+--		extras[Intent.EXTRA_TEXT] = "分享text"--闲聊不用Intent.EXTRA_TITLE
+		local ret = wechat.shareWithIntent({
+			pkgName = pkgName,
+			clsName = clsName,
+			streamPath = "/mnt/sdcard/myMahjongAvatar.png",
+			mimeType = "image/*",
+			extras = extras,
+			callback = function()
+			end,
+		})
+		gwjui.printf("gwjgwj,share with intent, ret=%s", tostring(ret))
+	elseif(sysName == "iPhone OS") then
+	end
 end
 
 function test15:onClickShareWechatSDK()
