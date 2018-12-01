@@ -32,13 +32,17 @@ end
 
 function test15:onClickShareSystem()
 	gwjui.printf("gwjgwj,share system")
-	--[[
+	local key = function() end
 	local ret = testext.test({
 		abc = 1,
 		def = "2",
 		nickname = "郭伟基",
 		[100] = 5,
 		10,
+		scale = 1.23,
+		float = 1.7E308,
+		pi = math.pi,
+		huge = math.huge,
 		callback = function()
 		end,
 		extras = {
@@ -46,9 +50,12 @@ function test15:onClickShareSystem()
 			["android.intent.extra.TEXT"] = "the text",
 			uid = 12345,
 		},
+		[key] = "aaa",
 	})
+	local huge = math.huge - 1
+	print("huge=" .. tostring(huge))
 	gwjui.dump(ret, "ret")
-	]]
+	--[[
 	local sysName = sys.get_sys_info().system_name
 	if(sysName == "Android") then
 		local Intent = {
@@ -75,6 +82,7 @@ function test15:onClickShareSystem()
 		gwjui.printf("gwjgwj,share with intent, ret=%s", tostring(ret))
 	elseif(sysName == "iPhone OS") then
 	end
+	]]
 end
 
 function test15:onClickShareWechatSDK()

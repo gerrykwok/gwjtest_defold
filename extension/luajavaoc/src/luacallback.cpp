@@ -151,6 +151,7 @@ std::string ext_jsonFromLuaTable(lua_State *L, int index)
 			break;
 		}
 
+		bool valueValid = true;
 		switch(lua_type(L, -1))
 		{
 		case LUA_TBOOLEAN:
@@ -158,10 +159,7 @@ std::string ext_jsonFromLuaTable(lua_State *L, int index)
 			break;
 		case LUA_TNUMBER:
 			fValue = lua_tonumber(L, -1);
-			if(floor(fValue) == fValue)
-				sprintf(buf, "%d", (int)fValue);
-			else
-				sprintf(buf, "%f", fValue);
+			sprintf(buf, "%g", fValue);
 			sValue = buf;
 			break;
 		case LUA_TSTRING:
@@ -176,17 +174,25 @@ std::string ext_jsonFromLuaTable(lua_State *L, int index)
 			break;
 		default:
 			sValue = "\"\"";
+			valueValid = false;
 			break;
 		}
-		
+
 //		dmLogInfo("%s - %s", lua_typename(L, lua_type(L, -2)), lua_typename(L, lua_type(L, -1)));
 //		dmLogInfo("\"%s\":%s", sKey.c_str(), sValue.c_str());
-		if(sRet.length() > 1)
-			sRet += ", ";
-		sRet += "\"";
-		sRet += sKey;
-		sRet += "\":";
-		sRet += sValue;
+		if(sKey.length() > 0 && valueValid)
+		{
+			if(sRet.length() > 1)
+				sRet += ", ";
+			sRet += "\"";
+			sRet += sKey;
+			sRet += "\":";
+			sRet += sValue;
+		}
+		else
+		{
+//			dmLogError("invalid key");
+		}
 
 		lua_pop(L, 1);  /* removes 'value'; keeps 'key' for next iteration */
 	}
