@@ -79,7 +79,7 @@ function test15:onClickShareSystem()
 		local extras = {}
 --		extras[Intent.EXTRA_SUBJECT] = "分享title"
 --		extras[Intent.EXTRA_TEXT] = "分享text"--闲聊不用Intent.EXTRA_TITLE
-		local ret = wechat.shareWithIntent({
+		local ok, ret = wechat.shareWithIntent({
 			pkgName = pkgName,
 			clsName = clsName,
 			streamPath = "/mnt/sdcard/myMahjongAvatar.png",
@@ -88,7 +88,7 @@ function test15:onClickShareSystem()
 			callback = function()
 			end,
 		})
-		gwjui.printf("gwjgwj,share with intent, ret=%s", tostring(ret))
+		gwjui.printf("gwjgwj,share with intent, ok=%s, ret=%s", tostring(ok), tostring(ret))
 	elseif(sysName == "iPhone OS") then
 	end
 end

@@ -63,28 +63,47 @@ static jstring stoJstring(JNIEnv* env, const char *pat)
 	return ret;
 }
 
-void ext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...)
+std::string ext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...)
 {
 	AttachScope attachscope;
 	JNIEnv* env = attachscope.m_Env;
 
 	jclass cls = GetClass(env, clazz);
+	if(cls == NULL) return (std::string)"failed to find class " + clazz;
 	jmethodID dummy_method = env->GetStaticMethodID(cls, method, signature);
+	if(dummy_method == NULL) return (std::string)"failed to find method " + clazz + "." + method + " " + signature;
 	va_list ap;
 	va_start(ap, signature);
 	env->CallStaticVoidMethodV(cls, dummy_method, ap);
 	va_end(ap);
+	return "success";
 }
 
-std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params)
+std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params, bool *ok)
 {
 	AttachScope attachscope;
 	JNIEnv* env = attachscope.m_Env;
+	*ok = true;
 
 	jclass cls = GetClass(env, clazz);
-	jmethodID dummy_method = env->GetStaticMethodID(cls, method, "(Ljava/lang/String;)Ljava/lang/String;");
+	if(cls == NULL)
+	{
+		*ok = false;
+		std::string str = (std::string)"failed to find class " + clazz;
+		dmLogError(str.c_str());
+		return str;
+	}
+	const char *signature = "(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;";
+	jmethodID dummy_method = env->GetStaticMethodID(cls, method, signature);
+	if(dummy_method == NULL)
+	{
+		*ok = false;
+		std::string str = (std::string)"failed to find method " + clazz + "." + method + " " + signature;
+		dmLogError(str.c_str());
+		return str;
+	}
 	jstring str = stoJstring(env, params);
-	jstring retjs = (jstring)env->CallStaticObjectMethod(cls, dummy_method, str);
+	jstring retjs = (jstring)env->CallStaticObjectMethod(cls, dummy_method, dmGraphics::GetNativeAndroidActivity(), str);
 	env->DeleteLocalRef(str);
 
 	const char *stringBuff = env->GetStringUTFChars(retjs, 0);

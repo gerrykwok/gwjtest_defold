@@ -20,9 +20,9 @@ extern void ext_unregisterLuaCallback(int callbackId);
 //调用callback
 extern void ext_invokeLuaCallbackWithString(int callbackId, const char *value);
 //调用java代码
-extern void ext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...);
+extern std::string ext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...);
 //在update线程中执行代码
 extern void ext_performInUpdateThread(const std::function<void(void)> &func);
 
 extern std::string ext_jsonFromLuaTable(lua_State *L, int index);
-extern std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params);
+extern std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);

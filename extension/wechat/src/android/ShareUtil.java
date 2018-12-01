@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 import android.util.Log;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ComponentName;
 import android.net.Uri;
@@ -14,7 +15,7 @@ import android.net.Uri;
 public class ShareUtil
 {
 	public static final String TAG = "shareutil";
-	public static String shareWithIntent(String data)
+	public static String shareWithIntent(Context ctx, String data)
 	{
 		Log.d(TAG, "gwjgwj,shareWithIntent:" + data);
 		String pkgName = "";
@@ -74,7 +75,7 @@ public class ShareUtil
 		}
 		try
 		{
-			PlatformWechat.s_context.startActivity(Intent.createChooser(intent, "分享"));
+			ctx.startActivity(Intent.createChooser(intent, "分享"));
 			success = true;
 		} catch(Exception e)
 		{
