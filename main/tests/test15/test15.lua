@@ -29,6 +29,23 @@ function test15:onEnter()
 	:onButtonClicked(function()
 		self:luaTableToJson()
 	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_test_oc",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		for i=1,5 do
+			local param = {
+				testname = "test" .. i,
+				param1 = "abc",
+				param2 = 3,
+--				callback = function()
+--				end,
+			}
+			local ok, ret = testext.test_oc("MyClass", "test" .. i, param)
+			gwjui.printf("gwjgwj,test oc %d, ok=%s, ret=%s", i, tostring(ok), tostring(ret))
+		end
+	end)
 end
 
 function test15:onExit()
@@ -90,6 +107,14 @@ function test15:onClickShareSystem()
 		})
 		gwjui.printf("gwjgwj,share with intent, ok=%s, ret=%s", tostring(ok), tostring(ret))
 	elseif(sysName == "iPhone OS") then
+		local ok, ret = wechat.shareWithIosSystem({
+			title = "the title",
+			text = "the text",
+			image = "/abc/def/test.png",
+			callback = function()
+			end,
+		})
+		gwjui.printf("gwjgwj,share with ios system, ok=%s, ret=%s", tostring(ok), tostring(ret))
 	end
 end
 

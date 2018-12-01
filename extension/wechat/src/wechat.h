@@ -26,3 +26,4 @@ extern void ext_performInUpdateThread(const std::function<void(void)> &func);
 
 extern std::string ext_jsonFromLuaTable(lua_State *L, int index);
 extern std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
+extern std::string ext_callOcStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);

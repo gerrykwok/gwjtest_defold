@@ -23,4 +23,14 @@ void wechat_logout()
 {
 }
 
+int wechat_shareWithIosSystem(lua_State *L)
+{
+	std::string param = ext_jsonFromLuaTable(L, -1);
+	bool ok;
+	std::string ret = ext_callOcStaticMethod("ShareUtil", "shareWithSystem", param.c_str(), &ok);
+	lua_pushboolean(L, ok);
+	lua_pushstring(L, ret.c_str());
+	return 2;
+}
+
 #endif

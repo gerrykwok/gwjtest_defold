@@ -3,9 +3,7 @@
 #define MODULE_NAME "testext"
 
 #include <dmsdk/sdk.h>
-#include <string>
-
-extern std::string ext_jsonFromLuaTable(lua_State *L, int index);
+#include "testext.h"
 
 static int test(lua_State *L)
 {
@@ -26,6 +24,9 @@ static int test(lua_State *L)
 static const luaL_reg Module_methods[] =
 {
 	{"test", test},
+#if defined(DM_PLATFORM_IOS)
+	{"test_oc", test_oc},
+#endif
 	{0, 0}
 };
 
