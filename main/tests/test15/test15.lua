@@ -22,6 +22,13 @@ function test15:onEnter()
 	:onButtonClicked(function()
 		self:onClickShareWechatSDK()
 	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_luatable_to_json",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:luaTableToJson()
+	end)
 end
 
 function test15:onExit()
@@ -30,8 +37,7 @@ end
 function test15:on_message(message_id, message, sender)
 end
 
-function test15:onClickShareSystem()
-	gwjui.printf("gwjgwj,share system")
+function test15:luaTableToJson()
 	local key = function() end
 	local ret = testext.test({
 		abc = 1,
@@ -55,7 +61,10 @@ function test15:onClickShareSystem()
 	local huge = math.huge - 1
 	print("huge=" .. tostring(huge))
 	gwjui.dump(ret, "ret")
-	--[[
+end
+
+function test15:onClickShareSystem()
+	gwjui.printf("gwjgwj,share system")
 	local sysName = sys.get_sys_info().system_name
 	if(sysName == "Android") then
 		local Intent = {
@@ -82,7 +91,6 @@ function test15:onClickShareSystem()
 		gwjui.printf("gwjgwj,share with intent, ret=%s", tostring(ret))
 	elseif(sysName == "iPhone OS") then
 	end
-	]]
 end
 
 function test15:onClickShareWechatSDK()
