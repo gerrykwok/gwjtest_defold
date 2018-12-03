@@ -14,8 +14,11 @@ static int test(lua_State *L)
 	dmLogUserDebug("gwjgwj,log user debug");//显示成蓝色
 	dmLogWarning("gwjgwj,log warning");//显示成橙色
 
-	dmLogInfo("gwjgwj,test,lua_state=0x%lx", (unsigned long)L);
+	return 0;
+}
 
+static int luatableToJson(lua_State *L)
+{
 	std::string ret = ext_jsonFromLuaTable(L, -1);
 	lua_pushstring(L, ret.c_str());
 	return 1;
@@ -24,7 +27,9 @@ static int test(lua_State *L)
 static const luaL_reg Module_methods[] =
 {
 	{"test", test},
+	{"luatableToJson", luatableToJson},
 #if defined(DM_PLATFORM_IOS)
+	{"takePhoto", test_takephoto},
 	{"test_oc", test_oc},
 #endif
 	{0, 0}

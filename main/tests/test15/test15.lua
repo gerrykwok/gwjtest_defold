@@ -27,7 +27,27 @@ function test15:onEnter()
 		maxScale = 1.1,
 	})
 	:onButtonClicked(function()
-		self:luaTableToJson()
+		local key = function() end
+		local ret = testext.luatableToJson({
+			abc = 1,
+			def = "2",
+			nickname = "郭伟基",
+			[100] = 5,
+			10,
+			scale = 1.23,
+			float = 1.7E308,
+			pi = math.pi,
+			huge = math.huge,
+			callback = function()
+			end,
+			extras = {
+				["android.intent.extra.TITLE"] = "the title",
+				["android.intent.extra.TEXT"] = "the text",
+				uid = 12345,
+			},
+			[key] = "aaa",
+		})
+		gwjui.printf("gwjgwj,json=%s", tostring(ret))
 	end)
 	gwjui.ScaleButton.new({
 		main_id = "btn_test_oc",
@@ -46,38 +66,26 @@ function test15:onEnter()
 			gwjui.printf("gwjgwj,test oc %d, ok=%s, ret=%s", i, tostring(ok), tostring(ret))
 		end
 	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_take_photo",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		local path = sys.get_save_file("myid", "takephoto.png")
+		gwjui.printf("gwjgwj,path=%s", tostring(path))
+		testext.takePhoto({
+			fromeCamera = false,
+			path = path,
+			callback = function(script, res)
+			end,
+		})
+	end)
 end
 
 function test15:onExit()
 end
 
 function test15:on_message(message_id, message, sender)
-end
-
-function test15:luaTableToJson()
-	local key = function() end
-	local ret = testext.test({
-		abc = 1,
-		def = "2",
-		nickname = "郭伟基",
-		[100] = 5,
-		10,
-		scale = 1.23,
-		float = 1.7E308,
-		pi = math.pi,
-		huge = math.huge,
-		callback = function()
-		end,
-		extras = {
-			["android.intent.extra.TITLE"] = "the title",
-			["android.intent.extra.TEXT"] = "the text",
-			uid = 12345,
-		},
-		[key] = "aaa",
-	})
-	local huge = math.huge - 1
-	print("huge=" .. tostring(huge))
-	gwjui.dump(ret, "ret")
 end
 
 function test15:onClickShareSystem()
@@ -107,13 +115,20 @@ function test15:onClickShareSystem()
 		})
 		gwjui.printf("gwjgwj,share with intent, ok=%s, ret=%s", tostring(ok), tostring(ret))
 	elseif(sysName == "iPhone OS") then
-		local ok, ret = wechat.shareWithIosSystem({
+		--图文分享
+--		local params = {
+--			image = "/abc/def/test.png",
+--		}
+		--share link
+		local params = {
 			title = "the title",
-			text = "the text",
-			image = "/abc/def/test.png",
-			callback = function()
-			end,
-		})
+--			image = "/abc/def/test.png",
+			url = "http://www.pconline.com.cn",
+		}
+		params.callback = function(script, res)
+			gwjui.printf("gwjgwj,share res=%s", tostring(res))
+		end
+		local ok, ret = wechat.shareWithIosSystem(params)
 		gwjui.printf("gwjgwj,share with ios system, ok=%s, ret=%s", tostring(ok), tostring(ret))
 	end
 end
