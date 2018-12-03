@@ -4,25 +4,9 @@
 #include "luajavaoc_ios.h"
 #include "../luacallback.h"
 
-NSDictionary* ext_jsonToDict(const char *jsonString)
-{
-	if (jsonString == NULL) {
-		return nil;
-	}
-
-	NSData *jsonData = [NSData dataWithBytesNoCopy:(void*)jsonString length:strlen(jsonString)+1];
-	NSError *err;
-	NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
-	if(err)
-	{
-		NSLog(@"parse json error: %@", err);
-		return nil;
-	}
-	return dic;
-}
-
 std::string ext_callOcStaticMethod(const char *clazz, const char *method, const char *params, bool *ok)
 {
+	std::string sReturn;
 	*ok = true;
 	Class targetClass = NSClassFromString([NSString stringWithUTF8String:clazz]);
 	if(!targetClass)
@@ -54,11 +38,19 @@ std::string ext_callOcStaticMethod(const char *clazz, const char *method, const 
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSig];
 		[invocation setTarget:targetClass];
 		[invocation setSelector:methodSel];
-		NSUInteger returnLength = [methodSig methodReturnLength];
 		const char *returnType = [methodSig methodReturnType];
-		dmLogInfo("gwjgwj,returnLength=%ld,returnType=%s,params=%s", (unsigned long)returnLength, returnType, params);
-		NSDictionary* dic = ext_jsonToDict(params);
-		[invocation setArgument:&dic atIndex:2];
+		dmLogInfo("gwjgwj,returnType=%s,params=%s", returnType, params);
+		NSError *err;
+		NSData *jsonData = [[NSString stringWithUTF8String:params] dataUsingEncoding:NSUTF8StringEncoding];
+		NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+		if(err)
+		{
+			dmLogError("parse json error:%s", [[err description] UTF8String]);
+		}
+		else
+		{
+			[invocation setArgument:&dic atIndex:2];
+		}
 		[invocation invoke];
 		NSString *sRet;
 		if (strcmp(returnType, "@") == 0)//NSString or something derived from NSObject
@@ -95,7 +87,8 @@ std::string ext_callOcStaticMethod(const char *clazz, const char *method, const 
 		{
 			sRet = @"";
 		}
-		return [sRet UTF8String];
+		sReturn = [sRet UTF8String];
+		return sReturn;
 	}
 	@catch (NSException *exception)
 	{
