@@ -4,6 +4,7 @@ local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 local test15 = gwjui.class("test15")
 
 function test15:ctor()
+	self.m_imageShare = nil
 end
 
 function test15:onEnter()
@@ -73,6 +74,7 @@ function test15:onEnter()
 	:onButtonClicked(function()
 		local path = sys.get_save_file("myid", "takephoto.png")
 		gwjui.printf("gwjgwj,path=%s", tostring(path))
+		self.m_imageShare = path
 		testext.takePhoto({
 			fromeCamera = false,
 			path = path,
@@ -115,16 +117,48 @@ function test15:onClickShareSystem()
 		})
 		gwjui.printf("gwjgwj,share with intent, ok=%s, ret=%s", tostring(ok), tostring(ret))
 	elseif(sysName == "iPhone OS") then
+--		if(self.m_imageShare == nil) then
+--			TipsBanner.show("请先takephoto")
+--			return
+--		end
 		--图文分享
---		local params = {
---			image = "/abc/def/test.png",
---		}
-		--share link
 		local params = {
-			title = "the title",
---			image = "/abc/def/test.png",
-			url = "http://www.pconline.com.cn",
+--			title = "the title",
+			image = self.m_imageShare,
+--			content = "the content",
 		}
+		--share link
+--		local params = {
+--			title = "the title",
+--			image = self.m_imageShare,
+--			url = "http://www.pconline.com.cn",
+--		}
+--[[
+		params.excludeActivityType = {
+			"com.apple.UIKit.activity.PostToFacebook",
+			"com.apple.UIKit.activity.PostToTwitter",
+			"com.apple.UIKit.activity.PostToWeibo",
+			"com.apple.UIKit.activity.Message",
+			"com.apple.UIKit.activity.Mail",
+			"com.apple.UIKit.activity.Print",
+			"com.apple.UIKit.activity.CopyToPasteboard",
+			"com.apple.UIKit.activity.AssignToContact",
+			"com.apple.UIKit.activity.SaveToCameraRoll",
+			"com.apple.UIKit.activity.AddToReadingList",
+			"com.apple.UIKit.activity.PostToFlickr",
+			"com.apple.UIKit.activity.PostToVimeo",
+			"com.apple.UIKit.activity.TencentWeibo",
+			"com.apple.UIKit.activity.AirDrop",
+			"com.apple.UIKit.activity.OpenInIBooks",
+
+			"com.apple.mobilenotes.SharingExtension", "com.apple.mobileslideshow.StreamShareService",
+			"com.tencent.mqq.ShareExtension",--QQ
+			"com.apple.NanoTimeKitCompanion.CreateWatchFace",--创建表盘
+			"com.apple.CloudDocsUI.AddToiCloudDrive",--存储到文件
+			"com.alipay.iphoneclient.ExtensionSchemeShare",--支付宝
+			"com.apple.reminders.RemindersEditorExtension",--提醒事项
+		}
+]]
 		params.callback = function(script, res)
 			gwjui.printf("gwjgwj,share res=%s", tostring(res))
 		end

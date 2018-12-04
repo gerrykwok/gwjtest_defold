@@ -39,13 +39,12 @@ std::string ext_callOcStaticMethod(const char *clazz, const char *method, const 
 		[invocation setTarget:targetClass];
 		[invocation setSelector:methodSel];
 		const char *returnType = [methodSig methodReturnType];
-		dmLogInfo("gwjgwj,returnType=%s,params=%s", returnType, params);
-		NSError *err;
+		NSError *err = nil;
 		NSData *jsonData = [[NSString stringWithUTF8String:params] dataUsingEncoding:NSUTF8StringEncoding];
 		NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
 		if(err)
 		{
-			dmLogError("parse json error:%s", [[err description] UTF8String]);
+			NSLog(@"parse json error:%@", err);
 		}
 		else
 		{
