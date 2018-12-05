@@ -245,7 +245,7 @@ function gwjui.dump(value, desciption, nesting)
 		return tostring(v)
 	end
 
-	local traceback = string_split(debug.traceback("", 2), "\n")
+	local traceback = string_split(debug.traceback(), "\n")
 	print("dump from: " .. string_trim(traceback[3]))
 
 	local function _dump(value, desciption, indent, nest, keylen)
