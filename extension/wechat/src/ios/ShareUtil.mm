@@ -20,8 +20,6 @@
 	NSDictionary* exclude = params[@"excludeActivityType"];
 	NSLog(@"gwjgwj,callback=%d,image=%@", callback, image);
 
-	/*
-
 	NSMutableArray *items = [[NSMutableArray alloc] init];
 	if(title && [title length] > 0)
 	{
@@ -95,7 +93,111 @@
 	if([activityController respondsToSelector:@selector(popoverPresentationController)])
 		activityController.popoverPresentationController.sourceView = [viewController view];//加入这句为了解决在ipad上崩溃, 参考:http://www.cocoachina.com/bbs/read.php?tid=233799
 	[viewController presentViewController:activityController animated:YES completion:nil];//这句在iphone7上可以
-	*/
+}
+
++(NSString*)shareWithSDK:(NSDictionary*)params
+{
+	NSLog(@"gwjgwj,In ShareUtil.shareWithSDK,params=%@", params);
+
+	NSString* shareType = json.getString("type");
+	int scene = [params[@"scene"] intValue];
+	NSString* text = params[@"text"];
+	NSString* image = params[@"image"];
+	NSString* title = params[@"title"];
+	NSString* description = params[@"description"];
+	NSString* url = params[@"url"];
+	int callback = [params[@"callback"] intValue];
+
+	bool success = false;
+
+	if([shareType isEqualToString:@"text"])
+	{
+		SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
+		req.bText = YES;
+		req.text = @"分享的内容";
+		req.scene = WXSceneSession;
+		[WXApi sendReq:req];
+	}
+	else if([shareType isEqualToString:@"image"])
+	{
+		UIImage *image = [UIImage imageNamed:@"res2.png"];
+		imageData = UIImageJPEGRepresentation(image, 0.7);
+
+		WXImageObject *imageObject = [WXImageObject object];
+		imageObject.imageData = imageData;
+
+		WXMediaMessage *message = [WXMediaMessage message];
+		NSString *filePath = [[NSBundle mainBundle] pathForResource:@"res5"
+		ofType:@"jpg"];
+		message.thumbData = [NSData dataWithContentsOfFile:filePath];
+		message.mediaObject = imageObject;
+
+		SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
+		req.bText = NO;
+		req.message = message;
+		req.scene = WXSceneTimeline;
+		[WXApi sendReq:req];
+	}
+	else if([shareType isEqualToString:@"music"])
+	{
+		WXMusicObject *musicObject = [WXMusicObject object];
+		musicObject.musicUrl = @"音乐url";
+		musicObject.musicLowBandUrl = musicObject.musicUrl;
+		musicObject.musicDataUrl = @"音乐数据url";
+		musicObject.musicLowBandDataUrl = musicObject.musicDataUrl;
+
+		WXMediaMessage *message = [WXMediaMessage message];
+		message.title = @"音乐标题";
+		message.description = @"音乐描述";
+		[message setThumbImage:[UIImage imageNamed:@"缩略图.jpg"]];
+		message.mediaObject = musicObject;
+
+		SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
+		req.bText = NO;
+		req.message = message;
+		req.scene = WXSceneSession;
+		[WXApi sendReq:req];
+	}
+	else if([shareType isEqualToString:@"video"])
+	{
+		WXVideoObject *videoObject = [WXVideoObject object];
+		videoObject.videoUrl = @"视频url";
+		videoObject.videoLowBandUrl = @"低分辨率视频url";
+
+		WXMediaMessage *message = [WXMediaMessage message];
+		message.title = @"标题";
+		message.description = @"描述";
+		[message setThumbImage:[UIImage imageNamed:@"缩略图.jpg"]];
+		message.mediaObject = videoObject;
+
+		SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
+		req.bText = NO;
+		req.message = message;
+		req.scene = WXSceneSession;
+		[WXApi sendReq:req];
+	}
+	else if([shareType isEqualToString:@"webpage"])
+	{
+		WXWebpageObject *webpageObject = [WXWebpageObject object];
+		webpageObject.webpageUrl = @"https://open.weixin.qq.com";
+
+		WXMediaMessage *message = [WXMediaMessage message];
+		message.title = @"标题";
+		message.description = @"描述";
+		[message setThumbImage:[UIImage imageNamed:@"缩略图.jpg"]];
+		message.mediaObject = webpageObject;
+
+		SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
+		req.bText = NO;
+		req.message = message;
+		req.scene = WXSceneSession;
+		[WXApi sendReq:req];
+	}
+	else
+	{
+		return [NSString stringWithFormat:@"invalid share type:%@", shareType];
+	}
+	return success ? @"success" : @"failed";
 }
 
 @end
