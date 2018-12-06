@@ -2,7 +2,7 @@
 title = gwjtest
 version = 0.1
 bundle_resources = /bundle_res
-appname = 牌乐门HDtest
+appname = defoldtest
 
 [bootstrap]
 main_collection = /main/main.collectionc

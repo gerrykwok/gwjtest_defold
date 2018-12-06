@@ -11,6 +11,7 @@ void wechat_notifyLoginResult(const char *res);
 void wechat_onUpdate();
 int wechat_shareWithIntent(lua_State *L);
 int wechat_shareWithIosSystem(lua_State *L);
+int wechat_shareWithSDK(lua_State *L);
 
 //注册一个lua callback
 //返回id

@@ -24,6 +24,34 @@ function test15:onEnter()
 		self:onClickShareWechatSDK()
 	end)
 	gwjui.ScaleButton.new({
+		main_id = "btn_share_wechat_sdk1",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:onClickShareWechatSDK1()
+	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_share_wechat_sdk2",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:onClickShareWechatSDK2()
+	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_share_wechat_sdk3",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:onClickShareWechatSDK3()
+	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_share_wechat_sdk4",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:onClickShareWechatSDK4()
+	end)
+	gwjui.ScaleButton.new({
 		main_id = "btn_luatable_to_json",
 		maxScale = 1.1,
 	})
@@ -167,7 +195,110 @@ function test15:onClickShareSystem()
 	end
 end
 
+function test15:onShareResult(res)
+	gwjui.printf("gwjgwj,share result:%s", tostring(res))
+	TipsBanner.show("分享结果:" .. tostring(res))
+end
+
 function test15:onClickShareWechatSDK()
+	local WXSceneSession = 0
+	local WXSceneTimeline = 1
+	local WXSceneFavorite = 2
+	local WXSceneSpecifiedContact = 3
+	local params = {
+		scene = WXSceneSession,
+		--text
+		type = "text",
+		text = "my text",
+		description = "my description",
+		callback = function(script, res)
+			self:onShareResult(res)
+		end,
+	}
+	local ok,ret = wechat.shareWithSDK(params)
+	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
+end
+
+function test15:onClickShareWechatSDK1()
+	local WXSceneSession = 0
+	local WXSceneTimeline = 1
+	local WXSceneFavorite = 2
+	local WXSceneSpecifiedContact = 3
+	local params = {
+		scene = WXSceneSession,
+		--image
+		type = "image",
+		image = "/mnt/sdcard/shareimage.jpg",
+		callback = function(script, res)
+			self:onShareResult(res)
+		end,
+	}
+	local ok,ret = wechat.shareWithSDK(params)
+	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
+end
+
+function test15:onClickShareWechatSDK2()
+	local WXSceneSession = 0
+	local WXSceneTimeline = 1
+	local WXSceneFavorite = 2
+	local WXSceneSpecifiedContact = 3
+	local params = {
+		scene = WXSceneSession,
+		--music
+		type = "music",
+		image = "/mnt/sdcard/share_icon3.png",
+		url = "http://10.11.133.31/day%20tripper.mp3",
+		title = "music title",
+		description = "music description",
+		callback = function(script, res)
+			self:onShareResult(res)
+		end,
+	}
+	local ok,ret = wechat.shareWithSDK(params)
+	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
+end
+
+function test15:onClickShareWechatSDK3()
+	local WXSceneSession = 0
+	local WXSceneTimeline = 1
+	local WXSceneFavorite = 2
+	local WXSceneSpecifiedContact = 3
+	local params = {
+		scene = WXSceneSession,
+		--video
+		type = "video",
+		title = "video title",
+		description = "video description",
+		url = "http://10.11.133.31/initial-d-26.mp4",
+		image = "/mnt/sdcard/share_icon3.png",
+		callback = function(script, res)
+			self:onShareResult(res)
+		end,
+	}
+	local ok,ret = wechat.shareWithSDK(params)
+	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
+end
+
+function test15:onClickShareWechatSDK4()
+	local WXSceneSession = 0
+	local WXSceneTimeline = 1
+	local WXSceneFavorite = 2
+	local WXSceneSpecifiedContact = 3
+	local params = {
+		scene = WXSceneSession,
+		--webpage
+		type = "webpage",
+		title = "the title",
+		description = "the description",
+		url = "https://www.pconline.com.cn",
+		image = "/mnt/sdcard/share_icon3.png",
+
+		callback = function(script, res)
+			self:onShareResult(res)
+		end,
+	}
+	local ok,ret = wechat.shareWithSDK(params)
+	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
 end
 
 return test15

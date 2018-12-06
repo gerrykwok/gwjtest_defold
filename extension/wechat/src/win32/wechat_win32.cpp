@@ -14,4 +14,9 @@ void wechat_logout()
 {
 }
 
+int wechat_shareWithSDK(lua_State *L)
+{
+	return 0;
+}
+
 #endif

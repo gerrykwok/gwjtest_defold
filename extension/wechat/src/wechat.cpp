@@ -42,6 +42,7 @@ static const luaL_reg Module_methods[] =
 #elif defined(DM_PLATFORM_IOS)
 	{"shareWithIosSystem", wechat_shareWithIosSystem},
 #endif
+	{"shareWithSDK", wechat_shareWithSDK},
 	{0, 0}
 };
 

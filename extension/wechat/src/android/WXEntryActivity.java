@@ -16,6 +16,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import com.xishanju.plm.wechat.PlatformWechat;
+import com.xishanju.plm.wechat.ShareUtil;
 
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler
 {
@@ -44,13 +45,32 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler
 	@Override
 	public void onResp(BaseResp resp)
 	{
-		Log.d("gwjgwj", "gwjgwj,onResp:"+resp);
-		if(resp.getType() == ConstantsAPI.COMMAND_SENDAUTH)
+//		Log.d("gwjgwj", "gwjgwj,onResp:"+resp);
+		int type = resp.getType();
+		if(type == ConstantsAPI.COMMAND_SENDAUTH)//微信登录
 		{
 			SendAuth.Resp res = (SendAuth.Resp)resp;
 			Log.d("gwjgwj", "gwjgwj,onAuthFinish,errCode="+res.errCode+",errStr="+res.errStr);
 			Log.d("gwjgwj", String.format(Locale.US, "gwjgwj,code=%s,openId=%s", res.code, res.openId));
 			PlatformWechat.notifyLoginResult(res.errCode, res.errStr, res.code, res.lang, res.country);
+		}
+		else if(type == ConstantsAPI.COMMAND_SENDMESSAGE_TO_WX)//微信分享
+		{
+			String result = "";
+			switch(resp.errCode)
+			{
+			case BaseResp.ErrCode.ERR_OK:
+				result = "success";
+				break;
+			case BaseResp.ErrCode.ERR_USER_CANCEL:
+				result = "cancel";
+				break;
+			default:
+				result = "failed";
+				break;
+			}
+			String res = String.format(Locale.US, "{\"result\":\"%s\"}", result);
+			ShareUtil.notifyShareResult(res);
 		}
 		finish();
 	}
