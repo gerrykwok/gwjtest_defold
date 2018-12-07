@@ -100,17 +100,31 @@ static int g_shareCallback;
 
 +(NSString*)shareWithSDK:(NSDictionary*)params
 {
-	NSLog(@"gwjgwj,In ShareUtil.shareWithSDK,params=%@", params);
-
+//	NSLog(@"gwjgwj,In ShareUtil.shareWithSDK,params=%@", params);
 	NSString* shareType = params[@"type"];
 	int scene = [params[@"scene"] intValue];
 	NSString* text = params[@"text"];
 	NSString* image = params[@"image"];
+	NSString *imagePath = nil;
+	int imageFrom = 1;
+	id imgFrom = params[@"imageFrom"];
+	if(imgFrom) imageFrom = [imgFrom intValue];
 	NSString* title = params[@"title"];
 	NSString* description = params[@"description"];
 	NSString* url = params[@"url"];
 	int callback = [params[@"callback"] intValue];
 	g_shareCallback = callback;
+	if(image)
+	{
+		if(imageFrom == 2)
+		{
+			imagePath = [[NSBundle mainBundle] pathForResource:image ofType:nil];
+		}
+		else
+		{
+			imagePath = image;
+		}
+	}
 
 	BOOL success = NO;
 
@@ -124,11 +138,8 @@ static int g_shareCallback;
 	}
 	else if([shareType isEqualToString:@"image"])
 	{
-//		UIImage *image = [UIImage imageNamed:@"res2.png"];
-//		imageData = UIImageJPEGRepresentation(image, 0.7);
-
 		WXImageObject *imageObject = [WXImageObject object];
-		imageObject.imageData = [NSData dataWithContentsOfFile:image];
+		imageObject.imageData = [NSData dataWithContentsOfFile:imagePath];
 
 		WXMediaMessage *message = [WXMediaMessage message];
 //		NSString *filePath = [[NSBundle mainBundle] pathForResource:@"res5" ofType:@"jpg"];
@@ -152,7 +163,7 @@ static int g_shareCallback;
 		WXMediaMessage *message = [WXMediaMessage message];
 		message.title = title;
 		message.description = description;
-		[message setThumbImage:[UIImage imageWithContentsOfFile:image]];
+		[message setThumbImage:[UIImage imageWithContentsOfFile:imagePath]];
 		message.mediaObject = musicObject;
 
 		SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
@@ -170,7 +181,7 @@ static int g_shareCallback;
 		WXMediaMessage *message = [WXMediaMessage message];
 		message.title = title;
 		message.description = description;
-		[message setThumbImage:[UIImage imageWithContentsOfFile:image]];
+		[message setThumbImage:[UIImage imageWithContentsOfFile:imagePath]];
 		message.mediaObject = videoObject;
 
 		SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
@@ -187,7 +198,7 @@ static int g_shareCallback;
 		WXMediaMessage *message = [WXMediaMessage message];
 		message.title = title;
 		message.description = description;
-		[message setThumbImage:[UIImage imageWithContentsOfFile:image]];
+		[message setThumbImage:[UIImage imageWithContentsOfFile:imagePath]];
 		message.mediaObject = webpageObject;
 
 		SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
