@@ -35,12 +35,11 @@
 
 -(void) onResp:(BaseResp*)resp
 {
-	//这里怎么判断微信登录取消了，或者出错了?
 	if([resp isKindOfClass:[SendAuthResp class]])
 	{
 		SendAuthResp *authResp = (SendAuthResp*)resp;
 		// NSLog(@"gwjgwj,onResp:code:%@,state:%@,lang:%@,country:%@", authResp.code, authResp.state, authResp.lang, authResp.country);
-		[PlatformWechat notifyLoginResult:0 errStr:@"" code:authResp.code];
+		[PlatformWechat notifyLoginResult:resp.errCode errStr:resp.errStr code:authResp.code];
 	}
 	else if([resp isKindOfClass:[SendMessageToWXResp class]])
 	{

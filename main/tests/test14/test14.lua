@@ -51,9 +51,9 @@ end
 function test14:setLoginInfo(t)
 	local errCode = t.errCode
 	if(errCode == 0) then
-		gui.set_text(gui.get_node("text_wechat_login_code"), t.code)
-		gui.set_text(gui.get_node("text_wechat_login_lang"), t.lang)
-		gui.set_text(gui.get_node("text_wechat_login_country"), t.country)
+		gui.set_text(gui.get_node("text_wechat_login_code"), t.code or "")
+		gui.set_text(gui.get_node("text_wechat_login_lang"), t.lang or "")
+		gui.set_text(gui.get_node("text_wechat_login_country"), t.country or "")
 	elseif(errCode == -2) then
 		TipsBanner.show("用户取消微信登录")
 	else
