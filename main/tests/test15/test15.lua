@@ -236,6 +236,8 @@ function test15:onClickShareWechatSDK_image()
 	if(sys.get_sys_info().system_name == "iPhone OS") then
 		params.image = self.m_imageShare
 	end
+	params.image = "IMG_20181204_094608.jpg"
+	params.imageFrom = 2
 	local ok,ret = wechat.shareWithSDK(params)
 	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
 end
@@ -260,6 +262,8 @@ function test15:onClickShareWechatSDK_music()
 	if(sys.get_sys_info().system_name == "iPhone OS") then
 		params.image = self.m_imageShare
 	end
+	params.image = "IMG_20181205_203508.jpg"
+	params.imageFrom = 2
 	local ok,ret = wechat.shareWithSDK(params)
 	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
 end
@@ -284,6 +288,8 @@ function test15:onClickShareWechatSDK_video()
 	if(sys.get_sys_info().system_name == "iPhone OS") then
 		params.image = self.m_imageShare
 	end
+	params.image = "IMG_20181205_203508.jpg"
+	params.imageFrom = 2
 	local ok,ret = wechat.shareWithSDK(params)
 	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
 end
@@ -309,6 +315,8 @@ function test15:onClickShareWechatSDK_webpage()
 	if(sys.get_sys_info().system_name == "iPhone OS") then
 		params.image = self.m_imageShare
 	end
+	params.image = "IMG_20181205_203508.jpg"
+	params.imageFrom = 2
 	local ok,ret = wechat.shareWithSDK(params)
 	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
 end

@@ -2,6 +2,7 @@ package com.xishanju.plm.wechat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -110,6 +111,7 @@ public class ShareUtil
 		String title = "";
 		String description = "";
 		String image = "";
+		int imageFrom = 1;//1=全路径图片，2=包内图片
 		String url = "";
 		int callback = 0;
 		try
@@ -119,6 +121,7 @@ public class ShareUtil
 			if(json.has("scene")) scene = json.getInt("scene");
 			if(json.has("text")) text = json.getString("text");
 			if(json.has("image")) image = json.getString("image");
+			if(json.has("imageFrom")) imageFrom = json.getInt("imageFrom");
 			if(json.has("title")) title = json.getString("title");
 			if(json.has("description")) description = json.getString("description");
 			if(json.has("url")) url = json.getString("url");
@@ -151,7 +154,14 @@ public class ShareUtil
 		{
 			//初始化 WXImageObject 和 WXMediaMessage 对象
 			WXImageObject imgObj = new WXImageObject();
-			imgObj.imagePath = image;
+			if(imageFrom == 2)
+			{
+				imgObj.imageData = getBytesFromAsset(ctx, image);
+			}
+			else
+			{
+				imgObj.imagePath = image;
+			}
 			WXMediaMessage msg = new WXMediaMessage();
 			msg.mediaObject = imgObj;
 
@@ -175,10 +185,17 @@ public class ShareUtil
 			msg.title = title;
 			msg.description = description;
 			//设置音乐缩略图
-			Bitmap thumbBmp;
-			thumbBmp = BitmapFactory.decodeFile(image);
-			msg.thumbData = bmpToByteArray(thumbBmp, true);
-			//msg.setThumbImage(thumbBmp);//用该方法分享出来的缩略图没有alpha
+			if(imageFrom == 2)
+			{
+				msg.thumbData = getBytesFromAsset(ctx, image);
+			}
+			else
+			{
+				Bitmap thumbBmp;
+				thumbBmp = BitmapFactory.decodeFile(image);
+				msg.thumbData = bmpToByteArray(thumbBmp, true);
+				//msg.setThumbImage(thumbBmp);//用该方法分享出来的缩略图没有alpha
+			}
 
 			//构造一个Req
 			SendMessageToWX.Req req = new SendMessageToWX.Req();
@@ -198,11 +215,18 @@ public class ShareUtil
 			WXMediaMessage msg = new WXMediaMessage(video);
 			msg.title = title;
 			msg.description = description;
-			
-			Bitmap thumbBmp;
-			thumbBmp = BitmapFactory.decodeFile(image);
-			msg.thumbData = bmpToByteArray(thumbBmp, true);
-			//msg.setThumbImage(thumbBmp);//用该方法分享出来的缩略图没有alpha
+
+			if(imageFrom == 2)
+			{
+				msg.thumbData = getBytesFromAsset(ctx, image);
+			}
+			else
+			{
+				Bitmap thumbBmp;
+				thumbBmp = BitmapFactory.decodeFile(image);
+				msg.thumbData = bmpToByteArray(thumbBmp, true);
+				//msg.setThumbImage(thumbBmp);//用该方法分享出来的缩略图没有alpha
+			}
 
 			//构造一个Req
 			SendMessageToWX.Req req = new SendMessageToWX.Req();
@@ -224,10 +248,17 @@ public class ShareUtil
 			msg.title = title;
 			msg.description = description;
 
-			Bitmap thumbBmp;
-			thumbBmp = BitmapFactory.decodeFile(image);
-			msg.thumbData = bmpToByteArray(thumbBmp, true);
-			//msg.setThumbImage(thumbBmp);//用该方法分享出来的缩略图没有alpha
+			if(imageFrom == 2)
+			{
+				msg.thumbData = getBytesFromAsset(ctx, image);
+			}
+			else
+			{
+				Bitmap thumbBmp;
+				thumbBmp = BitmapFactory.decodeFile(image);
+				msg.thumbData = bmpToByteArray(thumbBmp, true);
+				//msg.setThumbImage(thumbBmp);//用该方法分享出来的缩略图没有alpha
+			}
 
 			//构造一个Req
 			SendMessageToWX.Req req = new SendMessageToWX.Req();
@@ -273,5 +304,24 @@ public class ShareUtil
 		}
 		
 		return result;
+	}
+
+	public static byte[] getBytesFromAsset(Context ctx, String path)
+	{
+		InputStream is;
+		byte[] ret = null;
+		try
+		{
+			is = ctx.getAssets().open(path);
+			int size = is.available();
+			ret = new byte[size];
+			is.read(ret);
+			is.close();
+		} catch(Exception e)
+		{
+			ret = null;
+			e.printStackTrace();
+		}
+		return ret;
 	}
 }
