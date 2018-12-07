@@ -43,6 +43,7 @@ static const luaL_reg Module_methods[] =
 	{"shareWithIosSystem", wechat_shareWithIosSystem},
 #endif
 	{"shareWithSDK", wechat_shareWithSDK},
+	{"makePurchase", wechat_makePurchase},
 	{0, 0}
 };
 

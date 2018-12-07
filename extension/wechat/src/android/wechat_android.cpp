@@ -78,4 +78,34 @@ int wechat_shareWithSDK(lua_State *L)
 	return 2;
 }
 
+extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_WeixinPayUtil_nativeNotifyPay(JNIEnv *env, jclass clz, jint callback, jstring value)
+{
+	if(callback <= 0) return;
+	jstring value2 = (jstring)env->NewGlobalRef(value);
+	auto func = [=](){
+		JavaVM *vm = dmGraphics::GetNativeAndroidJavaVM();
+		JNIEnv *env2;
+		vm->AttachCurrentThread(&env2, NULL);
+		const char *value_ = env2->GetStringUTFChars(value2, 0);
+
+		ext_invokeLuaCallbackWithString(callback, value_);
+		ext_unregisterLuaCallback(callback);
+
+		env2->ReleaseStringUTFChars(value2, value_);
+		env2->DeleteGlobalRef(value2);
+		vm->DetachCurrentThread();
+	};
+	ext_performInUpdateThread(func);
+}
+
+int wechat_makePurchase(lua_State *L)
+{
+	std::string param = ext_jsonFromLuaTable(L, -1);
+	bool ok;
+	std::string ret = ext_callJavaStaticMethod("com.xishanju.plm.wechat.WeixinPayUtil", "makePurchase", param.c_str(), &ok);
+	lua_pushboolean(L, ok);
+	lua_pushstring(L, ret.c_str());
+	return 2;
+}
+
 #endif

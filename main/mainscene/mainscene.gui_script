@@ -20,6 +20,7 @@ local alltest =
 	require("main.tests.test13.name"),
 	require("main.tests.test14.name"),
 	require("main.tests.test15.name"),
+	require("main.tests.test16.name"),
 }
 
 function init(self)

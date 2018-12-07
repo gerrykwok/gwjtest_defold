@@ -43,4 +43,9 @@ int wechat_shareWithSDK(lua_State *L)
 	return 2;
 }
 
+int wechat_makePurchase(lua_State *L)
+{
+	return 0;
+}
+
 #endif
