@@ -2,6 +2,7 @@
 
 #import "AppControllerWechat.h"
 #import "PlatformWechat.h"
+#import "ShareUtil.h"
 
 @implementation AppControllerWechat
 
@@ -40,6 +41,24 @@
 		SendAuthResp *authResp = (SendAuthResp*)resp;
 		// NSLog(@"gwjgwj,onResp:code:%@,state:%@,lang:%@,country:%@", authResp.code, authResp.state, authResp.lang, authResp.country);
 		[PlatformWechat notifyLoginResult:0 errStr:@"" code:authResp.code];
+	}
+	else if([resp isKindOfClass:[SendMessageToWXResp class]])
+	{
+		NSString *result = @"";
+		switch(resp.errCode)
+		{
+		case WXSuccess:
+			result = @"success";
+			break;
+		case WXErrCodeUserCancel:
+			result = @"cancel";
+			break;
+		default:
+			result = @"error";
+			break;
+		}
+		NSString *res = [NSString stringWithFormat:@"{\"result\":\"%@\"}", result];
+		[ShareUtil notifyShareResult:res];
 	}
 }
 

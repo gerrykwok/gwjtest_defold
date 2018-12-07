@@ -17,39 +17,39 @@ function test15:onEnter()
 		self:onClickShareSystem()
 	end)
 	gwjui.ScaleButton.new({
-		main_id = "btn_share_wechat_sdk",
+		main_id = "btn_share_wechat_sdk_text",
 		maxScale = 1.1,
 	})
 	:onButtonClicked(function()
-		self:onClickShareWechatSDK()
+		self:onClickShareWechatSDK_text()
 	end)
 	gwjui.ScaleButton.new({
-		main_id = "btn_share_wechat_sdk1",
+		main_id = "btn_share_wechat_sdk_image",
 		maxScale = 1.1,
 	})
 	:onButtonClicked(function()
-		self:onClickShareWechatSDK1()
+		self:onClickShareWechatSDK_image()
 	end)
 	gwjui.ScaleButton.new({
-		main_id = "btn_share_wechat_sdk2",
+		main_id = "btn_share_wechat_sdk_music",
 		maxScale = 1.1,
 	})
 	:onButtonClicked(function()
-		self:onClickShareWechatSDK2()
+		self:onClickShareWechatSDK_music()
 	end)
 	gwjui.ScaleButton.new({
-		main_id = "btn_share_wechat_sdk3",
+		main_id = "btn_share_wechat_sdk_video",
 		maxScale = 1.1,
 	})
 	:onButtonClicked(function()
-		self:onClickShareWechatSDK3()
+		self:onClickShareWechatSDK_video()
 	end)
 	gwjui.ScaleButton.new({
-		main_id = "btn_share_wechat_sdk4",
+		main_id = "btn_share_wechat_sdk_webpage",
 		maxScale = 1.1,
 	})
 	:onButtonClicked(function()
-		self:onClickShareWechatSDK4()
+		self:onClickShareWechatSDK_webpage()
 	end)
 	gwjui.ScaleButton.new({
 		main_id = "btn_luatable_to_json",
@@ -200,7 +200,7 @@ function test15:onShareResult(res)
 	TipsBanner.show("分享结果:" .. tostring(res))
 end
 
-function test15:onClickShareWechatSDK()
+function test15:onClickShareWechatSDK_text()
 	local WXSceneSession = 0
 	local WXSceneTimeline = 1
 	local WXSceneFavorite = 2
@@ -219,7 +219,7 @@ function test15:onClickShareWechatSDK()
 	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
 end
 
-function test15:onClickShareWechatSDK1()
+function test15:onClickShareWechatSDK_image()
 	local WXSceneSession = 0
 	local WXSceneTimeline = 1
 	local WXSceneFavorite = 2
@@ -233,11 +233,14 @@ function test15:onClickShareWechatSDK1()
 			self:onShareResult(res)
 		end,
 	}
+	if(sys.get_sys_info().system_name == "iPhone OS") then
+		params.image = self.m_imageShare
+	end
 	local ok,ret = wechat.shareWithSDK(params)
 	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
 end
 
-function test15:onClickShareWechatSDK2()
+function test15:onClickShareWechatSDK_music()
 	local WXSceneSession = 0
 	local WXSceneTimeline = 1
 	local WXSceneFavorite = 2
@@ -254,11 +257,14 @@ function test15:onClickShareWechatSDK2()
 			self:onShareResult(res)
 		end,
 	}
+	if(sys.get_sys_info().system_name == "iPhone OS") then
+		params.image = self.m_imageShare
+	end
 	local ok,ret = wechat.shareWithSDK(params)
 	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
 end
 
-function test15:onClickShareWechatSDK3()
+function test15:onClickShareWechatSDK_video()
 	local WXSceneSession = 0
 	local WXSceneTimeline = 1
 	local WXSceneFavorite = 2
@@ -275,11 +281,14 @@ function test15:onClickShareWechatSDK3()
 			self:onShareResult(res)
 		end,
 	}
+	if(sys.get_sys_info().system_name == "iPhone OS") then
+		params.image = self.m_imageShare
+	end
 	local ok,ret = wechat.shareWithSDK(params)
 	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
 end
 
-function test15:onClickShareWechatSDK4()
+function test15:onClickShareWechatSDK_webpage()
 	local WXSceneSession = 0
 	local WXSceneTimeline = 1
 	local WXSceneFavorite = 2
@@ -297,6 +306,9 @@ function test15:onClickShareWechatSDK4()
 			self:onShareResult(res)
 		end,
 	}
+	if(sys.get_sys_info().system_name == "iPhone OS") then
+		params.image = self.m_imageShare
+	end
 	local ok,ret = wechat.shareWithSDK(params)
 	gwjui.printf("gwjgwj,share with sdk, ok=%s, ret=%s", tostring(ok), tostring(ret))
 end

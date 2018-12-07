@@ -66,7 +66,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler
 				result = "cancel";
 				break;
 			default:
-				result = "failed";
+				result = "error";
 				break;
 			}
 			String res = String.format(Locale.US, "{\"result\":\"%s\"}", result);

@@ -2,4 +2,6 @@
 
 @interface ShareUtil : NSObject
 
++(void)notifyShareResult:(NSString*)res;
+
 @end

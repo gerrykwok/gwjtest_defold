@@ -160,7 +160,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
-  id: "btn_share_wechat_sdk"
+  id: "btn_share_wechat_sdk_text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -233,7 +233,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "btn_share_wechat_sdk"
+  parent: "btn_share_wechat_sdk_text"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -628,7 +628,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
-  id: "btn_share_wechat_sdk1"
+  id: "btn_share_wechat_sdk_image"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -701,7 +701,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "btn_share_wechat_sdk1"
+  parent: "btn_share_wechat_sdk_image"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -745,7 +745,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
-  id: "btn_share_wechat_sdk2"
+  id: "btn_share_wechat_sdk_music"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -818,7 +818,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "btn_share_wechat_sdk2"
+  parent: "btn_share_wechat_sdk_music"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -862,7 +862,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
-  id: "btn_share_wechat_sdk3"
+  id: "btn_share_wechat_sdk_video"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -935,7 +935,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "btn_share_wechat_sdk3"
+  parent: "btn_share_wechat_sdk_video"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -979,7 +979,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
-  id: "btn_share_wechat_sdk4"
+  id: "btn_share_wechat_sdk_webpage"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -1052,7 +1052,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "btn_share_wechat_sdk4"
+  parent: "btn_share_wechat_sdk_webpage"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
