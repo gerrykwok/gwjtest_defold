@@ -25,7 +25,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_PlatformWechat_no
 
 void wechat_onAppInit()
 {
-	ext_call_java_static_void_method(WECHAT_CLASS, "init", "(Landroid/content/Context;)V", dmGraphics::GetNativeAndroidActivity());
+	bool ok;
+	ext_callJavaStaticMethod(WECHAT_CLASS, "init", WECHAT_APPID, &ok);
 }
 
 void wechat_login()

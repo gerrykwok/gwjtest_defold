@@ -16,13 +16,12 @@ public class PlatformWechat
 	public static Context s_context;
 	public static IWXAPI s_wxApi;
 
-	public static void init(Context ctx)
+	public static String init(Context ctx, String wechatAppId)
 	{
-		String wechatAppId = "wxc0acf2068b5dd7a3";
-
 		s_context = ctx;
 		s_wxApi = WXAPIFactory.createWXAPI(ctx, null);
 		s_wxApi.registerApp(wechatAppId);
+		return "";
 	}
 	/*
 	* 微信登录

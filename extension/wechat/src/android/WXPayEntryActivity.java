@@ -1,4 +1,4 @@
-package cn.com.xishanju.qyq.wxapi;
+package com.xsjplm.plm.wxapi;
 
 import java.util.Locale;
 

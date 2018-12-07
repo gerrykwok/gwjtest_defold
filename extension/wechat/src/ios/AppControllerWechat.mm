@@ -3,12 +3,13 @@
 #import "AppControllerWechat.h"
 #import "PlatformWechat.h"
 #import "ShareUtil.h"
+#import "../wechat.h"
 
 @implementation AppControllerWechat
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	NSString *wechatAppId = @"wxc0acf2068b5dd7a3";
+	NSString *wechatAppId = [NSString stringWithUTF8String:WECHAT_APPID];
 	[WXApi registerApp:wechatAppId];
 	return YES;
 }

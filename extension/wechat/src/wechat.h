@@ -4,6 +4,10 @@
 #include <functional>
 #include <string>
 
+//微信appid，用于微信登录和微信SDK分享
+//牌乐门: wxc0acf2068b5dd7a3  牌乐门HD: wxefac673b77470b4f
+#define WECHAT_APPID			"wxefac673b77470b4f"
+
 void wechat_onAppInit();
 void wechat_login();
 void wechat_logout();
