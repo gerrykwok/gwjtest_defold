@@ -123,7 +123,8 @@ std::string ext_jsonFromLuaTable(lua_State *L, int index)
 	int top = lua_gettop(L);
 	std::string sKey, sValue;
 	std::string sRet;
-	char buf[32];
+	int i;
+	char buf[256];
 	lua_Number fValue;
 
 	sRet = "{";
@@ -159,7 +160,18 @@ std::string ext_jsonFromLuaTable(lua_State *L, int index)
 			break;
 		case LUA_TNUMBER:
 			fValue = lua_tonumber(L, -1);
-			sprintf(buf, "%g", fValue);
+			sprintf(buf, "%f", fValue);
+			for(i = strlen(buf)-1; i >= 0; --i)
+			{
+				if(buf[i] != '0')
+					break;
+				if(i > 0)
+				{
+					buf[i] = 0;
+					if(buf[i-1] == '.')
+						buf[i-1] = 0;
+				}
+			}
 			sValue = buf;
 			break;
 		case LUA_TSTRING:

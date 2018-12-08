@@ -64,7 +64,8 @@ function test15:onEnter()
 			[100] = 5,
 			10,
 			scale = 1.23,
-			float = 1.7E308,
+			float = 1.7E108,
+			timestamp = os.time(),
 			pi = math.pi,
 			huge = math.huge,
 			callback = function()
