@@ -99,4 +99,71 @@ std::string ext_callOcStaticMethod(const char *clazz, const char *method, const 
 	}
 }
 
+NSDictionary* ext_NSDictionaryFromLuaTable(lua_State *L, int index)
+{
+	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+	NSDictionary *sub;
+	int top = lua_gettop(L);
+	NSString *key;
+	std::string sValue;
+	int i;
+	char buf[256];
+	lua_Number fValue;
+	int funcId;
+
+	lua_pushnil(L);  /* first key */
+	while(lua_next(L, index-1) != 0)
+	{
+		/* 'key' is at index -2 and 'value' at index -1 */
+		switch(lua_type(L, -2))
+		{
+		case LUA_TNIL:
+			key = @"nil";
+			break;
+		case LUA_TBOOLEAN:
+			key = lua_toboolean(L, -2) ? @"true" : @"false";
+			break;
+		case LUA_TNUMBER:
+			key = [NSString stringWithFormat:@"%d", (int)lua_tonumber(L, -2)];
+			break;
+		case LUA_TSTRING:
+			key = [NSString stringWithUTF8String:lua_tostring(L, -2)];
+			break;
+		default:
+			key = nil;
+			break;
+		}
+
+		if(key) switch(lua_type(L, -1))
+		{
+		case LUA_TBOOLEAN:
+			[dict setObject:[NSNumber numberWithBool:lua_toboolean(L, -1)] forKey:key];
+			break;
+		case LUA_TNUMBER:
+			[dict setObject:[NSNumber numberWithDouble:lua_tonumber(L, -1)] forKey:key];
+			break;
+		case LUA_TSTRING:
+			[dict setObject:[NSString stringWithUTF8String:lua_tostring(L, -1)] forKey:key];
+			break;
+		case LUA_TFUNCTION:
+			funcId = ext_registerLuaCallback(L, -1);
+			[dict setObject:[NSNumber numberWithInt:funcId] forKey:key];
+			break;
+		case LUA_TTABLE:
+			sub = ext_NSDictionaryFromLuaTable(L, -1);
+			[dict setObject:sub forKey:key];
+			break;
+		default: break;
+		}
+
+//		dmLogInfo("%s - %s", lua_typename(L, lua_type(L, -2)), lua_typename(L, lua_type(L, -1)));
+//		dmLogInfo("\"%s\":%s", sKey.c_str(), sValue.c_str());
+
+		lua_pop(L, 1);  /* removes 'value'; keeps 'key' for next iteration */
+	}
+
+	assert(top + 0 == lua_gettop(L));
+	return dict;
+}
+
 #endif

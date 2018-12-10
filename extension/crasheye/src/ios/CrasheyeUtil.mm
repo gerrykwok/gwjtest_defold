@@ -9,13 +9,14 @@
 {
 	NSString *title = params[@"title"];
 	NSString *content = params[@"content"];
+//	NSLog(@"gwjgwj,send script error,title=%@,content=%@", title, content);
 	[Crasheye sendScriptExceptionRequestWithTitle:title exception:content file:nil language:@"lua"];
 }
 
 +(void)setUserId:(NSDictionary*)params
 {
 	NSString *userId = params[@"userId"];
-	NSLog(@"gwjgwj,set user id:%@", userId);
+//	NSLog(@"gwjgwj,set user id:%@", userId);
 	[Crasheye setUserID:userId];
 }
 
@@ -27,7 +28,7 @@
 	{
 		NSString *key = [allkey objectAtIndex:i];
 		NSString *value = [params objectForKey:key];
-		NSLog(@"gwjgwj,addExtra,key=%@,value=%@", key, value);
+//		NSLog(@"gwjgwj,addExtra,key=%@,value=%@", key, value);
 		[Crasheye addExtraDataWithKey:key withValue:value];
 	}
 }

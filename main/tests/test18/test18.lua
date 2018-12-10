@@ -68,6 +68,15 @@ function test18:onSendError()
 	local ok,ret = crasheye.sendScriptError({
 		title = "error title",
 		content = "error content",
+		mytable = {
+			abc = "test",
+			def = 4,
+			nest = {
+				nest1 = 1,
+				nest2 = 2,
+				nickname = "gwjgwj",
+			},
+		},
 	})
 	gwjui.printf("gwjgwj,send script error,ok=%s,ret=%s", tostring(ok), tostring(ret))
 end
@@ -91,7 +100,7 @@ function test18:raiseError1()
 end
 
 function test18:raiseError2()
-	error("gwj error")
+	error("gwj error1")
 end
 
 return test18

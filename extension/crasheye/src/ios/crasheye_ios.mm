@@ -2,6 +2,9 @@
 
 #include "../crasheye.h"
 #include "crasheye_ios_v2.6.3/Crasheye.h"
+#import "CrasheyeUtil.h"
+
+extern NSDictionary* ext_NSDictionaryFromLuaTable(lua_State *L, int index);
 
 void crasheye_onAppInit()
 {
@@ -11,11 +14,11 @@ void crasheye_onAppInit()
 
 int crasheye_sendScriptError(lua_State *L)
 {
-	std::string param = ext_jsonFromLuaTable(L, -1);
-	bool ok;
-	std::string ret = ext_callOcStaticMethod("CrasheyeUtil", "sendScriptError", param.c_str(), &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
+	NSDictionary *param = ext_NSDictionaryFromLuaTable(L, -1);
+	[CrasheyeUtil sendScriptError:param];
+
+	lua_pushboolean(L, true);
+	lua_pushstring(L, "success");
 	return 2;
 }
 

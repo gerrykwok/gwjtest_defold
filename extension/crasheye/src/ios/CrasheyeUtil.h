@@ -2,4 +2,8 @@
 
 @interface CrasheyeUtil : NSObject
 
++(void)sendScriptError:(NSDictionary*)params;
++(void)setUserId:(NSDictionary*)params;
++(void)addExtraData:(NSDictionary*)params;
+
 @end
