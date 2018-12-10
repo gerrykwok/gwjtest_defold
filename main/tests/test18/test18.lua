@@ -3,7 +3,13 @@ local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 
 local test18 = gwjui.class("test18")
 
+test18.has_set_error_handle = false
+
 function test18:ctor()
+	if(not test18.has_set_error_handle) then
+		test18.has_set_error_handle = true
+		sys.set_error_handler(gwjui.handler(self, self.onLuaError))
+	end
 end
 
 function test18:onEnter()
@@ -28,6 +34,13 @@ function test18:onEnter()
 	})
 	:onButtonClicked(function()
 		self:onSendError()
+	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_raise_error",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:onRaiseError()
 	end)
 end
 
@@ -57,6 +70,28 @@ function test18:onSendError()
 		content = "error content",
 	})
 	gwjui.printf("gwjgwj,send script error,ok=%s,ret=%s", tostring(ok), tostring(ret))
+end
+
+function test18:onLuaError(source, message, traceback)
+--	gwjui.printf("gwjgwj,error,source=%s", tostring(source))
+--	gwjui.printf("gwjgwj,error,message=%s", tostring(message))
+--	gwjui.printf("gwjgwj,error,traceback=%s", tostring(traceback))
+	crasheye.sendScriptError({
+		title = message,
+		content = traceback,
+	})
+end
+
+function test18:onRaiseError()
+	self:raiseError1()
+end
+
+function test18:raiseError1()
+	self:raiseError2()
+end
+
+function test18:raiseError2()
+	error("gwj error")
 end
 
 return test18
