@@ -4,12 +4,12 @@ platforms:
     arm64-ios:
         context:
             flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            libs:       ["z", "c++"]
 
     armv7-ios:
         context:
             flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            libs:       ["z", "c++"]
 
     armv7-android:
         context:
