@@ -13,6 +13,22 @@ struct LuaCallbackInfo
 	int        m_id;
 };
 
+static void ext_replaceString(std::string &str, const char *sub, const char *repl)
+{
+	std::string::size_type lenRepl = strlen(repl);
+	std::string::size_type lenSub = strlen(sub);
+	std::string::size_type pos, start;
+	start = 0;
+	while(1)
+	{
+		pos = str.find(sub, start);
+		if(pos == std::string::npos)
+		break;
+		str.replace(pos, lenSub, repl);
+		start = pos + lenRepl;
+	}
+}
+
 static int g_SequenceId = 0;
 
 static void RegisterCallback(lua_State* L, int index, LuaCallbackInfo* cbk)

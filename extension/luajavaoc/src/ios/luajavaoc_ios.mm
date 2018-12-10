@@ -45,6 +45,7 @@ std::string ext_callOcStaticMethod(const char *clazz, const char *method, const 
 		if(err)
 		{
 			NSLog(@"parse json error:%@", err);
+			NSLog(@"parsing json:%s", params);
 		}
 		else
 		{
