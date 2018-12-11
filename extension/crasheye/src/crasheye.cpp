@@ -10,6 +10,8 @@ static const luaL_reg Module_methods[] =
 	{"sendScriptError", crasheye_sendScriptError},
 	{"setUserId", crasheye_setUserId},
 	{"addExtraData", crasheye_addExtraData},
+	{"removeExtraData", crasheye_removeExtraData},
+	{"clearExtraData", crasheye_clearExtraData},
 	{0, 0}
 };
 

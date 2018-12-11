@@ -33,6 +33,22 @@
 	}
 }
 
++(void)removeExtraData:(NSDictionary*)params
+{
+	NSString *key = params[@"key"];
+	if(key)
+	{
+		NSLog(@"crasheye:remove extra of key %@", key);
+		[Crasheye removeExtraDataWithKey:key];
+	}
+}
+
++(void)clearExtraData:(NSDictionary*)params
+{
+	NSLog(@"crasheye:clear all extra data");
+	[Crasheye clearExtraData];
+}
+
 @end
 
 #endif

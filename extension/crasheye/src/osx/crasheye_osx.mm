@@ -21,4 +21,14 @@ int crasheye_addExtraData(lua_State *L)
 	return 0;
 }
 
+int crasheye_removeExtraData(lua_State *L)
+{
+	return 0;
+}
+
+int crasheye_clearExtraData(lua_State *L)
+{
+	return 0;
+}
+
 #endif

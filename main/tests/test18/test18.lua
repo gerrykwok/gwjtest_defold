@@ -29,6 +29,20 @@ function test18:onEnter()
 		self:onAddExtraData()
 	end)
 	gwjui.ScaleButton.new({
+		main_id = "btn_remove_extra",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:onRemoveExtraData()
+	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_clear_extra",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:onClearExtraData()
+	end)
+	gwjui.ScaleButton.new({
 		main_id = "btn_send_error",
 		maxScale = 1.1,
 	})
@@ -62,6 +76,18 @@ function test18:onAddExtraData()
 		timestamp = os.time(),
 	})
 	gwjui.printf("gwjgwj,add extra data,ok=%s,ret=%s", tostring(ok), tostring(ret))
+end
+
+function test18:onRemoveExtraData()
+	local ok,ret = crasheye.removeExtraData({
+		key = "category",
+	})
+	gwjui.printf("gwjgwj,remove extra data,ok=%s,ret=%s", tostring(ok), tostring(ret))
+end
+
+function test18:onClearExtraData()
+	local ok,ret = crasheye.clearExtraData()
+	gwjui.printf("gwjgwj,clear extra data,ok=%s,ret=%s", tostring(ok), tostring(ret))
 end
 
 function test18:onSendError()

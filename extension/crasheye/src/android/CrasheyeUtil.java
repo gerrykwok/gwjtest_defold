@@ -63,4 +63,29 @@ class CrasheyeUtil
 		}
 		return "success";
 	}
+
+	public static String removeExtraData(Context ctx, String data)
+	{
+		String key = "";
+		try
+		{
+			JSONObject json = new JSONObject(data);
+			if(json.has("key")) key = json.getString("key");
+		} catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		if(key.equals(""))
+			return "key invalid";
+//		Log.d(TAG, "crasheye:remove extra of key "+key);
+		Crasheye.removeExtraData(key);
+		return "success";
+	}
+
+	public static String clearExtraData(Context ctx, String data)
+	{
+//		Log.d(TAG, "crasheye:clear all extra data");
+		Crasheye.clearExtraData();
+		return "success";
+	}
 }

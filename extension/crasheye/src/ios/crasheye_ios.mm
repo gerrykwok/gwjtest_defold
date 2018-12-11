@@ -43,4 +43,23 @@ int crasheye_addExtraData(lua_State *L)
 	return 2;
 }
 
+int crasheye_removeExtraData(lua_State *L)
+{
+	std::string param = ext_jsonFromLuaTable(L, -1);
+	bool ok;
+	std::string ret = ext_callOcStaticMethod("CrasheyeUtil", "removeExtraData", param.c_str(), &ok);
+	lua_pushboolean(L, ok);
+	lua_pushstring(L, ret.c_str());
+	return 2;
+}
+
+int crasheye_clearExtraData(lua_State *L)
+{
+	bool ok;
+	std::string ret = ext_callOcStaticMethod("CrasheyeUtil", "clearExtraData", "{}", &ok);
+	lua_pushboolean(L, ok);
+	lua_pushstring(L, ret.c_str());
+	return 2;
+}
+
 #endif
