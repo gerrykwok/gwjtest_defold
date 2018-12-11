@@ -15,6 +15,5 @@ int crasheye_addExtraData(lua_State *L);
 int crasheye_removeExtraData(lua_State *L);
 int crasheye_clearExtraData(lua_State *L);
 
-extern std::string ext_jsonFromLuaTable(lua_State *L, int index);
 extern std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
-extern std::string ext_callOcStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
+extern int ext_callNativeStaticMethod(const char *clazz, const char *method, lua_State *L, int idxParam);

@@ -12,51 +12,27 @@ void crasheye_onAppInit()
 
 int crasheye_sendScriptError(lua_State *L)
 {
-	std::string param = ext_jsonFromLuaTable(L, -1);
-	bool ok;
-	std::string ret = ext_callJavaStaticMethod(CRASHEYE_CLASS, "sendScriptError", param.c_str(), &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod(CRASHEYE_CLASS, "sendScriptError", L, -1);
 }
 
 int crasheye_setUserId(lua_State *L)
 {
-	const char *userId = lua_tostring(L, -1);
-	bool ok;
-	std::string ret = ext_callJavaStaticMethod(CRASHEYE_CLASS, "setUserId", userId, &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod(CRASHEYE_CLASS, "setUserId", L, -1);
 }
 
 int crasheye_addExtraData(lua_State *L)
 {
-	std::string param = ext_jsonFromLuaTable(L, -1);
-	bool ok;
-	std::string ret = ext_callJavaStaticMethod(CRASHEYE_CLASS, "addExtraData", param.c_str(), &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod(CRASHEYE_CLASS, "addExtraData", L, -1);
 }
 
 int crasheye_removeExtraData(lua_State *L)
 {
-	std::string param = ext_jsonFromLuaTable(L, -1);
-	bool ok;
-	std::string ret = ext_callJavaStaticMethod(CRASHEYE_CLASS, "removeExtraData", param.c_str(), &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod(CRASHEYE_CLASS, "removeExtraData", L, -1);
 }
 
 int crasheye_clearExtraData(lua_State *L)
 {
-	bool ok;
-	std::string ret = ext_callJavaStaticMethod(CRASHEYE_CLASS, "clearExtraData", "", &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod(CRASHEYE_CLASS, "clearExtraData", L, -1);
 }
 
 #endif

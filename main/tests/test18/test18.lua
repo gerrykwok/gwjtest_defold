@@ -65,7 +65,9 @@ function test18:on_message(message_id, message, sender)
 end
 
 function test18:onSetUserId()
-	local ok,ret = crasheye.setUserId("gwjgwj123456")
+	local ok,ret = crasheye.setUserId({
+		userId = "gwjgwj123456",
+	})
 	gwjui.printf("gwjgwj,ser userid,ok=%s,ret=%s", tostring(ok), tostring(ret))
 end
 
@@ -92,8 +94,8 @@ end
 
 function test18:onSendError()
 	local ok,ret = crasheye.sendScriptError({
-		title = "error title",
-		content = "error content",
+		title = "error title2",
+		content = "error content2",
 		mytable = {
 			abc = "test",
 			def = 4,
@@ -126,7 +128,7 @@ function test18:raiseError1()
 end
 
 function test18:raiseError2()
-	error("gwj error1")
+	error("gwj error2")
 end
 
 return test18

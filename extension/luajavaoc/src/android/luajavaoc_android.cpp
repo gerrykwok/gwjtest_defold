@@ -1,5 +1,6 @@
 #if defined(DM_PLATFORM_ANDROID)
 
+#include <math.h>
 #include "../luacallback.h"
 #include "luajavaoc_android.h"
 
@@ -166,9 +167,16 @@ jobject ext_JSONObjectFromLuaTable(JNIEnv *env, lua_State *L, int index)
 	std::string sKey, sValue;
 	int i;
 	char buf[256];
-	lua_Number fValue;
+	lua_Number fValue, abs;
 	int funcId;
 
+	int type = top > 0 ? lua_type(L, index) : LUA_TNIL;
+//	dmLogInfo("gwjgwj,type in index is %d top=%d", type, top);
+	if(type != LUA_TTABLE)
+	{
+		return ret;
+	}
+	
 	lua_pushnil(L);  /* first key */
 	while(lua_next(L, index-1) != 0)
 	{
@@ -200,8 +208,18 @@ jobject ext_JSONObjectFromLuaTable(JNIEnv *env, lua_State *L, int index)
 			put_to_json(env, ret, sKey.c_str(), value, "Z");
 			break;
 		case LUA_TNUMBER:
-			value.d = lua_tonumber(L, -1);
-			put_to_json(env, ret, sKey.c_str(), value, "D");
+			fValue = lua_tonumber(L, -1);
+			abs = fValue >= 0 ? fValue : -fValue;
+			if(abs - floor(abs) == 0)
+			{
+				value.i = fValue;
+				put_to_json(env, ret, sKey.c_str(), value, "I");
+			}
+			else
+			{
+				value.d = fValue;
+				put_to_json(env, ret, sKey.c_str(), value, "D");
+			}
 			break;
 		case LUA_TSTRING:
 			value.l = stoJstring(env, lua_tostring(L, -1));
