@@ -38,14 +38,14 @@
 	NSString *key = params[@"key"];
 	if(key)
 	{
-		NSLog(@"crasheye:remove extra of key %@", key);
+//		NSLog(@"crasheye:remove extra of key %@", key);
 		[Crasheye removeExtraDataWithKey:key];
 	}
 }
 
 +(void)clearExtraData:(NSDictionary*)params
 {
-	NSLog(@"crasheye:clear all extra data");
+//	NSLog(@"crasheye:clear all extra data");
 	[Crasheye clearExtraData];
 }
 
