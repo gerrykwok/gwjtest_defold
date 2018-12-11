@@ -255,3 +255,12 @@ void ext_onUpdate()
 		}
 	}
 }
+
+int ext_callNativeStaticMethod(const char *clazz, const char *method, lua_State *L, int idxParam)
+{
+	bool ok;
+	std::string ret = ext_callNativeStaticMethodBase(clazz, method, L, idxParam, &ok);
+	lua_pushboolean(L, ok);
+	lua_pushstring(L, ret.c_str());
+	return 2;
+}

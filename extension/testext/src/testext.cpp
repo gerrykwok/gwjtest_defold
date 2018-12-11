@@ -32,6 +32,7 @@ static const luaL_reg Module_methods[] =
 	{"takePhoto", test_takephoto},
 	{"test_oc", test_oc},
 #endif
+	{"callnative", test_callnative},
 	{0, 0}
 };
 

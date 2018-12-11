@@ -97,6 +97,44 @@ function test15:onEnter()
 		end
 	end)
 	gwjui.ScaleButton.new({
+		main_id = "btn_call_native",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		local key = function() end
+		for i=1,1000 do
+			local ok,ret = testext.callnative({
+				abc = 1,
+				def = "2",
+				nickname = "郭伟基",
+				[100] = 5,
+				10,
+				scale = 1.23,
+				float = 1.7E108,
+				timestamp = os.time(),
+				pi = math.pi,
+				huge = math.huge,
+				callback = function()
+				end,
+				extras = {
+					["android.intent.extra.TITLE"] = "the title",
+					["android.intent.extra.TEXT"] = "the text",
+					uid = 12345,
+				},
+				[key] = "aaa",
+				nest1 = {
+					nest_field1 = 5,
+					nest_field2 = "6",
+					nest2 = {
+						nest_field3 = "deep",
+						nest_field4 = "555",
+					},
+				},
+			})
+			gwjui.printf("gwjgwj,call native,ok=%s,ret=%s", tostring(ok), tostring(ret))
+		end
+	end)
+	gwjui.ScaleButton.new({
 		main_id = "btn_take_photo",
 		maxScale = 1.1,
 	})

@@ -1,10 +1,12 @@
 #pragma once
 
+#include <dmsdk/sdk.h>
 #include <string>
 #include <functional>
 
 int test_oc(lua_State *L);
 int test_takephoto(lua_State *L);
+int test_callnative(lua_State *L);
 
 //注册一个lua callback
 //返回id
@@ -21,3 +23,5 @@ extern void ext_performInUpdateThread(const std::function<void(void)> &func);
 extern std::string ext_jsonFromLuaTable(lua_State *L, int index);
 extern std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
 extern std::string ext_callOcStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
+
+extern int ext_callNativeStaticMethod(const char *clazz, const char *method, lua_State *L, int idxParam);

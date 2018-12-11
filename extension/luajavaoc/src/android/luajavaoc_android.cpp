@@ -1,7 +1,7 @@
 #if defined(DM_PLATFORM_ANDROID)
 
-#include <dmsdk/sdk.h>
 #include "../luacallback.h"
+#include "luajavaoc_android.h"
 
 static JNIEnv* Attach()
 {
@@ -105,6 +105,157 @@ std::string ext_callJavaStaticMethod(const char *clazz, const char *method, cons
 	jstring str = stoJstring(env, params);
 	jstring retjs = (jstring)env->CallStaticObjectMethod(cls, dummy_method, dmGraphics::GetNativeAndroidActivity(), str);
 	env->DeleteLocalRef(str);
+
+	const char *stringBuff = env->GetStringUTFChars(retjs, 0);
+	std::string retStr = stringBuff;
+	env->ReleaseStringUTFChars(retjs, stringBuff);
+	return retStr;
+}
+
+static jobject newJavaObject(JNIEnv *env, const char *className)
+{
+	jclass cls = env->FindClass(className);
+	if(cls == NULL) return NULL;
+	jmethodID ctorID = env->GetMethodID(cls, "<init>", "()V");
+	if(ctorID == NULL)
+	{
+		env->DeleteLocalRef(cls);
+		return NULL;
+	}
+	jobject obj = env->NewObject(cls, ctorID);
+	if(cls) env->DeleteLocalRef(cls);
+	return obj;
+}
+
+static jobject put_to_json(JNIEnv *env, jobject jsonObj, const char *name, jvalue value, const char *valueType)
+{
+//	dmLogInfo("gwjgwj,put to json,name=%s,valuetype=%s", name, valueType);
+	if(strcmp(valueType, "D") == 0)
+	{
+		char buf[256];
+		sprintf(buf, "%f", value.d);
+		if(strcmp(buf, "inf") == 0)
+		{
+			dmLogWarning("gwjgwj,found infinity,convert to string inf");
+			valueType = "Ljava/lang/Object;";
+			value.l = stoJstring(env, "inf");
+		}
+	}
+	jclass cls = env->GetObjectClass(jsonObj);
+	std::string signature = (std::string)"(Ljava/lang/String;" + valueType + ")Lorg/json/JSONObject;";
+	jmethodID methodPut = env->GetMethodID(cls, "put", signature.c_str());
+	if(methodPut == NULL)
+	{
+		dmLogError("gwjgwj,cannot get method of json.put %s", signature.c_str());
+		return NULL;
+	}
+	jvalue args[2];
+	args[0].l = stoJstring(env, name);
+	args[1] = value;
+	jobject ret = env->CallObjectMethodA(jsonObj, methodPut, args);
+	env->DeleteLocalRef(cls);//?
+	return ret;
+}
+
+jobject ext_JSONObjectFromLuaTable(JNIEnv *env, lua_State *L, int index)
+{
+	jobject ret = newJavaObject(env, "org/json/JSONObject");
+	jobject sub = NULL;
+	jvalue value;
+	int top = lua_gettop(L);
+	std::string sKey, sValue;
+	int i;
+	char buf[256];
+	lua_Number fValue;
+	int funcId;
+
+	lua_pushnil(L);  /* first key */
+	while(lua_next(L, index-1) != 0)
+	{
+		/* 'key' is at index -2 and 'value' at index -1 */
+		switch(lua_type(L, -2))
+		{
+		case LUA_TNIL:
+			sKey = "nil";
+			break;
+		case LUA_TBOOLEAN:
+			sKey = lua_toboolean(L, -2) ? "true" : "false";
+			break;
+		case LUA_TNUMBER:
+			sprintf(buf, "%d", (int)lua_tonumber(L, -2));
+			sKey = buf;
+			break;
+		case LUA_TSTRING:
+			sKey = lua_tostring(L, -2);
+			break;
+		default:
+			sKey = "";
+			break;
+		}
+
+		if(sKey.length() > 0) switch(lua_type(L, -1))
+		{
+		case LUA_TBOOLEAN:
+			value.z = lua_toboolean(L, -1);
+			put_to_json(env, ret, sKey.c_str(), value, "Z");
+			break;
+		case LUA_TNUMBER:
+			value.d = lua_tonumber(L, -1);
+			put_to_json(env, ret, sKey.c_str(), value, "D");
+			break;
+		case LUA_TSTRING:
+			value.l = stoJstring(env, lua_tostring(L, -1));
+			put_to_json(env, ret, sKey.c_str(), value, "Ljava/lang/Object;");
+			break;
+		case LUA_TFUNCTION:
+			funcId = ext_registerLuaCallback(L, -1);
+			value.i = funcId;
+			put_to_json(env, ret, sKey.c_str(), value, "I");
+			break;
+		case LUA_TTABLE:
+			sub = ext_JSONObjectFromLuaTable(env, L, -1);
+			value.l = sub;
+			put_to_json(env, ret, sKey.c_str(), value, "Ljava/lang/Object;");
+			break;
+		default: break;
+		}
+
+//		dmLogInfo("%s - %s", lua_typename(L, lua_type(L, -2)), lua_typename(L, lua_type(L, -1)));
+//		dmLogInfo("\"%s\":%s", sKey.c_str(), sValue.c_str());
+
+		lua_pop(L, 1);  /* removes 'value'; keeps 'key' for next iteration */
+	}
+
+	assert(top + 0 == lua_gettop(L));
+	return ret;
+}
+
+std::string ext_callNativeStaticMethodBase(const char *clazz, const char *method, lua_State *L, int idxParam, bool *ok)
+{
+	AttachScope attachscope;
+	JNIEnv* env = attachscope.m_Env;
+	*ok = true;
+
+	jobject json = ext_JSONObjectFromLuaTable(env, L, idxParam);
+
+	jclass cls = GetClass(env, clazz);
+	if(cls == NULL)
+	{
+		*ok = false;
+		std::string str = (std::string)"failed to find class " + clazz;
+		dmLogError(str.c_str());
+		return str;
+	}
+	const char *signature = "(Landroid/content/Context;Lorg/json/JSONObject;)Ljava/lang/String;";
+	jmethodID dummy_method = env->GetStaticMethodID(cls, method, signature);
+	if(dummy_method == NULL)
+	{
+		*ok = false;
+		std::string str = (std::string)"failed to find method " + clazz + "." + method + " " + signature;
+		dmLogError(str.c_str());
+		return str;
+	}
+	jstring retjs = (jstring)env->CallStaticObjectMethod(cls, dummy_method, dmGraphics::GetNativeAndroidActivity(), json);
 
 	const char *stringBuff = env->GetStringUTFChars(retjs, 0);
 	std::string retStr = stringBuff;

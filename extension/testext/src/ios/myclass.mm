@@ -6,6 +6,7 @@
 
 +(NSString*)test1:(NSDictionary*)params
 {
+	NSLog(@"gwjgwj,test1,params=%@", params);
 	return @"my str";
 }
 

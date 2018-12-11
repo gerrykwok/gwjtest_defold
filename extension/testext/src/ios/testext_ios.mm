@@ -1,6 +1,5 @@
 #if defined(DM_PLATFORM_IOS)
 
-#include <dmsdk/sdk.h>
 #include "../testext.h"
 
 int test_oc(lua_State *L)
@@ -23,6 +22,12 @@ int test_takephoto(lua_State *L)
 	lua_pushboolean(L, ok);
 	lua_pushstring(L, ret.c_str());
 	return 0;
+}
+
+int test_callnative(lua_State *L)
+{
+	int numRet = ext_callNativeStaticMethod("MyClass", "test1", L, -1);
+	return numRet;
 }
 
 #endif

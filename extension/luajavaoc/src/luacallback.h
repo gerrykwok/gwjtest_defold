@@ -1,5 +1,6 @@
 #pragma once
 
+#include <dmsdk/sdk.h>
 #include <functional>
 #include <string>
 
@@ -25,3 +26,12 @@ std::string ext_jsonFromLuaTable(lua_State *L, int index);
 std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
 //调用oc方法
 std::string ext_callOcStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
+
+std::string ext_callNativeStaticMethodBase(const char *clazz, const char *method, lua_State *L, int idxParam, bool *ok);
+
+//调用原生方法(java或oc)
+//传送到原生方法的参数是一个lua table，位于idxParam的lua栈中
+//java方法型如: String func(Context, JSONObject)
+//OC方法型如: +(NSString*) func:(NSDictionary*)params  返回值可任意
+//返回: 插入到lua栈的返回值个数
+int ext_callNativeStaticMethod(const char *clazz, const char *method, lua_State *L, int idxParam);
