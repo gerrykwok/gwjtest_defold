@@ -111,6 +111,13 @@ NSDictionary* ext_NSDictionaryFromLuaTable(lua_State *L, int index)
 	lua_Number fValue;
 	int funcId;
 
+	int type = top > 0 ? lua_type(L, index) : LUA_TNIL;
+//	dmLogInfo("gwjgwj,type in index is %d top=%d", type, top);
+	if(type != LUA_TTABLE)
+	{
+		return dict;
+	}
+
 	lua_pushnil(L);  /* first key */
 	while(lua_next(L, index-1) != 0)
 	{

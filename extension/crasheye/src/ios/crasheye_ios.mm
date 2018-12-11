@@ -14,52 +14,27 @@ void crasheye_onAppInit()
 
 int crasheye_sendScriptError(lua_State *L)
 {
-	NSDictionary *param = ext_NSDictionaryFromLuaTable(L, -1);
-	[CrasheyeUtil sendScriptError:param];
-
-	lua_pushboolean(L, true);
-	lua_pushstring(L, "success");
-	return 2;
+	return ext_callNativeStaticMethod("CrasheyeUtil", "sendScriptError", L, -1);
 }
 
 int crasheye_setUserId(lua_State *L)
 {
-	const char *userId = lua_tostring(L, -1);
-	std::string param = (std::string)"{\"userId\":\"" + userId + "\"}";
-	bool ok;
-	std::string ret = ext_callOcStaticMethod("CrasheyeUtil", "setUserId", param.c_str(), &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod("CrasheyeUtil", "setUserId", L, -1);
 }
 
 int crasheye_addExtraData(lua_State *L)
 {
-	std::string param = ext_jsonFromLuaTable(L, -1);
-	bool ok;
-	std::string ret = ext_callOcStaticMethod("CrasheyeUtil", "addExtraData", param.c_str(), &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod("CrasheyeUtil", "addExtraData", L, -1);
 }
 
 int crasheye_removeExtraData(lua_State *L)
 {
-	std::string param = ext_jsonFromLuaTable(L, -1);
-	bool ok;
-	std::string ret = ext_callOcStaticMethod("CrasheyeUtil", "removeExtraData", param.c_str(), &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod("CrasheyeUtil", "removeExtraData", L, -1);
 }
 
 int crasheye_clearExtraData(lua_State *L)
 {
-	bool ok;
-	std::string ret = ext_callOcStaticMethod("CrasheyeUtil", "clearExtraData", "{}", &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod("CrasheyeUtil", "clearExtraData", L, -1);
 }
 
 #endif
