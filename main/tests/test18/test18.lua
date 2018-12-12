@@ -68,7 +68,7 @@ function test18:onSetUserId()
 	local ok,ret = crasheye.setUserId({
 		userId = "gwjgwj123456",
 	})
-	gwjui.printf("gwjgwj,ser userid,ok=%s,ret=%s", tostring(ok), tostring(ret))
+	gwjui.printf("gwjgwj,set userid,ok=%s,ret=%s", tostring(ok), tostring(ret))
 end
 
 function test18:onAddExtraData()

@@ -40,7 +40,7 @@
 	{
 		SendAuthResp *authResp = (SendAuthResp*)resp;
 		// NSLog(@"gwjgwj,onResp:code:%@,state:%@,lang:%@,country:%@", authResp.code, authResp.state, authResp.lang, authResp.country);
-		NSString *res = [NSString stringWithFormat:@"{\"errCode\":%d, \"errStr\":\"%@\", \"code\":\"%@\"}", errCode, errStr, code];
+		NSString *res = [NSString stringWithFormat:@"{\"errCode\":%d, \"errStr\":\"%@\", \"code\":\"%@\"}", resp.errCode, resp.errStr, authResp.code];
 		[PlatformWechat notifyLoginResult:res];
 	}
 	else if([resp isKindOfClass:[SendMessageToWXResp class]])

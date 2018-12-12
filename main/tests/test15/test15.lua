@@ -228,6 +228,7 @@ function test15:onClickShareSystem()
 ]]
 		params.callback = function(script, res)
 			gwjui.printf("gwjgwj,share res=%s", tostring(res))
+			self:onShareResult(res)
 		end
 		local ok, ret = wechat.shareWithIosSystem(params)
 		gwjui.printf("gwjgwj,share with ios system, ok=%s, ret=%s", tostring(ok), tostring(ret))
