@@ -25,7 +25,9 @@ end
 
 function test17:onClickInstallApk()
 	local apkPath = "/mnt/sdcard/xianliao.apk"
-	local ok,ret = misc.installApk(apkPath)
+	local ok,ret = misc.installApk({
+		path = apkPath,
+	})
 	gwjui.printf("gwjgwj,install apk,ok=%s,ret=%s", tostring(ok), tostring(ret))
 end
 
