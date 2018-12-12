@@ -30,9 +30,8 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 public class ShareUtil
 {
 	public static final String TAG = "shareutil";
-	public static String shareWithIntent(Context ctx, String data)
+	public static String shareWithIntent(Context ctx, JSONObject json)
 	{
-		Log.d(TAG, "gwjgwj,shareWithIntent:" + data);
 		String pkgName = "";
 		String clsName = "";
 		String mimeType = "";
@@ -41,7 +40,6 @@ public class ShareUtil
 
 		try
 		{
-			JSONObject json = new JSONObject(data);
 			if(json.has("pkgName")) pkgName = json.getString("pkgName");
 			if(json.has("clsName")) clsName = json.getString("clsName");
 			if(json.has("mimeType")) mimeType = json.getString("mimeType");
@@ -100,7 +98,7 @@ public class ShareUtil
 	}
 
 	public static int s_shareCallback = 0;
-	public static String shareWithSDK(Context ctx, String data)
+	public static String shareWithSDK(Context ctx, JSONObject json)
 	{
 		IWXAPI api = PlatformWechat.s_wxApi;
 		boolean success = false;
@@ -116,7 +114,6 @@ public class ShareUtil
 		int callback = 0;
 		try
 		{
-			JSONObject json = new JSONObject(data);
 			if(json.has("type")) shareType = json.getString("type");
 			if(json.has("scene")) scene = json.getInt("scene");
 			if(json.has("text")) text = json.getString("text");

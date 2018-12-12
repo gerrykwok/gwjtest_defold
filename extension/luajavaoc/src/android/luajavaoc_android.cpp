@@ -64,22 +64,6 @@ static jstring stoJstring(JNIEnv* env, const char *pat)
 	return ret;
 }
 
-std::string ext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...)
-{
-	AttachScope attachscope;
-	JNIEnv* env = attachscope.m_Env;
-
-	jclass cls = GetClass(env, clazz);
-	if(cls == NULL) return (std::string)"failed to find class " + clazz;
-	jmethodID dummy_method = env->GetStaticMethodID(cls, method, signature);
-	if(dummy_method == NULL) return (std::string)"failed to find method " + clazz + "." + method + " " + signature;
-	va_list ap;
-	va_start(ap, signature);
-	env->CallStaticVoidMethodV(cls, dummy_method, ap);
-	va_end(ap);
-	return "success";
-}
-
 std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params, bool *ok)
 {
 	AttachScope attachscope;

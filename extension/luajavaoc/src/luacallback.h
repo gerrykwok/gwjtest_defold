@@ -11,9 +11,6 @@ int ext_registerLuaCallback(lua_State* L, int index);
 void ext_unregisterLuaCallback(int callbackId);
 //调用callback
 void ext_invokeLuaCallbackWithString(int callbackId, const char *value);
-//调用java代码
-//返回: success或者出错信息
-std::string ext_call_java_static_void_method(const char *clazz, const char *method, const char *signature, ...);
 //在update线程中执行代码
 void ext_performInUpdateThread(const std::function<void(void)> &func);
 //根据lua栈中的参数转换为json字符串

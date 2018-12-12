@@ -34,10 +34,12 @@ function test14:on_message(message_id, message, sender)
 end
 
 function test14:onClickWechatLogin()
-	gwjui.printf("login wechat")
-	wechat.login(function(script, res)
-		self:onWechatLoginResult(res)
-	end)
+	local ok,res = wechat.login({
+		callback = function(script, res)
+			self:onWechatLoginResult(res)
+		end,
+	})
+	gwjui.printf("gwjgwj,wechat login,ok=%s,res=%s", tostring(ok), tostring(res))
 end
 
 function test14:onWechatLoginResult(res)
@@ -63,8 +65,8 @@ function test14:setLoginInfo(t)
 end
 
 function test14:onClickWechatLogout()
-	gwjui.printf("logout wechat")
-	wechat.logout()
+	local ok,res = wechat.logout()
+	gwjui.printf("gwjgwj,wechat logout,ok=%s,res=%s", tostring(ok), tostring(res))
 end
 
 return test14

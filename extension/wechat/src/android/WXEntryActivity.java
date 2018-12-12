@@ -52,7 +52,17 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler
 			SendAuth.Resp res = (SendAuth.Resp)resp;
 			Log.d("gwjgwj", "gwjgwj,onAuthFinish,errCode="+res.errCode+",errStr="+res.errStr);
 			Log.d("gwjgwj", String.format(Locale.US, "gwjgwj,code=%s,openId=%s", res.code, res.openId));
-			PlatformWechat.notifyLoginResult(res.errCode, res.errStr, res.code, res.lang, res.country);
+			String str;
+			if(res.errCode == 0)
+			{
+				str = String.format(Locale.US, "{\"errCode\":%d, \"errStr\":\"%s\", \"code\":\"%s\", \"lang\":\"%s\", \"country\":\"%s\"}",
+					res.errCode, res.errStr, res.code, res.lang, res.country);
+			}
+			else
+			{
+				str = String.format(Locale.US, "{\"errCode\":%d, \"errStr\":\"%s\"}", res.errCode, res.errStr);
+			}
+			PlatformWechat.notifyLoginResult(str);
 		}
 		else if(type == ConstantsAPI.COMMAND_SENDMESSAGE_TO_WX)//微信分享
 		{

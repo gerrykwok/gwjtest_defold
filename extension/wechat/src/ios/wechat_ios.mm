@@ -14,33 +14,24 @@ void wechat_onAppInit()
 	}
 }
 
-void wechat_login()
+int wechat_login(lua_State *L)
 {
-	[PlatformWechat login];
+	return ext_callNativeStaticMethod("PlatformWechat", "login", L, -1);
 }
 
-void wechat_logout()
+int wechat_logout(lua_State *L)
 {
+	return ext_callNativeStaticMethod("PlatformWechat", "logout", L, -1);
 }
 
 int wechat_shareWithIosSystem(lua_State *L)
 {
-	std::string param = ext_jsonFromLuaTable(L, -1);
-	bool ok;
-	std::string ret = ext_callOcStaticMethod("ShareUtil", "shareWithSystem", param.c_str(), &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod("ShareUtil", "shareWithSystem", L, -1);
 }
 
 int wechat_shareWithSDK(lua_State *L)
 {
-	std::string param = ext_jsonFromLuaTable(L, -1);
-	bool ok;
-	std::string ret = ext_callOcStaticMethod("ShareUtil", "shareWithSDK", param.c_str(), &ok);
-	lua_pushboolean(L, ok);
-	lua_pushstring(L, ret.c_str());
-	return 2;
+	return ext_callNativeStaticMethod("ShareUtil", "shareWithSDK", L, -1);
 }
 
 int wechat_makePurchase(lua_State *L)

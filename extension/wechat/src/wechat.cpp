@@ -6,37 +6,11 @@
 
 #include "wechat.h"
 
-static int g_wechatLoginCallbackId = -1;
-
-static int wechatLogin(lua_State *L)
-{
-	g_wechatLoginCallbackId = ext_registerLuaCallback(L, 1);
-	dmLogInfo("callbackid = %d", g_wechatLoginCallbackId);
-	wechat_login();
-	return 0;
-}
-
-static int wechatLogout(lua_State *L)
-{
-	wechat_logout();
-	return 0;
-}
-
-void wechat_notifyLoginResult(const char *res)
-{
-	if(g_wechatLoginCallbackId >= 0)
-	{
-		ext_invokeLuaCallbackWithString(g_wechatLoginCallbackId, res);
-		ext_unregisterLuaCallback(g_wechatLoginCallbackId);
-		g_wechatLoginCallbackId = -1;
-	}
-}
-
 // Functions exposed to Lua
 static const luaL_reg Module_methods[] =
 {
-	{"login", wechatLogin},
-	{"logout", wechatLogout},
+	{"login", wechat_login},
+	{"logout", wechat_logout},
 #if defined(DM_PLATFORM_ANDROID)
 	{"shareWithIntent", wechat_shareWithIntent},
 #elif defined(DM_PLATFORM_IOS)

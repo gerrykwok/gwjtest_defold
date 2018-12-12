@@ -8,6 +8,11 @@
 static const luaL_reg Module_methods[] =
 {
 	{"installApk", misc_installApk},
+#if defined(DM_PLATFORM_ANDROID)
+	{"isApkInstalled", misc_isApkInstalled},
+#elif defined(DM_PLATFORM_IOS)
+	{"canOpenApp", misc_canOpenApp},
+#endif
 	{0, 0}
 };
 

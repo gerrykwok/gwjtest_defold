@@ -1,10 +1,9 @@
 package com.xishanju.plm.wechat;
 
 import java.util.Locale;
+import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -13,58 +12,45 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 public class PlatformWechat
 {
 	public static final String TAG = "wechat";
-	public static Context s_context;
-	public static IWXAPI s_wxApi;
+	public static IWXAPI s_wxApi = null;
+	private static int s_loginCallback = 0;
 
 	public static String init(Context ctx, String wechatAppId)
 	{
-		s_context = ctx;
 		s_wxApi = WXAPIFactory.createWXAPI(ctx, null);
 		s_wxApi.registerApp(wechatAppId);
-		return "";
+		return "success";
 	}
 	/*
 	* 微信登录
 	*/
-	public static void login()
+	public static String login(Context ctx, JSONObject json)
 	{
+		try
+		{
+			if(json.has("callback")) s_loginCallback = json.getInt("callback");
+		} catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		SendAuth.Req req = new SendAuth.Req();
 		req.scope = "snsapi_userinfo";
 		req.state = "wechat_login_plm";
 		s_wxApi.sendReq(req);
+		return "success";
 	}
 
-	public static void logout()
+	public static void logout(Context ctx, JSONObject json)
 	{
 	}
 
-	public static void notifyLoginResult(int errCode, String errStr, String code, String lang, String country)
+	public static native void notifyLua(int callback, String value);
+	public static void notifyLoginResult(String value)
 	{
-		String str;
-		if(errCode == 0)
+		if(s_loginCallback > 0)
 		{
-			str = String.format(Locale.US, "{\"errCode\":%d, \"errStr\":\"%s\", \"code\":\"%s\", \"lang\":\"%s\", \"country\":\"%s\"}", errCode, "", code, lang, country);
-		}
-		else
-		{
-			str = String.format(Locale.US, "{\"errCode\":%d, \"errStr\":\"%s\"}", errCode, errStr);
-		}
-		notifyLua(str);
-	}
-
-	public static native void notifyLua(String value);
-
-	public static boolean isAppInstalled(String pkgName)
-	{
-		PackageManager pm =  s_context.getPackageManager();
-		try {
-			pm.getPackageInfo(pkgName, 0);
-			return true;
-		} catch (NameNotFoundException e) {
-			return false;
-		} catch (Exception e)
-		{
-			return false;
+			notifyLua(s_loginCallback, value);
+			s_loginCallback = 0;
 		}
 	}
 }

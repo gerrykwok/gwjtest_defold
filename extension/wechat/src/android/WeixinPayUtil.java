@@ -15,13 +15,12 @@ public class WeixinPayUtil
 	public static int s_payCallback = 0;
 	private static IWXAPI s_api = null;
 	public static String APP_ID = "";
-	public static String makePurchase(Context ctx, String data)
+	public static String makePurchase(Context ctx, JSONObject json)
 	{
 		boolean success = true;
 		PayReq request = new PayReq();
 		try
 		{
-			JSONObject json = new JSONObject(data);
 			if(json.has("callback")) s_payCallback = json.getInt("callback");
 			if(json.has("appid")) request.appId = json.getString("appid");
 			if(json.has("partnerid")) request.partnerId = json.getString("partnerid");

@@ -6,12 +6,14 @@ void wechat_onAppInit()
 {
 }
 
-void wechat_login()
+int wechat_login(lua_State *L)
 {
+	return 0;
 }
 
-void wechat_logout()
+int wechat_logout(lua_State *L)
 {
+	return 0;
 }
 
 int wechat_shareWithSDK(lua_State *L)

@@ -8,13 +8,13 @@
 /**
  * 微信登录
  */
-+ (void)login;
++ (void)login:(NSDictionary*)params;
 
 /**
  * 微信登出
  */
-+ (void)logout;
++ (void)logout:(NSDictionary*)params;
 
-+ (void)notifyLoginResult:(int)errCode errStr:(NSString*)errStr code:(NSString*)code;
++ (void)notifyLoginResult:(NSString*)res;
 
 @end

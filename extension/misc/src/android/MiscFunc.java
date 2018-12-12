@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.util.Log;
 
@@ -35,5 +37,34 @@ class MiscFunc
 		intent.setDataAndType(uri, "application/vnd.android.package-archive");
 		ctx.startActivity(intent);
 		return "success";
+	}
+
+	public static String isAppInstalled(Context ctx, JSONObject json)
+	{
+		String pkgName = "";
+		try
+		{
+			if(json.has("package")) pkgName = json.getString("package");
+		} catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		if(pkgName.equals(""))
+		{
+			return "package invalid";
+		}
+
+		PackageManager pm =  ctx.getPackageManager();
+		try
+		{
+			pm.getPackageInfo(pkgName, 0);
+			return "true";
+		} catch (NameNotFoundException e)
+		{
+			return "false";
+		} catch (Exception e)
+		{
+			return "false";
+		}
 	}
 }
