@@ -1,6 +1,7 @@
 #if defined(DM_PLATFORM_IOS)
 
 #include "../xianliao.h"
+#import "XianliaoUtil.h"
 
 void xianliao_onAppInit()
 {

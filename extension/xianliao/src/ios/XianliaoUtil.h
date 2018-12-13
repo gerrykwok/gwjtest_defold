@@ -6,4 +6,6 @@
 +(void)login:(NSDictionary *)params;
 +(void)share:(NSDictionary *)params;
 
++(void)notifyShare:(int)callback withResult:(NSString*)res;
+
 @end

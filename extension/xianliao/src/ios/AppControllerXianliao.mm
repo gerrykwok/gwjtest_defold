@@ -2,6 +2,7 @@
 
 #import "AppControllerXianliao.h"
 #import "../xianliao.h"
+#import "XianliaoSDK_iOS/SugramApiManager.h"
 
 @implementation AppControllerXianliao
 
