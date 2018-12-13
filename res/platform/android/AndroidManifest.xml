@@ -130,7 +130,7 @@
         </activity>
         <!-- gwj: wechat callback activity -->
         <activity
-            android:name="{{android.package}}.wxapi.WXEntryActivity"
+            android:name=".wxapi.WXEntryActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
@@ -140,6 +140,8 @@
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"/>
+        <!-- for xianliao callback -->
+        <activity android:name=".sgapi.SGEntryActivity" android:exported="true"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.vending.BILLING" />

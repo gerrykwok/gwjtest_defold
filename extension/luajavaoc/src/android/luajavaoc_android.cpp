@@ -265,4 +265,25 @@ std::string ext_callNativeStaticMethodBase(const char *clazz, const char *method
 	return retStr;
 }
 
+void ext_callLuaCallbackInAndroid(JNIEnv *env, jint callback, jstring value, bool unregister)
+{
+	if(callback <= 0) return;
+	jstring value2 = (jstring)env->NewGlobalRef(value);
+	auto func = [=](){
+		JavaVM *vm = dmGraphics::GetNativeAndroidJavaVM();
+		JNIEnv *env2;
+		vm->AttachCurrentThread(&env2, NULL);
+		const char *value_ = env2->GetStringUTFChars(value2, 0);
+
+		ext_invokeLuaCallbackWithString(callback, value_);
+		if(unregister)
+			ext_unregisterLuaCallback(callback);
+
+		env2->ReleaseStringUTFChars(value2, value_);
+		env2->DeleteGlobalRef(value2);
+		vm->DetachCurrentThread();
+	};
+	ext_performInUpdateThread(func);
+}
+
 #endif
