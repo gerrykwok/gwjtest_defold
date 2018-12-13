@@ -4,6 +4,7 @@
 
 void xianliao_onAppInit()
 {
+	[XianliaoUtil initXianliao:@XIANLIAO_APPID];
 }
 
 int xianliao_login(lua_State *L)
