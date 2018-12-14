@@ -7,5 +7,6 @@
 +(void)share:(NSDictionary *)params;
 
 +(void)notifyShare:(int)callback withResult:(NSString*)res;
++(void)notifyShare:(int)callback withCode:(int)errCode;
 
 @end

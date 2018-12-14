@@ -3,6 +3,7 @@
 #import "../xianliao.h"
 #import "XianliaoSDK_iOS/SugramApiManager.h"
 #import "XianliaoSDK_iOS/SugramApiObject.h"
+#import "XianliaoUtil.h"
 
 @implementation XianliaoUtil
 
@@ -13,6 +14,23 @@
 
 +(void)login:(NSDictionary *)params
 {
+	int callback = [params[@"callback"] intValue];//回调
+	[SugramApiManager loginState:nil fininshBlock:^(SugramLoginCallBackType callBackType, NSString *code, NSString *state) {
+//		NSLog(@"callbacktype:%lu, code:%@, state:%@", callBackType, code, state);
+		int errCode = 0;
+		switch(callBackType)
+		{
+			case SugramShareSuccesslType: errCode = 0; break;
+			case SugramShareCancelType: errCode = -2; break;
+			default: errCode = -1; break;
+		}
+		NSString *res = [NSString stringWithFormat:@"{\"errCode\":%d,\"code\":\"%@\"}", errCode, code];
+		if(callback > 0)
+		{
+			ext_invokeLuaCallbackWithString(callback, [res UTF8String]);
+			ext_unregisterLuaCallback(callback);
+		}
+	}];
 }
 
 +(void)share:(NSDictionary *)params
@@ -52,11 +70,11 @@
 		SugramShareImageObject *object = [[SugramShareImageObject alloc] init];
 		object.imageData = [NSData dataWithContentsOfFile:imagePath];
 		baseObject = object;
-		NSUInteger imageSize = [imageObject.imageData length];
+		NSUInteger imageSize = [object.imageData length];
 		if(imageSize > 512*1024)
 		{
 			NSLog(@"gwjgwj,image is bigger than 512KB, %ldKB", imageSize);
-//			[CocosLua callLuaFunction:callback res:"{\"result\": -1}"];
+			[XianliaoUtil notifyShare:callback withCode:-1];
 			return;
 		}
 	}
@@ -75,24 +93,26 @@
 		if(imageSize > 32*1024)
 		{
 			NSLog(@"gwjgwj,image is bigger than 32KB, %ldKB", imageSize);
-			[XianliaoUtil notifyShare:callback withResult:@"{\"result\": -1}"];
+			[XianliaoUtil notifyShare:callback withCode:-1];
 			return;
 		}
 	}
 	[SugramApiManager share:baseObject fininshBlock:^(SugramShareCallBackType callBackType) {
+		int errCode = 0;
 		switch(callBackType)
 		{
-		case SugramShareSuccesslType:
-			[XianliaoUtil notifyShare:callback withResult:@"{\"result\": 0}"];
-			break;
-		case SugramShareCancelType:
-			[XianliaoUtil notifyShare:callback withResult:@"{\"result\": -2}"];
-			break;
-		default:
-			[XianliaoUtil notifyShare:callback withResult:@"{\"result\": -1}"];
-			break;
+		case SugramShareSuccesslType: errCode = 0; break;
+		case SugramShareCancelType: errCode = -2; break;
+		default: errCode = -1; break;
 		}
+		[XianliaoUtil notifyShare:callback withCode:errCode];
 	}];
+}
+
++(void)notifyShare:(int)callback withCode:(int)errCode
+{
+	NSString *res = [NSString stringWithFormat:@"{\"errCode\":%d}", errCode];
+	[XianliaoUtil notifyShare:callback withResult:res];
 }
 
 +(void)notifyShare:(int)callback withResult:(NSString*)res

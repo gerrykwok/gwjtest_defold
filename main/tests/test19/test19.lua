@@ -117,6 +117,7 @@ function test19:onXianliaoShare_app()
 end
 
 function test19:onShareResult(res)
+	gwjui.printf("gwjgwj,share result:%s", tostring(res))
 	TipsBanner.show("分享结果:" .. tostring(res))
 end
 
