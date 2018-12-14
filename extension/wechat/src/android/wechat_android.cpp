@@ -6,24 +6,11 @@
 
 #define WECHAT_CLASS	"com.xishanju.plm.wechat.PlatformWechat"
 
+extern void ext_callLuaCallbackInAndroid(JNIEnv *env, jint callback, jstring value, bool unregister);
+
 extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_PlatformWechat_notifyLua(JNIEnv *env, jclass clz, jint callback, jstring value)
 {
-	if(callback <= 0) return;
-	jstring value2 = (jstring)env->NewGlobalRef(value);
-	auto func = [=](){
-		JavaVM *vm = dmGraphics::GetNativeAndroidJavaVM();
-		JNIEnv *env2;
-		vm->AttachCurrentThread(&env2, NULL);
-		const char *value_ = env2->GetStringUTFChars(value2, 0);
-		
-		ext_invokeLuaCallbackWithString(callback, value_);
-		ext_unregisterLuaCallback(callback);
-		
-		env2->ReleaseStringUTFChars(value2, value_);
-		env2->DeleteGlobalRef(value2);
-		vm->DetachCurrentThread();
-	};
-	ext_performInUpdateThread(func);
+	ext_callLuaCallbackInAndroid(env, callback, value, true);
 }
 
 void wechat_onAppInit()
@@ -49,22 +36,7 @@ int wechat_shareWithIntent(lua_State *L)
 
 extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_ShareUtil_nativeNotifyShare(JNIEnv *env, jclass clz, jint callback, jstring value)
 {
-	if(callback <= 0) return;
-	jstring value2 = (jstring)env->NewGlobalRef(value);
-	auto func = [=](){
-		JavaVM *vm = dmGraphics::GetNativeAndroidJavaVM();
-		JNIEnv *env2;
-		vm->AttachCurrentThread(&env2, NULL);
-		const char *value_ = env2->GetStringUTFChars(value2, 0);
-
-		ext_invokeLuaCallbackWithString(callback, value_);
-		ext_unregisterLuaCallback(callback);
-		
-		env2->ReleaseStringUTFChars(value2, value_);
-		env2->DeleteGlobalRef(value2);
-		vm->DetachCurrentThread();
-	};
-	ext_performInUpdateThread(func);
+	ext_callLuaCallbackInAndroid(env, callback, value, true);
 }
 
 int wechat_shareWithSDK(lua_State *L)
@@ -74,22 +46,7 @@ int wechat_shareWithSDK(lua_State *L)
 
 extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_WeixinPayUtil_nativeNotifyPay(JNIEnv *env, jclass clz, jint callback, jstring value)
 {
-	if(callback <= 0) return;
-	jstring value2 = (jstring)env->NewGlobalRef(value);
-	auto func = [=](){
-		JavaVM *vm = dmGraphics::GetNativeAndroidJavaVM();
-		JNIEnv *env2;
-		vm->AttachCurrentThread(&env2, NULL);
-		const char *value_ = env2->GetStringUTFChars(value2, 0);
-
-		ext_invokeLuaCallbackWithString(callback, value_);
-		ext_unregisterLuaCallback(callback);
-
-		env2->ReleaseStringUTFChars(value2, value_);
-		env2->DeleteGlobalRef(value2);
-		vm->DetachCurrentThread();
-	};
-	ext_performInUpdateThread(func);
+	ext_callLuaCallbackInAndroid(env, callback, value, true);
 }
 
 int wechat_makePurchase(lua_State *L)
