@@ -65,6 +65,10 @@ echo -e "{" >> $cpppath
 echo -e "	return dmExtension::RESULT_OK;" >> $cpppath
 echo -e "}" >> $cpppath
 echo -e "" >> $cpppath
+echo -e "static void extOnEvent(dmExtension::Params* params, const dmExtension::Event* event)" >> $cpppath
+echo -e "{" >> $cpppath
+echo -e "}" >> $cpppath
+echo -e "" >> $cpppath
 echo -e "static dmExtension::Result extFinal(dmExtension::Params* params)" >> $cpppath
 echo -e "{" >> $cpppath
 echo -e "	return dmExtension::RESULT_OK;" >> $cpppath
@@ -72,7 +76,7 @@ echo -e "}" >> $cpppath
 echo -e "" >> $cpppath
 echo -e "// Defold SDK uses a macro for setting up extension entry points" >> $cpppath
 echo -e "// DM_DECLARE_EXTENSION(symbol, name, app_init, app_final, init, update, on_event, final)" >> $cpppath
-echo -e "DM_DECLARE_EXTENSION(EXTENSION_NAME, LIB_NAME, extAppInit, extAppFinal, extInit, 0, 0, extFinal)" >> $cpppath
+echo -e "DM_DECLARE_EXTENSION(EXTENSION_NAME, LIB_NAME, extAppInit, extAppFinal, extInit, 0, extOnEvent, extFinal)" >> $cpppath
 
 echo -e -n "#if defined(DM_PLATFORM_ANDROID)\n\n#include \"../$name.h\"\n\n#endif" >> $name/src/android/${name}_android.cpp
 echo -e -n "#if defined(DM_PLATFORM_IOS)\n\n#include \"../$name.h\"\n\n#endif" >> $name/src/ios/${name}_ios.mm
