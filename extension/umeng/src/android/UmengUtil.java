@@ -73,7 +73,10 @@ public class UmengUtil
 		if(eventName == "")
 			return "must specify name";
 		Log.d(TAG, "gwjgwj,send umeng event:" + eventName + ", args=" + args);
-		MobclickAgent.onEvent(ctx, eventName, args);
+		if(args.isEmpty())
+			MobclickAgent.onEvent(ctx, eventName);
+		else
+			MobclickAgent.onEvent(ctx, eventName, args);
 		return "success";
 	}
 }

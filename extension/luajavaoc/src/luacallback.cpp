@@ -234,12 +234,38 @@ std::string ext_jsonFromLuaTable(lua_State *L, int index)
 
 static std::mutex g_performMutex;
 static std::vector<std::function<void(void)>> g_functionsToPerform;
+struct DELAY_STRUCT
+{
+	bool m_valid;
+	std::function<void(void)> m_callback;
+	int m_leftCount;
+};
+#define DELAY_MAX	8
+static DELAY_STRUCT g_allDelay[DELAY_MAX];
 
 void ext_performInUpdateThread(const std::function<void(void)> &func)
 {
 	g_performMutex.lock();
 	g_functionsToPerform.push_back(func);
 	g_performMutex.unlock();
+}
+
+void ext_performWithDelay(int delayInUpdateCount, const std::function<void(void)> &func)
+{
+	DELAY_STRUCT *p, *pEnd;
+	p = g_allDelay;
+	pEnd = p + DELAY_MAX;
+	while(p < pEnd)
+	{
+		if(!p->m_valid)
+		{
+			p->m_callback = func;
+			p->m_leftCount = delayInUpdateCount;
+			p->m_valid = true;
+			break;
+		}
+		p++;
+	}
 }
 
 void ext_onUpdate()
@@ -253,6 +279,22 @@ void ext_onUpdate()
 		for(const auto &func : temp) {
 			func();
 		}
+	}
+	DELAY_STRUCT *p, *pEnd;
+	p = g_allDelay;
+	pEnd = p + DELAY_MAX;
+	while(p < pEnd)
+	{
+		if(p->m_valid)
+		{
+			p->m_leftCount--;
+			if(p->m_leftCount <= 0)
+			{
+				p->m_callback();
+				p->m_valid = false;
+			}
+		}
+		p++;
 	}
 }
 
