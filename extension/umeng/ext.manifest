@@ -3,13 +3,15 @@ name: "umeng"
 platforms:
     arm64-ios:
         context:
+            frameworks: ["CoreTelephony", "SystemConfiguration"]
             flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            libs:       ["z", "sqlite3", "c++"]
 
     armv7-ios:
         context:
+            frameworks: ["CoreTelephony", "SystemConfiguration"]
             flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            libs:       ["z", "sqlite3", "c++"]
 
     armv7-android:
         context:
