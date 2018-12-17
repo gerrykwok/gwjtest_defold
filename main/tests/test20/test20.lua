@@ -48,6 +48,7 @@ function test20:onSendUmengEvent1()
 			t2 = "1545018598",
 			nickname = "郭伟基",
 			is_defold = true,
+			delay_resume = false,
 		},
 		testflag = true,
 	})
