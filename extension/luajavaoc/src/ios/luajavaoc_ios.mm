@@ -4,6 +4,33 @@
 #include "luajavaoc_ios.h"
 #include "../luacallback.h"
 
+@implementation NSBoolean
+
++(NSBoolean*)fromBool:(BOOL)b
+{
+	NSBoolean *ret = [[NSBoolean alloc] initWithBool:b];
+	return ret;
+}
+
+-(id)initWithBool:(BOOL)b
+{
+	self = [super init];
+	m_b = b;
+	return self;
+}
+
+-(BOOL)boolValue
+{
+	return m_b;
+}
+
+-(NSString*)description
+{
+	return m_b ? @"true" : @"false";
+}
+
+@end
+
 std::string ext_callOcStaticMethod(const char *clazz, const char *method, const char *params, bool *ok)
 {
 	std::string sReturn;
@@ -144,7 +171,8 @@ NSDictionary* ext_NSDictionaryFromLuaTable(lua_State *L, int index)
 		if(key) switch(lua_type(L, -1))
 		{
 		case LUA_TBOOLEAN:
-			[dict setObject:[NSNumber numberWithBool:lua_toboolean(L, -1)] forKey:key];
+//			[dict setObject:[NSNumber numberWithBool:lua_toboolean(L, -1)] forKey:key];
+			[dict setObject:[NSBoolean fromBool:lua_toboolean(L, -1)] forKey:key];
 			break;
 		case LUA_TNUMBER:
 			[dict setObject:[NSNumber numberWithDouble:lua_tonumber(L, -1)] forKey:key];

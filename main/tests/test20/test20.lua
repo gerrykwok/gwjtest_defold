@@ -45,9 +45,11 @@ function test20:onSendUmengEvent1()
 		name = "myevent",
 		args = {
 			timestamp = os.time(),
+			t2 = "1545018598",
 			nickname = "郭伟基",
 			is_defold = true,
 		},
+		testflag = true,
 	})
 	gwjui.printf("gwjgwj,send umeng event,ok=%s,ret=%s", tostring(ok), tostring(ret))
 end

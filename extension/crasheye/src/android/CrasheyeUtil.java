@@ -13,9 +13,9 @@ class CrasheyeUtil
 	public static final String TAG = "crasyeyeutil";
 	public static String init(Context ctx, String appkey)
 	{
+//		Log.d(TAG, "init crasheye with " + appkey);
 //		Crasheye.initWithNativeHandle(ctx.getApplicationContext(), appkey);
 		Crasheye.init(ctx.getApplicationContext(), appkey);
-		Log.d(TAG, "init crasheye with " + appkey);
 		return "success";
 	}
 

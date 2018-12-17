@@ -8,7 +8,7 @@ extern NSDictionary* ext_NSDictionaryFromLuaTable(lua_State *L, int index);
 
 void crasheye_onAppInit()
 {
-	NSLog(@"gwjgwj,init crasheye with key %s", CRASHEYE_APPKEY_IOS);
+//	NSLog(@"gwjgwj,init crasheye with key %s", CRASHEYE_APPKEY_IOS);
 	[Crasheye initWithAppKey:@CRASHEYE_APPKEY_IOS];
 }
 
