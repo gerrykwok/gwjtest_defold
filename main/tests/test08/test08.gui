@@ -8,7 +8,7 @@ background_color {
 nodes {
   position {
     x: 944.0
-    y: 0.0
+    y: 113.0
     z: 0.0
     w: 1.0
   }
@@ -51,13 +51,14 @@ nodes {
   alpha: 1.0
   template_node_child: false
   size_mode: SIZE_MODE_AUTO
-  spine_scene: "role"
-  spine_default_animation: "animation"
+  spine_scene: "logo"
+  spine_default_animation: "suoxiaoxunhuan"
+  spine_skin: ""
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT
 max_nodes: 512
 spine_scenes {
-  name: "role"
-  spine_scene: "/main/tests/test08/role.spinescene"
+  name: "logo"
+  spine_scene: "/main/tests/test08/logo/logo.spinescene"
 }
