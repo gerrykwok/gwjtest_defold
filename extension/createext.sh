@@ -18,6 +18,19 @@ mkdir -p $name/src/android
 mkdir -p $name/src/ios
 mkdir -p $name/src/osx
 mkdir -p $name/src/win32
+
+mkdir -p $name/lib/android
+mkdir -p $name/lib/ios
+mkdir -p $name/lib/osx
+mkdir -p $name/lib/win32
+mkdir -p $name/lib/armv7-ios
+mkdir -p $name/lib/arm64-ios
+mkdir -p $name/lib/armv7-android
+mkdir -p $name/lib/x86-osx
+mkdir -p $name/lib/x86_64-osx
+mkdir -p $name/lib/x86-win32
+mkdir -p $name/lib/x86_64-win32
+
 touch $name/src/$name.h
 touch $name/src/$name.cpp
 touch $name/src/android/${name}_android.cpp
