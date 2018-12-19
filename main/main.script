@@ -24,6 +24,9 @@ function init(self)
 	local msg = ext2.test()
 	ccprint("msg=%s", msg)
 	]]
+	local ok,ret = umeng.sendEvent({
+		name = "app_start_test",
+	})
 end
 
 function final(self)
