@@ -18,8 +18,9 @@ platforms:
 
     x86_64-osx:
         context:
+            frameworks: ["AVFoundation", "AudioToolbox", "VideoToolbox", "CoreAudio", "CoreServices", "CoreFoundation", "AudioUnit", "CoreMedia", "CoreWLAN", "SystemConfiguration"]
             flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            libs:       ["c++", "resolv.9"]
 
     x86_64-win32:
         context:

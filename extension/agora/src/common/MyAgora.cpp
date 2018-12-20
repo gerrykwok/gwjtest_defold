@@ -69,7 +69,7 @@ int agora_joinChannel(lua_State *L)
 	uid = lua_tointeger(L, -1);
 	lua_pop(L, 1);								/* L: */
 
-//	dmLogInfo("gwjgwj,joinchannel,channel=%s,uid=%d", channelName, uid);
+//	dmLogInfo("gwjgwj,joinchannel,channel=%s,uid=%d,engine=0x%x", channelName, uid, g_agoraEngine);
 
 	g_agoraEngine->setChannelProfile(CHANNEL_PROFILE_GAME);
 	g_agoraEngine->joinChannel(NULL, channelName, NULL, uid);

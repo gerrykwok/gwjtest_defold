@@ -4,6 +4,8 @@
 #include "../android/AMG_Voice_Native_Android_HD_v2_2_3_20/IAgoraRtcEngine.h"
 #elif defined(DM_PLATFORM_WINDOWS)
 #include "../win32/Agora_Native_SDK_for_Windows_v2.0.8.3_FULL/IAgoraRtcEngine.h"
+#elif defined(DM_PLATFORM_OSX)
+#import <AgoraRtcEngineKit/IAgoraRtcEngine.h>
 #endif
 using namespace agora::rtc;
 
