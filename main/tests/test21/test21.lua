@@ -17,7 +17,9 @@ end
 
 function test21:onEnter()
 	self.m_url = msg.url()
-	self.m_userId = math.random(100, 200)--随机生成一个UID
+	math.randomseed(os.time())
+	self.m_userId = math.random(10000, 30000)--随机生成一个UID
+	gui.set_text(gui.get_node("text_userid"), "userId:" .. self.m_userId)
 
 	gwjui.ScaleButton.new({
 		main_id = "btn_join_channel",
