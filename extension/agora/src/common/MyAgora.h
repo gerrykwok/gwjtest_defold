@@ -6,6 +6,8 @@
 #include "../win32/Agora_Native_SDK_for_Windows_v2.0.8.3_FULL/IAgoraRtcEngine.h"
 #elif defined(DM_PLATFORM_OSX)
 #import <AgoraRtcEngineKit/IAgoraRtcEngine.h>
+#elif defined(DM_PLATFORM_IOS)
+#import <AgoraAudioKit/IAgoraRtcEngine.h>
 #endif
 using namespace agora::rtc;
 
