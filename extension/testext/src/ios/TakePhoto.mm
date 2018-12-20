@@ -57,7 +57,7 @@
 	if ([mediaType isEqualToString:@"public.image"]){
 		UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
 
-		NSLog(@"image,Orientation=%ld,size=%f,%f", image.imageOrientation, image.size.width, image.size.height);
+		NSLog(@"image,Orientation=%ld,size=%f,%f", (long)image.imageOrientation, image.size.width, image.size.height);
 
 		CGSize reSize = CGSizeMake(m_outputWidth, m_outputHeight);
 		UIImage * imageReSize = [TakePhoto reSizeImage:image toSize:reSize];

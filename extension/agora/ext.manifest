@@ -3,14 +3,15 @@ name: "agora"
 platforms:
     arm64-ios:
         context:
+            frameworks: ["AVFoundation", "Accelerate", "SystemConfiguration", "CoreMedia", "AudioToolbox", "CoreTelephony", "CFNetwork"]
             flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            libs:       ["c++", "resolv.9"]
 
     armv7-ios:
         context:
-            frameworks: ["CoreTelephony", "SystemConfiguration"]
+            frameworks: ["AVFoundation", "Accelerate", "SystemConfiguration", "CoreMedia", "AudioToolbox", "CoreTelephony", "CFNetwork"]
             flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            libs:       ["c++", "resolv.9"]
 
     armv7-android:
         context:
