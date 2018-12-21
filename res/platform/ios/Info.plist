@@ -293,5 +293,7 @@
         </array>
         <key>NSCameraUsageDescription</key>
         <string>是否允许{{project.appname}}使用你的相机？</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>{{project.appname}}需要您的同意，您才能在使用期间使用麦克风与其它玩家聊天互动。</string>
 </dict>
 </plist>
