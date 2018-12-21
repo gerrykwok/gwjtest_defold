@@ -7,6 +7,7 @@
 static IRtcEngine *g_agoraEngine;
 static MyAgoraEventHandler g_agoraEventHandler;
 static int g_luaCallback = 0;
+typedef const char* (AGORA_CALL *PFN_getAgoraRtcEngineVersion)(int* build);
 typedef IRtcEngine* (AGORA_CALL *PFN_createAgoraRtcEngine)();
 
 void agora_initAgora()
@@ -17,6 +18,13 @@ void agora_initAgora()
 //	dmLogInfo("gwjgwj,agora library handle:0x%x", hDll);
 	if(hDll)
 	{
+		PFN_getAgoraRtcEngineVersion funcGetVersion = (PFN_getAgoraRtcEngineVersion)dlsym(hDll, "getAgoraSdkVersion");
+		if(funcGetVersion)
+		{
+			int build;
+			const char *version = funcGetVersion(&build);
+			dmLogInfo("c++:agora sdk version:%s", version);
+		}
 		PFN_createAgoraRtcEngine funcCreateEngine = (PFN_createAgoraRtcEngine)dlsym(hDll, "createAgoraRtcEngine");
 		g_agoraEngine = funcCreateEngine();
 //		dmLogInfo("gwjgwj,engine=0x%x", g_agoraEngine);
@@ -32,6 +40,9 @@ void agora_initAgora()
 		dmLogError("cannot load %s", soName);
 	}
 #else
+	int build;
+	const char *version = getAgoraRtcEngineVersion(&build);
+	dmLogInfo("c++:agora sdk version:%s", version);
 	g_agoraEngine = createAgoraRtcEngine();
 	RtcEngineContext ctx;
 	ctx.eventHandler = &g_agoraEventHandler;

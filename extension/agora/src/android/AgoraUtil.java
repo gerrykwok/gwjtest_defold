@@ -16,7 +16,7 @@ public class AgoraUtil
 		Log.d(TAG, "gwjgwj,load agora library finish");
 
 		String version = RtcEngine.getSdkVersion();
-		Log.d(TAG, "gwjgwj,agora sdk version:" + version);
+		Log.d(TAG, "java:agora sdk version:" + version);
 
 		Thread thr = new Thread(new Runnable()
 		{
