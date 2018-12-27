@@ -33,11 +33,12 @@ public class PlatformWechat
 		{
 			e.printStackTrace();
 		}
+		boolean success;
 		SendAuth.Req req = new SendAuth.Req();
 		req.scope = "snsapi_userinfo";
 		req.state = "wechat_login_plm";
-		s_wxApi.sendReq(req);
-		return "success";
+		success = s_wxApi.sendReq(req);
+		return success ? "success" : "failed";
 	}
 
 	public static void logout(Context ctx, JSONObject json)
