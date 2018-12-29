@@ -7,6 +7,10 @@
 
 static const luaL_reg Module_methods[] =
 {
+	{"init", appleiap_init},
+	{"loadProducts", appleiap_loadProducts},
+	{"purchase", appleiap_purchase},
+	{"finishTransaction", appleiap_finishTransaction},
 	{0, 0}
 };
 

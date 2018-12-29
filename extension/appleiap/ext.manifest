@@ -6,9 +6,11 @@ platforms:
             libs:       ["c++"]
             flags:      ["-std=c++11", "-stdlib=libc++"]
             linkFlags:  ["-ObjC"]
+            defines:    []
 
     armv7-ios:
         context:
             libs:       ["c++"]
             flags:      ["-std=c++11", "-stdlib=libc++"]
             linkFlags:  ["-ObjC"]
+            defines:    []
