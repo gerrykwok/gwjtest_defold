@@ -25,6 +25,7 @@ function test22:on_message(message_id, message, sender)
 end
 
 function test22:onClickPayTest()
+	testext.printMacro()
 end
 
 return test22

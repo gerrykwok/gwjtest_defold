@@ -33,6 +33,9 @@ static const luaL_reg Module_methods[] =
 	{"test_oc", test_oc},
 #endif
 	{"callnative", test_callnative},
+#if defined(DM_PLATFORM_WINDOWS)
+	{"printMacro", test_printMacro},
+#endif
 	{0, 0}
 };
 
