@@ -1,8 +1,7 @@
+#if defined(DM_PLATFORM_IOS)
 
 #include "store/CCStorePaymentTransactionWrapper.h"
 #import <StoreKit/StoreKit.h>
-
-NS_CC_EXTRA_BEGIN
 
 StorePaymentTransactionWrapper* StorePaymentTransactionWrapper::createWithTransaction(void* transactionObj)
 {
@@ -17,5 +16,4 @@ StorePaymentTransactionWrapper::~StorePaymentTransactionWrapper(void)
     [(SKPaymentTransaction *)m_transactionObj release];
 }
 
-NS_CC_EXTRA_END
-
+#endif

@@ -1,3 +1,4 @@
+#if defined(DM_PLATFORM_IOS)
 
 #include "store/CCStore.h"
 
@@ -329,3 +330,5 @@ void Store::passStorePaymentTransactionToLuaListener(StorePaymentTransaction* tr
 #endif
 
 NS_CC_EXTRA_END
+
+#endif

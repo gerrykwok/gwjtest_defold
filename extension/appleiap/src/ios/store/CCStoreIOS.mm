@@ -1,3 +1,4 @@
+#if defined(DM_PLATFORM_IOS)
 
 #import "platform/ios/CCStoreIOS.h"
 #import "platform/ios/CCStoreReceiptVerifyRequestIOS.h"
@@ -529,3 +530,5 @@ static const char* const SANDBOX_RECEIPT_VERIFY_URL = "https://sandbox.itunes.ap
 }
 
 @end
+
+#endif

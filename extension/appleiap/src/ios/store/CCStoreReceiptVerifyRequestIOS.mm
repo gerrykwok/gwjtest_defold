@@ -1,3 +1,4 @@
+#if defined(DM_PLATFORM_IOS)
 
 #include "platform/ios/CCStoreReceiptVerifyRequestIOS.h"
 
@@ -45,3 +46,5 @@ void CCStoreReceiptVerifyRequestIOS::requestFailed(HTTPRequest* request)
     [m_store release];
     release();
 }
+
+#endif

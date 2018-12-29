@@ -1,1 +1,14 @@
 name: "appleiap"
+
+platforms:
+    arm64-ios:
+        context:
+            libs:       ["c++"]
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            linkFlags:  ["-ObjC"]
+
+    armv7-ios:
+        context:
+            libs:       ["c++"]
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            linkFlags:  ["-ObjC"]

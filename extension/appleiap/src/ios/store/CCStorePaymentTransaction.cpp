@@ -1,3 +1,4 @@
+#if defined(DM_PLATFORM_IOS)
 
 #include "store/CCStorePaymentTransaction.h"
 
@@ -128,3 +129,5 @@ const LuaValueDict StorePaymentTransaction::convertToLuaTable(void)
 #endif
 
 NS_CC_EXTRA_END
+
+#endif

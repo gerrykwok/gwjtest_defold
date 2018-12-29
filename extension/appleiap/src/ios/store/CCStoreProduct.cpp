@@ -1,7 +1,6 @@
+#if defined(DM_PLATFORM_IOS)
 
 #include "store/CCStoreProduct.h"
-
-NS_CC_EXTRA_BEGIN
 
 StoreProduct* StoreProduct::productWithId(const char* productIdentifier,
                                               const char* localizedTitle,
@@ -29,4 +28,4 @@ bool StoreProduct::initWithId(const char* productIdentifier,
     return true;
 }
 
-NS_CC_EXTRA_END
+#endif
