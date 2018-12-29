@@ -1,0 +1,31 @@
+local gwjui = require("gwjui.gwjui")
+local test = require("main.tests.test22.test22")
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.m_input = gwjui.input.createInstance()
+
+	self.m_test = test.new()
+	self.m_test:onEnter()
+end
+
+function final(self)
+	self.m_test:onExit()
+	self.m_input:final()
+end
+
+function update(self, dt)
+	self.m_input:onUpdate(dt)
+end
+
+function on_message(self, message_id, message, sender)
+	self.m_input:on_message(message_id, message, sender)
+	self.m_test:on_message(message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+	self.m_input:onInput(action_id, action)
+end
+
+function on_reload(self)
+end
