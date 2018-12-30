@@ -29,7 +29,7 @@ iap_provider =
 manifest = /res/platform/android/AndroidManifest.xml
 
 [ios]
-bundle_identifier = com.xsjplm.plm
+bundle_identifier = com.xishanju.qyq
 app_icon_114x114 = /res/platform/ios/ios_icon96.png
 infoplist = /res/platform/ios/Info.plist
 launch_image_2436x1125 = /res/platform/ios/launch_2436x1125.png

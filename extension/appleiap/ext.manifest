@@ -3,6 +3,7 @@ name: "appleiap"
 platforms:
     arm64-ios:
         context:
+            frameworks: ["StoreKit"]
             libs:       ["c++"]
             flags:      ["-std=c++11", "-stdlib=libc++"]
             linkFlags:  ["-ObjC"]
@@ -10,6 +11,7 @@ platforms:
 
     armv7-ios:
         context:
+            frameworks: ["StoreKit"]
             libs:       ["c++"]
             flags:      ["-std=c++11", "-stdlib=libc++"]
             linkFlags:  ["-ObjC"]

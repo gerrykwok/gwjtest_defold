@@ -58,6 +58,7 @@ end
 
 function clsUIListViewItem:addContent(contentNode)
 	gui.set_parent(contentNode, self.m_node)
+	gui.set_position(contentNode, vmath.vector3())
 	self.m_contentNode = contentNode
 end
 
