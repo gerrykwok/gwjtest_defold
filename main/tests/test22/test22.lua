@@ -9,6 +9,13 @@ end
 function test22:onEnter()
 	self.m_url = msg.url()
 
+	appleiap.init({
+		callback = function(script, res)
+			--gwjui.printf("transaction callback,res=%s", tostring(res))
+			self:onTransactionCallback(json.decode(res))
+		end,
+	})
+
 	local can = appleiap.canMakePurchases()
 	gwjui.printf("gwjgwj,can make purchases:%s", tostring(can))
 
@@ -18,7 +25,7 @@ function test22:onEnter()
 	})
 	:onTouch(function(event)
 		if(event.name == "clicked") then
-			ccprint("clicked:%d", event.itemPos)
+			self:makePurchase(event.item.m_productId)
 		end
 	end)
 
@@ -55,7 +62,7 @@ function test22:onLoadProducts()
 			self:onLoadProductResult(json.decode(res))
 		end,
 	})
-	if(sys.get_sys_info() ~= "iPhone OS") then--not ios
+	if(sys.get_sys_info().system_name ~= "iPhone OS") then--not ios
 		local result = {
 			invalidProductsId = {
 				"my_invalid_product2",
@@ -142,10 +149,26 @@ function test22:onLoadProductResult(result)
 			item:addContent(clones[rootName])
 			local size = gui.get_size(clones[rootName])
 			item:setItemSize(size.x, size.y)
+			item.m_productId = product.productIdentifier
 			self.m_listProducts:addItem(item)
 		end
 	end
 	self.m_listProducts:reload()
+end
+
+function test22:makePurchase(productId)
+	ccprint("buy %s", productId)
+	local ok, res = appleiap.purchase({
+		productId = productId,
+	})
+	gwjui.printf("make purchase,ok=%s,res=%s", tostring(ok), tostring(res))
+end
+
+function test22:onTransactionCallback(transaction)
+	gwjui.dump(transaction, "transaction callback")
+	appleiap.finishTransaction({
+		transactionId = transaction.transactionIdentifier,
+	})
 end
 
 return test22
