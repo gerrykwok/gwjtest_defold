@@ -10,6 +10,11 @@
 	[[IapUtil getInstance] init:params];
 }
 
++(NSString*)static_canMakePurchases:(NSDictionary*)params
+{
+	return [[IapUtil getInstance] canMakePurchases:params];
+}
+
 +(void)static_loadProducts:(NSDictionary*)params
 {
 	[[IapUtil getInstance] loadProducts:params];
@@ -35,6 +40,13 @@ static IapUtil* g_instance;
 
 -(void)init:(NSDictionary*)params
 {
+}
+
+-(NSString*)canMakePurchases:(NSDictionary*)params
+{
+	NSLog(@"gwjgwj oc,invoke canMakePurchases,params=%@", params);
+	BOOL can = [SKPaymentQueue canMakePayments];
+	return can ? @"yes" : @"no";
 }
 
 -(void)loadProducts:(NSDictionary*)params

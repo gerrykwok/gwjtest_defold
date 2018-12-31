@@ -9,6 +9,9 @@ end
 function test22:onEnter()
 	self.m_url = msg.url()
 
+	local can = appleiap.canMakePurchases()
+	gwjui.printf("gwjgwj,can make purchases:%s", tostring(can))
+
 	self.m_listProducts = gwjui.UIListView.createInstance({
 		main_id = "product_list",
 		direction = gwjui.UIListView.DIRECTION_HORIZONTAL,
