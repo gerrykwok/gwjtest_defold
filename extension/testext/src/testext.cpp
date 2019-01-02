@@ -4,6 +4,7 @@
 
 #include <dmsdk/sdk.h>
 #include "testext.h"
+#include "libbase64.h"
 
 static int test(lua_State *L)
 {
@@ -24,6 +25,31 @@ static int luatableToJson(lua_State *L)
 	return 1;
 }
 
+int test_encodeBase64(lua_State *L)
+{
+	const char *input = lua_tostring(L, -1);
+	int inputlength = lua_tointeger(L, -1);
+	int bufsize = Base64encode_len(inputlength);
+	char *buffer = new char[bufsize];
+	int size = Base64encode(buffer, input, inputlength) - 1;
+	if(size) lua_pushstring(L, buffer);
+	else lua_pushnil(L);
+	delete[] buffer;
+	return 1;
+}
+
+int test_decodeBase64(lua_State *L)
+{
+	const char *input = lua_tostring(L, -1);
+	int bufsize = Base64decode_len(input);
+	char *buffer = new char[bufsize];
+	int size = Base64decode(buffer, input);
+	if(size) lua_pushlstring(L, buffer, size);
+	else lua_pushnil(L);
+	delete[] buffer;
+	return 1;
+}
+
 static const luaL_reg Module_methods[] =
 {
 	{"test", test},
@@ -36,6 +62,8 @@ static const luaL_reg Module_methods[] =
 #if defined(DM_PLATFORM_WINDOWS)
 	{"printMacro", test_printMacro},
 #endif
+	{"encodeBase64", test_encodeBase64},
+	{"decodeBase64", test_decodeBase64},
 	{0, 0}
 };
 

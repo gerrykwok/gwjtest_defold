@@ -166,6 +166,8 @@ end
 
 function test22:onTransactionCallback(transaction)
 	gwjui.dump(transaction, "transaction callback")
+	--测试:向苹果服务器验证订单
+--	 testext.encodeBase64(transaction.transactionIdentifier, string.len(transaction.transactionIdentifier))
 	appleiap.finishTransaction({
 		transactionId = transaction.transactionIdentifier,
 	})
