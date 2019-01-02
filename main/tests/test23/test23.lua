@@ -25,11 +25,17 @@ function test23:on_message(message_id, message, sender)
 end
 
 function test23:onClickDownload()
+	if(self.m_downloading) then
+		TipsBanner.show("正在下载中")
+		return
+	end
+
+	self.m_downloading = true
 	gui.set_text(gui.get_node("text_progress"), "下载中")
 	
 	local url = "http://www.xsjplm.com:7654/?c=Index&a=download_info&app_id=XYd0ogCwfB4wYCqdikYooVe"
 	url = "http://qnweb.xsjplm.com/mj_beta_201806051000_1.apk"
-	http.request(url, "GET", function(self, _, response)
+	http.request(url, "GET", function(script, _, response)
 		gwjui.dump(response, "download response")
 		local status = response.status
 		local resp = response.response
@@ -55,8 +61,11 @@ function test23:onClickDownload()
 		if(f) then
 			f:write(resp)
 			f:close()
+		else
+			gwjui.printf("cannot open %s for writing", filepath)
 		end
 		gui.set_text(gui.get_node("text_progress"), text)
+		self.m_downloading = false
 	end)
 end
 
