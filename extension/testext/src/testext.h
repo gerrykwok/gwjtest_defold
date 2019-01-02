@@ -8,8 +8,6 @@ int test_oc(lua_State *L);
 int test_takephoto(lua_State *L);
 int test_callnative(lua_State *L);
 int test_printMacro(lua_State *L);
-int test_encodeBase64(lua_State *L);
-int test_decodeBase64(lua_State *L);
 
 //根据id反注册callback
 extern void ext_unregisterLuaCallback(int callbackId);
