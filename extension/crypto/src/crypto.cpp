@@ -26,7 +26,7 @@ int crypto_decodeBase64(lua_State *L)
 	void* decoded = crypto_decode_base64(input, &decodeSize);
 
 	if(decoded == NULL) lua_pushnil(L);
-	else lua_pushlstring(L, decoded, decodeSize);
+	else lua_pushlstring(L, (char*)decoded, decodeSize);
 	crypto_delete_buffer(decoded);
 	return 1;
 }
