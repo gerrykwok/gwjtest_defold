@@ -54,13 +54,11 @@ static IapUtil* g_instance;
 
 -(void)init:(NSDictionary*)params
 {
-	NSLog(@"IapUtil init,params=%@", params);
 	m_transactionCallback = [params[@"callback"] intValue];
 }
 
 -(NSString*)canMakePurchases:(NSDictionary*)params
 {
-	NSLog(@"gwjgwj oc,invoke canMakePurchases,params=%@", params);
 	BOOL can = [SKPaymentQueue canMakePayments];
 	return can ? @"yes" : @"no";
 }
@@ -77,7 +75,7 @@ static IapUtil* g_instance;
 		NSString *id = productsId[key];
 		[allPid addObject:id];
 	}
-	NSLog(@"all product id:%@", allPid);
+	//NSLog(@"all product id:%@", allPid);
 	[m_loadedProducts removeAllObjects];
 	SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:allPid];
 	request.delegate = self;
@@ -151,13 +149,11 @@ static IapUtil* g_instance;
 
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
 {
-	NSLog(@"updated transactions:%@", transactions);
+	//NSLog(@"updated transactions:%@", transactions);
 	for(SKPaymentTransaction *transaction : transactions)
 	{
 		SKPaymentTransactionState state = transaction.transactionState;
 		NSLog(@"transaction state:%d", state);
-//		if(state != SKPaymentTransactionStatePurchasing)
-//			[[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 		switch(transaction.transactionState)
 		{
 		case SKPaymentTransactionStatePurchased:
@@ -263,6 +259,17 @@ static const char* const CCStorePaymentTransactionStateNames[] = {
 	[res appendFormat:@"\"date\":%g,", [transaction.transactionDate timeIntervalSince1970]];
 	[res appendFormat:@"\"errorCode\":%d,", errorCode];
 	[res appendFormat:@"\"errorString\":\"%s\"", errorDescription ? errorDescription : ""];
+
+	if(receiptDataLength > 0)
+	{
+		// http://stackoverflow.com/questions/11242667/how-to-parse-apples-iap-receipt-mal-formatted-json
+		char* receiptBase64 = crypto_encode_base64(receiptData, receiptDataLength);
+		if(receiptBase64)
+		{
+			[res appendFormat:@",\"receipt_base64\":\"%s\"", receiptBase64];
+			crypto_delete_buffer(receiptBase64);
+		}
+	}
 
 	[res appendString:@"}"];
 	

@@ -18,6 +18,7 @@ function test22:onEnter()
 
 	local can = appleiap.canMakePurchases()
 	gwjui.printf("gwjgwj,can make purchases:%s", tostring(can))
+	TipsBanner.show("can make purchase:" .. tostring(can))
 
 	self.m_listProducts = gwjui.UIListView.createInstance({
 		main_id = "product_list",
@@ -166,11 +167,31 @@ end
 
 function test22:onTransactionCallback(transaction)
 	gwjui.dump(transaction, "transaction callback")
-	--测试:向苹果服务器验证订单
---	 testext.encodeBase64(transaction.transactionIdentifier, string.len(transaction.transactionIdentifier))
+
 	appleiap.finishTransaction({
 		transactionId = transaction.transactionIdentifier,
 	})
+	
+	--测试:向苹果服务器验证订单
+	if(transaction.state == "purchased") then
+		local receiptBase64 = transaction.receipt_base64
+		gwjui.printf("receipt in base64:%s", receiptBase64)
+		local postData = string.format("{\"receipt-data\":\"%s\"}", receiptBase64)
+--		local url = "https://buy.itunes.apple.com/verifyReceipt"
+		local url = "https://sandbox.itunes.apple.com/verifyReceipt"
+		local headers = {
+			"Content-Type: application/json",
+		}
+		headers = nil
+		local options = {
+			timeout = 30,
+		}
+		gwjui.printf("about to post validation")
+		http.request(url, "POST", function(self, _, response)
+			gwjui.dump(response, "verify receipt response")
+		end, headers, postData, options)
+		gwjui.printf("post validation end")
+	end
 end
 
 return test22
