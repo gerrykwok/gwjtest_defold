@@ -180,17 +180,16 @@ function test22:onTransactionCallback(transaction)
 --		local url = "https://buy.itunes.apple.com/verifyReceipt"
 		local url = "https://sandbox.itunes.apple.com/verifyReceipt"
 		local headers = {
-			"Content-Type: application/json",
+			["Content-Type"] = "application/json",
 		}
-		headers = nil
 		local options = {
 			timeout = 30,
 		}
-		gwjui.printf("about to post validation")
+		gwjui.printf("gwjgwj,about to post validation")
 		http.request(url, "POST", function(self, _, response)
 			gwjui.dump(response, "verify receipt response")
 		end, headers, postData, options)
-		gwjui.printf("post validation end")
+		gwjui.printf("gwjgwj,post validation end")
 	end
 end
 
