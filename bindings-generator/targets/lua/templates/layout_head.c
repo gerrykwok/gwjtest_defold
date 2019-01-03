@@ -3,9 +3,6 @@
 $macro_judgement
 #end if 
 #for header in $headers
-\#include "${os.path.basename(header)}"
+\#include "$header"
 #end for
-\#include "tolua_fix.h"
-\#include "LuaBasicConversions.h"
-
-
+\#include "external_include.h"
