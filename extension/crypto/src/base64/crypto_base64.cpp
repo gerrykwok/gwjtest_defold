@@ -18,7 +18,7 @@ void* crypto_decode_base64(const char *codedString, int *decodeSize)
 {
 	const char *input = codedString;
 	int bufsize = Base64decode_len(input);
-	char *buffer = new char[bufsize];
+	char *buffer = (char*)malloc(bufsize);
 	int size = Base64decode(buffer, input);
 	if(size <= 0)
 	{
@@ -33,5 +33,5 @@ void* crypto_decode_base64(const char *codedString, int *decodeSize)
 void crypto_delete_buffer(void *buffer)
 {
 	if(buffer)
-		delete[] buffer;
+		free(buffer);
 }

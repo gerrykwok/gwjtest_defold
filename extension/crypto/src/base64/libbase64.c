@@ -86,6 +86,8 @@
 
 #include "libbase64.h"
 
+#define REGISTER /*register*/
+
 /* aaaack but it's fast and const should make it shared text page. */
 static const unsigned char pr2six[256] =
 {
@@ -111,8 +113,8 @@ static const unsigned char pr2six[256] =
 int Base64decode_len(const char *bufcoded)
 {
     int nbytesdecoded;
-    register const unsigned char *bufin;
-    register int nprbytes;
+    REGISTER const unsigned char *bufin;
+    REGISTER int nprbytes;
 
     bufin = (const unsigned char *) bufcoded;
     while (pr2six[*(bufin++)] <= 63);
@@ -126,9 +128,9 @@ int Base64decode_len(const char *bufcoded)
 int Base64decode(char *bufplain, const char *bufcoded)
 {
     int nbytesdecoded;
-    register const unsigned char *bufin;
-    register unsigned char *bufout;
-    register int nprbytes;
+    REGISTER const unsigned char *bufin;
+    REGISTER unsigned char *bufout;
+    REGISTER int nprbytes;
 
     bufin = (const unsigned char *) bufcoded;
     while (pr2six[*(bufin++)] <= 63);
