@@ -1,7 +1,7 @@
 TOLUA_API int register_all_${prefix}(lua_State* tolua_S)
 {
-    lua_getglobal(L, "_G");
-    if (lua_istable(L, -1))//stack:...,_G,
+    lua_getglobal(tolua_S, "_G");
+    if (lua_istable(tolua_S, -1))//stack:...,_G,
     {
         tolua_open(tolua_S);
 
@@ -21,7 +21,7 @@ TOLUA_API int register_all_${prefix}(lua_State* tolua_S)
 
         tolua_endmodule(tolua_S);
     }
-    lua_pop(L, 1);
+    lua_pop(tolua_S, 1);
     return 1;
 }
 
