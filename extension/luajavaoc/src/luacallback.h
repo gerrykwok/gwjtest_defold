@@ -11,8 +11,13 @@ int ext_registerLuaCallback(lua_State* L, int index);
 void ext_unregisterLuaCallback(int callbackId);
 //调用callback
 void ext_invokeLuaCallbackWithString(int callbackId, const char *value);
-//在update线程中执行代码
+//在update线程中执行代码(执行一次)
 void ext_performInUpdateThread(const std::function<void(void)> &func);
+//把代码加入到update线程中执行(一直执行)
+//返回ID(<=0代表无效ID)
+unsigned int ext_scheduleUpdate(const std::function<void(void)> &func);
+//移除在update中执行的代码
+void ext_unscheduleUpdate(unsigned int entryId);
 //延迟执行代码
 void ext_performWithDelay(int delayInUpdateCount, const std::function<void(void)> &func);
 //根据lua栈中的参数转换为json字符串

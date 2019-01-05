@@ -1,0 +1,33 @@
+name: "httpreq"
+
+platforms:
+    arm64-ios:
+        context:
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       ["c++"]
+
+    armv7-ios:
+        context:
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       ["c++"]
+
+    armv7-android:
+        context:
+            flags:      ["-std=c++11"]
+
+    x86_64-osx:
+        context:
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       ["c++"]
+
+    x86_64-win32:
+        context:
+            flags:      []
+            defines:    []
+            libs:       ["msvcrt"]
+
+    x86-win32:
+        context:
+            flags:      []
+            defines:    []
+            libs:       ["msvcrt"]

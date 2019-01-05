@@ -2,6 +2,7 @@
 #include <math.h>
 #include <mutex>
 #include <vector>
+#include <map>
 #include "luacallback.h"
 
 struct LuaCallbackInfo
@@ -233,7 +234,10 @@ std::string ext_jsonFromLuaTable(lua_State *L, int index)
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 static std::mutex g_performMutex;
-static std::vector<std::function<void(void)>> g_functionsToPerform;
+static std::vector<std::function<void(void)> > g_functionsToPerform;
+typedef std::map<unsigned int, std::function<void(void)> > ScheduleFunctions;
+static ScheduleFunctions g_functionsToSchedule;
+static unsigned int g_counterSchedule = 0;
 struct DELAY_STRUCT
 {
 	bool m_valid;
@@ -248,6 +252,18 @@ void ext_performInUpdateThread(const std::function<void(void)> &func)
 	g_performMutex.lock();
 	g_functionsToPerform.push_back(func);
 	g_performMutex.unlock();
+}
+
+unsigned int ext_scheduleUpdate(const std::function<void(void)> &func)
+{
+	unsigned int id = ++g_counterSchedule;
+	g_functionsToSchedule[id] = func;
+	return id;
+}
+
+void ext_unscheduleUpdate(unsigned int entryId)
+{
+	g_functionsToSchedule.erase(entryId);
 }
 
 void ext_performWithDelay(int delayInUpdateCount, const std::function<void(void)> &func)
@@ -295,6 +311,14 @@ void ext_onUpdate()
 			}
 		}
 		p++;
+	}
+	//schedule
+	if(!g_functionsToSchedule.empty())
+	{
+		for(const auto &entry : g_functionsToSchedule)
+		{
+			entry.second();
+		}
 	}
 }
 

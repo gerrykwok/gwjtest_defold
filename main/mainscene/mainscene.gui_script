@@ -82,6 +82,7 @@ function init(self)
 		listview:addItem(item)
 	end
 	listview:reload()
+	listview:scrollTo(0, 0)
 	--退出按钮
 	local btnExit = gwjui.ScaleButton.new({
 		main_id = "exit/bg",
