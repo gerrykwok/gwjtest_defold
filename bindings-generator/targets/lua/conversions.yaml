@@ -79,6 +79,7 @@ conversions:
     object: "ok &= luaval_to_object<${arg.to_string($generator).replace(\"*\", \"\")}>(tolua_S, ${arg_idx}, \"${scriptname}\",&${out_value})"
   from_native:
     # native to lua
+    LUA_BUFFER: "lua_pushlstring(tolua_S, (const char*)${in_value}.ptr, ${in_value}.size)"
     int: "tolua_pushnumber(tolua_S,(lua_Number)${in_value})"
     "unsigned int": "tolua_pushnumber(tolua_S,(lua_Number)${in_value})"
     "unsigned short": "tolua_pushnumber(tolua_S,(lua_Number)${in_value})"
