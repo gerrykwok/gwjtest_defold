@@ -102,6 +102,7 @@ function test23:onClickHttpReq()
 --	url = "http://10.11.133.32/invalid.aaa"
 	local req
 	local dltotal = -1
+	gwjui.printf("begin to download %s", url)
 	req = httpreq.HTTPRequest:create(function(script, res)
 		local t = json.decode(res)
 		if(t.name ~= "progress") then
