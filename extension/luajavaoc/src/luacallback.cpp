@@ -334,16 +334,16 @@ void ext_onUpdate()
 			if(!entry.second.m_delete)
 				entry.second.func();
 		}
-	}
-	//delete all schedule that is marked delete
-	ScheduleFunctions::iterator it;
-	for(it = g_functionsToSchedule.begin(); it != g_functionsToSchedule.end(); )
-	{
-		if(it->second.m_delete)
+		//delete all schedule that is marked delete
+		ScheduleFunctions::iterator it;
+		for(it = g_functionsToSchedule.begin(); it != g_functionsToSchedule.end(); )
 		{
-			g_functionsToSchedule.erase(it++);
+			if(it->second.m_delete)
+			{
+				g_functionsToSchedule.erase(it++);
+			}
+			else it++;
 		}
-		else it++;
 	}
 }
 
