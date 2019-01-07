@@ -28,6 +28,7 @@
 #include <unordered_map>
 #include <vector>
 #include <typeinfo>
+#include <string>
 
 #ifdef __cplusplus
 extern "C" {
