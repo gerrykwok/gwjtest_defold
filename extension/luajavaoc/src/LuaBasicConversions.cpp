@@ -23,6 +23,7 @@
  ****************************************************************************/
 
 #include "LuaBasicConversions.h"
+#include <stdlib.h>
 //#include "tolua_fix.h"
 #define CCASSERT(cond, msg) do {                              \
           if (!(cond)) {                                          \

@@ -26,6 +26,8 @@
 
 #include <dmsdk/sdk.h>
 #include <unordered_map>
+#include <vector>
+#include <typeinfo>
 
 #ifdef __cplusplus
 extern "C" {
