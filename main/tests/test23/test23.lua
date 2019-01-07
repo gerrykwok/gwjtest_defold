@@ -101,10 +101,17 @@ function test23:onClickHttpReq()
 	url = "http://10.11.133.31/gdmj-release.apk"
 --	url = "http://10.11.133.32/invalid.aaa"
 	local req
+	local dltotal = -1
 	req = httpreq.HTTPRequest:create(function(script, res)
-		gwjui.printf("lua:httpreq callback,res=%s", tostring(res))
 		local t = json.decode(res)
+		if(t.name ~= "progress") then
+			gwjui.printf("lua:httpreq callback,res=%s", tostring(res))
+		end
 		if(t.name == "progress") then
+			if(t.dltotal ~= dltotal) then
+				gwjui.printf("lua:progress: %d/%d", t.dltotal, t.total)
+				dltotal = t.dltotal
+			end
 			gui.set_text(gui.get_node("text_progress"), string.format("进度：%d/%d", t.dltotal, t.total))
 			local size = gui.get_size(gui.get_node("progress1"))
 			size.x = size.x * t.dltotal / t.total
@@ -117,7 +124,7 @@ function test23:onClickHttpReq()
 			gwjui.printf("response string=%s", str)
 			gwjui.printf("response data=%s", respData)
 			local filepath = self:getOutputPath(self:getFilenameFromURL(url))
-			gwjui.printf("save to %s", filepath)
+--			gwjui.printf("save to %s", filepath)
 --			req:saveResponseData(filepath)
 --[[			local f = io.open(filepath, "wb")
 			if(f) then
