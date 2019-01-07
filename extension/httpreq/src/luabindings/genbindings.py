@@ -98,7 +98,7 @@ def main():
         sys.exit(1)
 
     current_path = os.path.dirname(__file__)
-    cxx_generator_root = os.path.abspath(os.path.join(current_path, '../../../../bindings-generator'))
+    cxx_generator_root = os.path.abspath(os.path.join(current_path, '../../../../../../assets/bindings-generator'))
 
     # save config to file
     config = ConfigParser.ConfigParser()
