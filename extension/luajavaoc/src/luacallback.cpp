@@ -235,7 +235,12 @@ std::string ext_jsonFromLuaTable(lua_State *L, int index)
 
 static std::mutex g_performMutex;
 static std::vector<std::function<void(void)> > g_functionsToPerform;
-typedef std::map<unsigned int, std::function<void(void)> > ScheduleFunctions;
+struct SCHEDULE_FUNCTION
+{
+	bool m_delete;
+	std::function<void(void)> func;
+};
+typedef std::map<unsigned int, SCHEDULE_FUNCTION> ScheduleFunctions;
 static ScheduleFunctions g_functionsToSchedule;
 static unsigned int g_counterSchedule = 0;
 struct DELAY_STRUCT
@@ -257,13 +262,21 @@ void ext_performInUpdateThread(const std::function<void(void)> &func)
 unsigned int ext_scheduleUpdate(const std::function<void(void)> &func)
 {
 	unsigned int id = ++g_counterSchedule;
-	g_functionsToSchedule[id] = func;
+	SCHEDULE_FUNCTION entry;
+	entry.func = func;
+	entry.m_delete = false;
+	g_functionsToSchedule[id] = entry;
 	return id;
 }
 
 void ext_unscheduleUpdate(unsigned int entryId)
 {
-	g_functionsToSchedule.erase(entryId);
+	//just mark for delete
+	ScheduleFunctions::iterator it = g_functionsToSchedule.find(entryId);
+	if(it != g_functionsToSchedule.end())
+	{
+		it->second.m_delete = true;
+	}
 }
 
 void ext_performWithDelay(int delayInUpdateCount, const std::function<void(void)> &func)
@@ -315,10 +328,22 @@ void ext_onUpdate()
 	//schedule
 	if(!g_functionsToSchedule.empty())
 	{
+		//dmLogInfo("schedule num:%d", g_functionsToSchedule.size());
 		for(const auto &entry : g_functionsToSchedule)
 		{
-			entry.second();
+			if(!entry.second.m_delete)
+				entry.second.func();
 		}
+	}
+	//delete all schedule that is marked delete
+	ScheduleFunctions::iterator it;
+	for(it = g_functionsToSchedule.begin(); it != g_functionsToSchedule.end(); )
+	{
+		if(it->second.m_delete)
+		{
+			g_functionsToSchedule.erase(it++);
+		}
+		else it++;
 	}
 }
 

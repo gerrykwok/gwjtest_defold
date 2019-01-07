@@ -19,6 +19,7 @@ typedef int curl_httppost;
 #elif defined(DM_PLATFORM_WINDOWS)
 #include "curl/win32/curl/curl.h"
 #elif defined(DM_PLATFORM_OSX)
+#include "curl/curl.h"
 #elif defined(DM_PLATFORM_IOS)
 #include "curl/ios/curl/curl.h"
 #endif

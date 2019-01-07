@@ -1,5 +1,6 @@
 #if defined(DM_PLATFORM_OSX)
 
+#import <Foundation/Foundation.h>
 #include "../httpreq.h"
 
 static NSString* runShellCommand(NSString *path, NSArray *arguments)
