@@ -122,8 +122,8 @@ static IapUtil* g_instance;
 
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error
 {
-	NSLog(@"request product failed,code=%d,%@", error.code, error);
-	NSString *res = [NSString stringWithFormat:@"{\"success\":false,\"errCode\":%d}", error.code];
+	NSLog(@"request product failed,code=%ld,%@", (long)error.code, error);
+	NSString *res = [NSString stringWithFormat:@"{\"success\":false,\"errCode\":%ld}", (long)error.code];
 	[self notifyLuaOfRequestProduct:res];
 }
 
@@ -153,9 +153,13 @@ static IapUtil* g_instance;
 	for(SKPaymentTransaction *transaction : transactions)
 	{
 		SKPaymentTransactionState state = transaction.transactionState;
-		NSLog(@"transaction state:%d", state);
+		NSLog(@"transaction state:%ld", (long)state);
 		switch(transaction.transactionState)
 		{
+		case SKPaymentTransactionStatePurchasing:
+			break;
+		case SKPaymentTransactionStateDeferred:
+			break;
 		case SKPaymentTransactionStatePurchased:
 			[self transactionCompleted:transaction];
 			break;
@@ -246,6 +250,8 @@ static const char* const CCStorePaymentTransactionStateNames[] = {
 		break;
 	case SKPaymentTransactionStateRestored:
 		ccstate = CCStorePaymentTransactionStateRestored;
+	case SKPaymentTransactionStateDeferred:
+		break;
 	}
 
 	NSMutableString *res = [NSMutableString stringWithCapacity:100];
@@ -255,7 +261,7 @@ static const char* const CCStorePaymentTransactionStateNames[] = {
 	[res appendFormat:@"\"state\":\"%s\",", CCStorePaymentTransactionStateNames[ccstate]];
 	[res appendFormat:@"\"transactionIdentifier\":\"%@\",", transaction.transactionIdentifier];
 	[res appendFormat:@"\"productIdentifier\":\"%@\",", transaction.payment.productIdentifier];
-	[res appendFormat:@"\"quantity\":%d,", transaction.payment.quantity];
+	[res appendFormat:@"\"quantity\":%ld,", (long)transaction.payment.quantity];
 	[res appendFormat:@"\"date\":%g,", [transaction.transactionDate timeIntervalSince1970]];
 	[res appendFormat:@"\"errorCode\":%d,", errorCode];
 	[res appendFormat:@"\"errorString\":\"%s\"", errorDescription ? errorDescription : ""];

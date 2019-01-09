@@ -20,9 +20,9 @@
 		int errCode = 0;
 		switch(callBackType)
 		{
-			case SugramShareSuccesslType: errCode = 0; break;
-			case SugramShareCancelType: errCode = -2; break;
-			default: errCode = -1; break;
+		case SugramLoginSuccessType: errCode = 0; break;
+		case SugramLoginCancelType: errCode = -2; break;
+		default: errCode = -1; break;
 		}
 		NSString *res = [NSString stringWithFormat:@"{\"errCode\":%d,\"code\":\"%@\"}", errCode, code];
 		if(callback > 0)
