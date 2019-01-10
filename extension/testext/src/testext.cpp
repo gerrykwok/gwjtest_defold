@@ -51,22 +51,26 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
+	dmLogInfo("testext:app init");
 	return dmExtension::RESULT_OK;
 }
 
 static dmExtension::Result ext_Init(dmExtension::Params* params)
 {
+	dmLogInfo("testext:init");
 	LuaInit(params->m_L);
 	return dmExtension::RESULT_OK;
 }
 
 static dmExtension::Result ext_AppFinal(dmExtension::AppParams* params)
 {
+	dmLogInfo("testext:app final");
 	return dmExtension::RESULT_OK;
 }
 
 static dmExtension::Result ext_Final(dmExtension::Params* params)
 {
+	dmLogInfo("testext:final");
 	return dmExtension::RESULT_OK;
 }
 

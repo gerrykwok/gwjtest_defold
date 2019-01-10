@@ -84,7 +84,7 @@ function init(self)
 	listview:reload()
 	listview:scrollTo(0, 0)
 	--退出按钮
-	local btnExit = gwjui.ScaleButton.new({
+	gwjui.ScaleButton.new({
 		main_id = "exit/bg",
 		maxScale = 1.1,
 	})
@@ -92,6 +92,14 @@ function init(self)
 		ccprint("gwjgwj,exit prog")
 		msg.post("@system:", "exit", {code=0})--os.exit()
 --		msg.post("@system:", "reboot")
+	end)
+	gwjui.ScaleButton.new({
+		main_id = "reboot/bg",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		ccprint("gwjgwj,reboot prog")
+		msg.post("@system:", "reboot")
 	end)
 end
 
