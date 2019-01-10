@@ -73,7 +73,7 @@
 		NSUInteger imageSize = [object.imageData length];
 		if(imageSize > 512*1024)
 		{
-			NSLog(@"gwjgwj,image is bigger than 512KB, %ldKB", imageSize);
+			NSLog(@"gwjgwj,image is bigger than 512KB, %ldKB", (unsigned long)imageSize);
 			[XianliaoUtil notifyShare:callback withCode:-1];
 			return;
 		}
@@ -92,7 +92,7 @@
 		NSUInteger imageSize = [gameObject.imageData length];
 		if(imageSize > 32*1024)
 		{
-			NSLog(@"gwjgwj,image is bigger than 32KB, %ldKB", imageSize);
+			NSLog(@"gwjgwj,image is bigger than 32KB, %ldKB", (unsigned long)imageSize);
 			[XianliaoUtil notifyShare:callback withCode:-1];
 			return;
 		}
