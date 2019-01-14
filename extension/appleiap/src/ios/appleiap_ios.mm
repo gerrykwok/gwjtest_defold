@@ -7,6 +7,11 @@ int appleiap_init(lua_State *L)
 	return ext_callNativeStaticMethod("IapUtil", "static_init", L, -1);
 }
 
+int appleiap_uninit(lua_State *L)
+{
+	return ext_callNativeStaticMethod("IapUtil", "static_purgeInstance", L, -1);
+}
+
 int appleiap_canMakePurchases(lua_State *L)
 {
 	ext_callNativeStaticMethod("IapUtil", "static_canMakePurchases", L, -1); /* stack: ok res */

@@ -10,6 +10,11 @@
 	[[IapUtil getInstance] init:params];
 }
 
++(void)static_purgeInstance:(NSDictionary*)params
+{
+	[IapUtil purgeInstance];
+}
+
 +(NSString*)static_canMakePurchases:(NSDictionary*)params
 {
 	return [[IapUtil getInstance] canMakePurchases:params];
@@ -38,6 +43,15 @@ static IapUtil* g_instance;
 	return g_instance;
 }
 
++(void)purgeInstance
+{
+	if(g_instance)
+	{
+		[g_instance release];
+		g_instance = nil;
+	}
+}
+
 - (id)init
 {
 	self = [super init];
@@ -48,12 +62,23 @@ static IapUtil* g_instance;
 		m_allTransactions = [NSMutableDictionary dictionaryWithCapacity:50];
 		//[m_loadedProducts retain];
 		//receiptVerifyMode_ = CCStoreReceiptVerifyModeNone;
+		m_transactionCallback = 0;
 	}
 	return self;
 }
 
+-(void)dealloc
+{
+	[[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
+}
+
 -(void)init:(NSDictionary*)params
 {
+	if(m_transactionCallback > 0)
+	{
+		ext_unregisterLuaCallback(m_transactionCallback);
+		m_transactionCallback = 0;
+	}
 	m_transactionCallback = [params[@"callback"] intValue];
 }
 

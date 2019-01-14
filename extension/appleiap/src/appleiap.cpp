@@ -8,6 +8,7 @@
 static const luaL_reg Module_methods[] =
 {
 	{"init", appleiap_init},
+	{"uninit", appleiap_uninit},
 	{"canMakePurchases", appleiap_canMakePurchases},
 	{"loadProducts", appleiap_loadProducts},
 	{"purchase", appleiap_purchase},
