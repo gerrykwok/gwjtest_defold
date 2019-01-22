@@ -31,11 +31,19 @@ class MiscFunc
 		{
 			return "apk not exist";
 		}
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		Uri uri = Uri.fromFile(f);
-		intent.setDataAndType(uri, "application/vnd.android.package-archive");
-		ctx.startActivity(intent);
+		try
+		{
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			Uri uri = Uri.fromFile(f);
+			intent.setDataAndType(uri, "application/vnd.android.package-archive");
+			ctx.startActivity(intent);
+		} catch(Exception e)
+		{
+			Log.e("misc", "exception while installing apk");
+			e.printStackTrace();
+			return "exception";
+		}
 		return "success";
 	}
 
