@@ -142,6 +142,11 @@
             android:launchMode="singleTop"/>
         <!-- for xianliao callback -->
         <activity android:name=".sgapi.SGEntryActivity" android:exported="true"/>
+        <activity
+            android:name="com.xishanju.plm.misc.RequestPermissionActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"/>
 	<!--
         <provider
             android:name="android.support.v4.content.FileProvider"

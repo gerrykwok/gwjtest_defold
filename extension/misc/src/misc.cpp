@@ -13,6 +13,10 @@ static const luaL_reg Module_methods[] =
 #elif defined(DM_PLATFORM_IOS)
 	{"canOpenApp", misc_canOpenApp},
 #endif
+	{"androidCheckPermission", misc_androidCheckPermission},
+	{"androidRequestPermissions", misc_androidRequestPermissions},
+	{"androidGetTargetSdkVersion", misc_androidGetTargetSdkVersion},
+	{"androidGotoAppSetting", misc_androidGotoAppSetting},
 	{0, 0}
 };
 
