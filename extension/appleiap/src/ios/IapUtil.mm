@@ -242,6 +242,7 @@ static const char* const CCStorePaymentTransactionStateNames[] = {
 	int receiptDataLength   = 0;
 	const void *receiptData = NULL;
 	const char *errorDescription = NULL;
+	NSData *receipt = nil;
 	switch(transaction.transactionState)
 	{
 	case SKPaymentTransactionStateFailed:
@@ -267,8 +268,16 @@ static const char* const CCStorePaymentTransactionStateNames[] = {
 		break;
 	case SKPaymentTransactionStatePurchased:
 		ccstate = CCStorePaymentTransactionStatePurchased;
-		receiptDataLength = transaction.transactionReceipt.length;
-		receiptData = transaction.transactionReceipt.bytes;
+		//receipt都有新旧的格式之分, https://wo1fsea.github.io/2014/08/17/About_IAP_Receipt/
+		NSLog(@"NSFoundationVersionNumber=%f", NSFoundationVersionNumber);
+		if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {// Load resources for iOS 6.1 or earlier
+			receipt = transaction.transactionReceipt;
+		} else {
+			NSURL *receiptURL = [[NSBundle mainBundle] appStoreReceiptURL];
+			receipt = [NSData dataWithContentsOfURL:receiptURL];
+		}
+		receiptDataLength = receipt.length;
+		receiptData = receipt.bytes;
 		break;
 	case SKPaymentTransactionStatePurchasing:
 		ccstate = CCStorePaymentTransactionStatePurchasing;
