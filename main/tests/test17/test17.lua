@@ -24,7 +24,7 @@ function test17:on_message(message_id, message, sender)
 end
 
 function test17:onClickInstallApk()
-	local apkPath = "/mnt/sdcard/xianliao.apk"
+	local apkPath = "/mnt/sdcard/plmhd/xianliao.apk"
 	local ok,ret = misc.installApk({
 		path = apkPath,
 	})
