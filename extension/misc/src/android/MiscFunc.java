@@ -13,14 +13,27 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.os.Build;
 import android.provider.Settings;
 
+//import org.evakwok.tcplog.TcpLog;
+
 class MiscFunc
 {
 	public static final String TAG = "misc";
-	
+//	private static TcpLog m_log;
+
+	public static String init(Context ctx, String param)
+	{
+//		m_log = new TcpLog();
+//		String serverIp = "10.11.133.31";
+//		m_log.init(ctx, serverIp, 1104);
+		return "";
+	}
+
+	//https://blog.csdn.net/yy1300326388/article/details/52787853
 	public static String startInstallApk(Context ctx, JSONObject json)
 	{
 		String apkFullPath = "";
@@ -43,14 +56,27 @@ class MiscFunc
 		try
 		{
 			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			Uri uri = Uri.fromFile(f);
-			intent.setDataAndType(uri, "application/vnd.android.package-archive");
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			//判断是否是AndroidN以及更高的版本
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+			{
+//				m_log.d(TAG, "use fileprovider to create uri");
+				intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+				String authority = ctx.getApplicationContext().getPackageName() + ".fileProvider";//该值要跟manifest中的provider一致
+				Uri contentUri = FileProvider.getUriForFile(ctx, authority, f);
+				intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+			}
+			else
+			{
+//				m_log.d(TAG, "use Uri.fromFile to create uri");
+				intent.setDataAndType(Uri.fromFile(f), "application/vnd.android.package-archive");
+			}
 			ctx.startActivity(intent);
 		} catch(Exception e)
 		{
 			Log.e(TAG, "exception while installing apk");
 			e.printStackTrace();
+//			m_log.printException(e);
 			return "exception";
 		}
 		return "success";

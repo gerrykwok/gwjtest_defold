@@ -32,6 +32,10 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
+#if defined(DM_PLATFORM_ANDROID)
+	bool ok;
+	ext_callJavaStaticMethod("com.xishanju.plm.misc.MiscFunc", "init", "", &ok);
+#endif
 	return dmExtension::RESULT_OK;
 }
 

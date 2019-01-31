@@ -46,10 +46,46 @@ end
 
 function test21:onClickJoinChannel()
 	local channelName = "testChannel"
-	agora.joinChannel({
-		channel = channelName,
-		uid = self.m_userId,
-	})
+	local function doJoinChannel()
+		agora.joinChannel({
+			channel = channelName,
+			uid = self.m_userId,
+		})
+	end
+	if(gwjui.platform == "android") then
+		local permission = "android.permission.RECORD_AUDIO"
+		local res = misc.androidCheckPermission(permission)
+		TipsBanner.show("res=" .. tostring(res))
+		if(res == "granted") then
+			doJoinChannel()
+		else
+			if(misc.androidGetTargetSdkVersion() < 23) then
+				TipsBanner.show("请在应用的权限设置中打开录音权限")
+				timer.delay(1, false, function()
+					misc.androidGotoAppSetting()
+				end)
+			else
+				misc.androidRequestPermissions({
+					permissions = {
+						permission,
+					},
+					callback = function(script, res)
+						local t = json.decode(res)
+						if(t[permission] == "granted") then
+							doJoinChannel()
+						else
+							TipsBanner.show("请在应用的权限设置中打开录音权限")
+							timer.delay(1, false, function()
+								misc.androidGotoAppSetting()
+							end)
+						end
+					end,
+				})
+			end
+		end
+	else
+		doJoinChannel()
+	end
 end
 
 function test21:onClickLeaveChannel()
