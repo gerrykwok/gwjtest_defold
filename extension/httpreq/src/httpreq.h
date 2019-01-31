@@ -12,6 +12,8 @@ typedef struct
 } LUA_BUFFER;
 
 void httpreq_printCurlVersion();
+//something like "192.168.2.2:8888"
+void httpreq_setCurlProxy(const char *proxy);
 
 extern unsigned int ext_scheduleUpdate(const std::function<void(void)> &func);
 extern void ext_unscheduleUpdate(unsigned int entryId);

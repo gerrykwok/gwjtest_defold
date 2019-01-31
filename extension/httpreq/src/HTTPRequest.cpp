@@ -10,11 +10,16 @@
 #define DEFAULT_TIMEOUT			10 // 10 seconds
 #define BUFFER_CHUNK_SIZE 		32768 // 32 KB
 int httpreq_isCharlesRunning();
-std::string curl_proxy = "";
+static std::string curl_proxy = "";
 
 void httpreq_printCurlVersion()
 {
 	dmLogInfo("curl version:%s", curl_version());
+}
+
+void httpreq_setCurlProxy(const char *proxy)
+{
+	curl_proxy = proxy;
 }
 
 HTTPRequest* HTTPRequest::create(LUA_FUNCTION listener, const char *url, const char *method)

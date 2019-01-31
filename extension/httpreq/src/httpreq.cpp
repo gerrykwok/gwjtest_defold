@@ -6,8 +6,21 @@
 #include "httpreq.h"
 #include "luabindings/lua_httpreq_auto.hpp"
 
+static int setCurlProxy(lua_State *L)
+{
+	if(!lua_isstring(L, -1))
+	{
+		luaL_error(L, "%s: must specify a string", "setProxy");
+		return 0;
+	}
+	const char *proxy = lua_tostring(L, -1);
+	httpreq_setCurlProxy(proxy);
+	return 0;
+}
+
 static const luaL_reg Module_methods[] =
 {
+	{"setProxy", setCurlProxy},
 	{0, 0}
 };
 
