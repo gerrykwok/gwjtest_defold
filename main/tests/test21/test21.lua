@@ -35,7 +35,13 @@ function test21:onEnter()
 	:onButtonClicked(function()
 		self:onClickLeaveChannel()
 	end)
-	
+	gwjui.ScaleButton.new({
+		main_id = "btn_current_channel",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:onClickCurrentChannel()
+	end)
 end
 
 function test21:onExit()
@@ -90,6 +96,11 @@ end
 
 function test21:onClickLeaveChannel()
 	agora.leaveChannel()
+end
+
+function test21:onClickCurrentChannel()
+	local channel = agora.getCurrentChannel()
+	TipsBanner.show("当前频道:" .. tostring(channel))
 end
 
 return test21

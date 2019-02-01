@@ -11,6 +11,7 @@ void agora_onAppInit();
 int agora_initCallback(lua_State *L);
 int agora_joinChannel(lua_State *L);
 int agora_leaveChannel(lua_State *L);
+int agora_getCurrentChannel(lua_State *L);
 
 extern int ext_registerLuaCallback(lua_State* L, int index);
 extern void ext_unregisterLuaCallback(int callbackId);

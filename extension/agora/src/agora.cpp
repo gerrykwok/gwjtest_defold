@@ -10,6 +10,7 @@ static const luaL_reg Module_methods[] =
 	{"initCallback", agora_initCallback},
 	{"joinChannel", agora_joinChannel},
 	{"leaveChannel", agora_leaveChannel},
+	{"getCurrentChannel", agora_getCurrentChannel},
 	{0, 0}
 };
 

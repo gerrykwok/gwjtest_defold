@@ -7,6 +7,7 @@
 static IRtcEngine *g_agoraEngine;
 static MyAgoraEventHandler g_agoraEventHandler;
 static int g_luaCallback = 0;
+static std::string g_currentChannel;
 typedef const char* (AGORA_CALL *PFN_getAgoraRtcEngineVersion)(int* build);
 typedef IRtcEngine* (AGORA_CALL *PFN_createAgoraRtcEngine)();
 
@@ -93,9 +94,16 @@ int agora_leaveChannel(lua_State *L)
 	return 0;
 }
 
+int agora_getCurrentChannel(lua_State *L)
+{
+	lua_pushstring(L, g_currentChannel.c_str());
+	return 1;
+}
+
 void MyAgoraEventHandler::onJoinChannelSuccess(const char* channel, uid_t userId, int elapsed)
 {
 	dmLogInfo("gwjgwj,join channel success,channel=%s,userId=%d,elapsed=%d", channel, userId, elapsed);
+	g_currentChannel = channel;
 	if(g_luaCallback > 0)
 	{
 		static char szChannel[1024];
@@ -111,6 +119,7 @@ void MyAgoraEventHandler::onJoinChannelSuccess(const char* channel, uid_t userId
 void MyAgoraEventHandler::onRejoinChannelSuccess(const char* channel, uid_t userId, int elapsed)
 {
 	dmLogInfo("gwjgwj,rejoin channel success,channel=%s,userId=%d,elapsed=%d", channel, userId, elapsed);
+	g_currentChannel = channel;
 	if(g_luaCallback > 0)
 	{
 		static char szChannel[1024];
@@ -126,6 +135,7 @@ void MyAgoraEventHandler::onRejoinChannelSuccess(const char* channel, uid_t user
 void MyAgoraEventHandler::onLeaveChannel(const RtcStats& stats)
 {
 	dmLogInfo("gwjgwj,on leave channel");
+	g_currentChannel = "";
 	if(g_luaCallback > 0)
 	{
 		ext_performInUpdateThread([=]() {
