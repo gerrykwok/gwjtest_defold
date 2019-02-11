@@ -23,6 +23,10 @@ function TipsBanner.show(str)
 	end
 end
 
+function TipsBanner.showf(...)
+	TipsBanner.show(string.format(...))
+end
+
 function TipsBanner.init()
 	local url = msg.url()
 	table.insert(TipsBanner.s_allRunningTipsUrl, url)

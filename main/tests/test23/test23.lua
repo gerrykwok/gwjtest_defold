@@ -23,6 +23,13 @@ function test23:onEnter()
 	:onButtonClicked(function()
 		self:onClickHttpReq()
 	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_https",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:onClickHttps()
+	end)
 end
 
 function test23:onExit()
@@ -98,8 +105,9 @@ end
 function test23:onClickHttpReq()
 	local url = "http://qnweb.xsjplm.com/mj_beta_201806051000_1.apk"
 --	url = "http://10.11.133.31/day%20tripper.mp3"
-	url = "http://10.11.133.31/gdmj-release.apk"
---	url = "http://10.11.133.32/invalid.aaa"
+--	url = "http://10.11.133.31/gdmj-release.apk"
+	url = "http://10.11.133.32/invalid.aaa"
+--	url = "http://dldir1.qq.com/weixin/android/weixin703android1400.apk"
 	local req
 	local dltotal = -1
 	gwjui.printf("begin to download %s", url)
@@ -118,30 +126,71 @@ function test23:onClickHttpReq()
 			size.x = size.x * t.dltotal / t.total
 			gui.set_size(gui.get_node("progress2"), size)
 		elseif(t.name == "completed") then
-			local len = req:getResponseDataLength()
-			local str = req:getResponseString()
-			local respData = req:getResponseDataLua()
-			gwjui.printf("response size=%d", len)
-			gwjui.printf("response string=%s", str)
-			gwjui.printf("response data=%s", respData)
-			local filepath = self:getOutputPath(self:getFilenameFromURL(url))
---			gwjui.printf("save to %s", filepath)
---			req:saveResponseData(filepath)
---[[			local f = io.open(filepath, "wb")
-			if(f) then
-				f:write(respData)
-				f:close()
+			local statusCode = req:getResponseStatusCode()
+			if(statusCode == 200) then
+				local len = req:getResponseDataLength()
+				local str = req:getResponseString()
+				local respData = req:getResponseDataLua()
+				gwjui.printf("response size=%d", len)
+				gwjui.printf("response string=%s", str)
+				gwjui.printf("response data=%s", respData)
+				local filepath = self:getOutputPath(self:getFilenameFromURL(url))
+--				gwjui.printf("save to %s", filepath)
+--				req:saveResponseData(filepath)
+				local f = io.open(filepath, "wb")
+				if(f) then
+					f:write(respData)
+					f:close()
+					TipsBanner.show("create success:" .. filepath)
+				else
+					gwjui.printf("cannot create %s", filepath)
+					TipsBanner.show("cannot create " .. filepath)
+				end
 			else
-				gwjui.printf("cannot create %s", filepath)
-			end]]
+				TipsBanner.showf("statusCode=%s", tostring(statusCode))
+			end
 		elseif(t.name == "failed") then
 		end
-	end, url, "post")
+	end, url, "get")
 	self.m_request = req
 --	req:setConnectTimeout(3)
 --	req:setReadTimeout(300)
 	req:setTimeout(0)
 	gwjui.dump(req, "req")
+	req:start()
+end
+
+function test23:onClickHttps()
+	local url = "https://mvlpthik01.boyaagame.com/mobile.php"
+	url = "http://10.11.133.34/invalid.aaa"
+	local req
+	req = httpreq.HTTPRequest:create(function(script, res)
+		local t = json.decode(res)
+		if(t.name ~= "progress") then
+			gwjui.printf("lua:httpreq callback,res=%s", tostring(res))
+		end
+		if(t.name == "progress") then
+		elseif(t.name == "completed") then
+			local statusCode = req:getResponseStatusCode()
+			gwjui.printf("statusCode=%d", statusCode)
+			if(statusCode == 200) then
+				local len = req:getResponseDataLength()
+				local str = req:getResponseString()
+				local respData = req:getResponseDataLua()
+				gwjui.printf("response size=%d", len)
+				gwjui.printf("response string=%s", str)
+				gwjui.printf("response data=%s", respData)
+			else
+				local str = string.format("statusCode=%s", tostring(statusCode))
+				TipsBanner.show(str)
+			end
+		elseif(t.name == "failed") then
+			local str = string.format("request failed,code=%s,msg=%s", tostring(req:getErrorCode()), tostring(req:getErrorMessage()))
+			gwjui.printf(str)
+			TipsBanner.show(str)
+		end
+	end, url, "post")
+	req:setTimeout(0)
 	req:start()
 end
 

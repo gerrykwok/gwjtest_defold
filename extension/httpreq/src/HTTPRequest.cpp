@@ -477,7 +477,7 @@ void HTTPRequest::onRequest(void)
 	m_errorMessage = (code == CURLE_OK) ? "" : curl_easy_strerror(code);
 	if(m_state == kCCHTTPRequestStateInProgress)
 		m_state = (code == CURLE_OK) ? kCCHTTPRequestStateCompleted : kCCHTTPRequestStateFailed;
-	dmLogInfo("gwjgwj,perform request end,code=%d,str=%s", code, m_errorMessage.c_str());
+//	dmLogInfo("gwjgwj,perform request end,code=%d,str=%s", code, m_errorMessage.c_str());
 	m_curlState = kCCHTTPRequestCURLStateClosed;
 }
 
