@@ -30,6 +30,7 @@ static dmExtension::Result extAppInit(dmExtension::AppParams* params)
 
 static dmExtension::Result extInit(dmExtension::Params* params)
 {
+	dmLogInfo("Registered %s Extension", MODULE_NAME);
 	LuaInit(params->m_L);
 	return dmExtension::RESULT_OK;
 }

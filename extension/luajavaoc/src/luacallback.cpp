@@ -355,3 +355,19 @@ int ext_callNativeStaticMethod(const char *clazz, const char *method, lua_State 
 	lua_pushstring(L, ret.c_str());
 	return 2;
 }
+
+void luajavaoc_onAppInit()
+{
+	int i;
+	g_SequenceId = 0;
+	while(g_callbacks.Size() > 0)
+	{
+		g_callbacks.Pop();
+	}
+	g_functionsToPerform.clear();
+	g_functionsToSchedule.clear();
+	g_counterSchedule = 0;
+
+	for(i = 0; i < DELAY_MAX; ++i)
+		g_allDelay[i].m_valid = false;
+}

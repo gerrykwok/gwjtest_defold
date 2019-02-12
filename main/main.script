@@ -27,6 +27,10 @@ function init(self)
 	local ok,ret = umeng.sendEvent({
 		name = "app_start_test",
 	})
+	agora.initCallback(function(script, res)
+		local t = json.decode(res)
+		dump(t, "agora callback")
+	end)
 end
 
 function final(self)

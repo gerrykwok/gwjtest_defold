@@ -3,9 +3,11 @@
 #define MODULE_NAME "luajavaoc"
 
 #include <dmsdk/sdk.h>
+#include "luajavaoc.h"
 
 static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
+	luajavaoc_onAppInit();
 	return dmExtension::RESULT_OK;
 }
 

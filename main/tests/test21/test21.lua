@@ -8,10 +8,10 @@ test21.initcallback = false
 function test21:ctor()
 	if(not test21.initcallback) then
 		test21.initcallback = true
-		agora.initCallback(function(script, res)
-			local t = json.decode(res)
-			gwjui.dump(t, "agora callback")
-		end)
+--		agora.initCallback(function(script, res)
+--			local t = json.decode(res)
+--			gwjui.dump(t, "agora callback")
+--		end)
 	end
 end
 
