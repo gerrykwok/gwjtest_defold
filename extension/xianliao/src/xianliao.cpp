@@ -5,6 +5,8 @@
 #include <dmsdk/sdk.h>
 #include "xianliao.h"
 
+static bool g_inited = false;
+
 static const luaL_reg Module_methods[] =
 {
 	{"login", xianliao_login},
@@ -23,7 +25,11 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result extAppInit(dmExtension::AppParams* params)
 {
-	xianliao_onAppInit();
+	if(!g_inited)
+	{
+		xianliao_onAppInit();
+		g_inited = true;
+	}
 	return dmExtension::RESULT_OK;
 }
 

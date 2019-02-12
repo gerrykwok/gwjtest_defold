@@ -5,6 +5,8 @@
 #include <dmsdk/sdk.h>
 #include "umeng.h"
 
+static bool g_inited = false;
+
 static const luaL_reg Module_methods[] =
 {
 	{"sendEvent", umeng_sendEvent},
@@ -21,7 +23,11 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result extAppInit(dmExtension::AppParams* params)
 {
-	umeng_onAppInit();
+	if(!g_inited)
+	{
+		umeng_onAppInit();
+		g_inited = true;
+	}
 	return dmExtension::RESULT_OK;
 }
 

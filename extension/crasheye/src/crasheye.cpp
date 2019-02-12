@@ -5,6 +5,8 @@
 #include <dmsdk/sdk.h>
 #include "crasheye.h"
 
+static bool g_inited = false;
+
 static const luaL_reg Module_methods[] =
 {
 	{"sendScriptError", crasheye_sendScriptError},
@@ -27,7 +29,11 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
-	crasheye_onAppInit();
+	if(!g_inited)
+	{
+		crasheye_onAppInit();
+		g_inited = true;
+	}
 	return dmExtension::RESULT_OK;
 }
 

@@ -6,6 +6,8 @@
 
 #include "wechat.h"
 
+static bool g_inited = false;
+
 // Functions exposed to Lua
 static const luaL_reg Module_methods[] =
 {
@@ -33,7 +35,11 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
-	wechat_onAppInit();
+	if(!g_inited)
+	{
+		wechat_onAppInit();
+		g_inited = true;
+	}
 	return dmExtension::RESULT_OK;
 }
 
