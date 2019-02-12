@@ -13,43 +13,40 @@ typedef IRtcEngine* (AGORA_CALL *PFN_createAgoraRtcEngine)();
 
 void agora_initAgora()
 {
+	if(g_agoraEngine)
+		return;
+	PFN_getAgoraRtcEngineVersion funcGetVersion = NULL;
+	PFN_createAgoraRtcEngine funcCreateEngine = NULL;
 #if defined(DM_PLATFORM_ANDROID)
 	const char *soName = "libagora-rtc-sdk-jni.so";
 	void* hDll = dlopen(soName, RTLD_NOW);
 //	dmLogInfo("gwjgwj,agora library handle:0x%x", hDll);
 	if(hDll)
 	{
-		PFN_getAgoraRtcEngineVersion funcGetVersion = (PFN_getAgoraRtcEngineVersion)dlsym(hDll, "getAgoraSdkVersion");
-		if(funcGetVersion)
-		{
-			int build;
-			const char *version = funcGetVersion(&build);
-			dmLogInfo("c++:agora sdk version:%s", version);
-		}
-		PFN_createAgoraRtcEngine funcCreateEngine = (PFN_createAgoraRtcEngine)dlsym(hDll, "createAgoraRtcEngine");
-		g_agoraEngine = funcCreateEngine();
-//		dmLogInfo("gwjgwj,engine=0x%x", g_agoraEngine);
-		RtcEngineContext ctx;
-		ctx.eventHandler = &g_agoraEventHandler;
-		ctx.appId = AGORA_APPID;
-//		dmLogInfo("gwjgwj,agora debug 1");
-		g_agoraEngine->initialize(ctx);
-//		dmLogInfo("gwjgwj,agora debug 1000");
+		funcGetVersion = (PFN_getAgoraRtcEngineVersion)dlsym(hDll, "getAgoraSdkVersion");
+		funcCreateEngine = (PFN_createAgoraRtcEngine)dlsym(hDll, "createAgoraRtcEngine");
 	}
 	else
 	{
 		dmLogError("cannot load %s", soName);
 	}
 #else
-	int build;
-	const char *version = getAgoraRtcEngineVersion(&build);
-	dmLogInfo("c++:agora sdk version:%s", version);
-	g_agoraEngine = createAgoraRtcEngine();
+	funcGetVersion = getAgoraRtcEngineVersion;
+	funcCreateEngine = createAgoraRtcEngine;
+#endif
+
+	if(funcGetVersion)
+	{
+		int build;
+		const char *version = funcGetVersion(&build);
+		dmLogInfo("c++:agora sdk version:%s", version);
+	}
+	g_agoraEngine = funcCreateEngine();
+//	dmLogInfo("gwjgwj,engine=0x%x", g_agoraEngine);
 	RtcEngineContext ctx;
 	ctx.eventHandler = &g_agoraEventHandler;
 	ctx.appId = AGORA_APPID;
 	g_agoraEngine->initialize(ctx);
-#endif
 }
 
 int agora_initCallback(lua_State *L)
