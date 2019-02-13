@@ -1,7 +1,7 @@
 [project]
 title = gwjtest
 version = 0.1
-bundle_resources = /bundle_res
+bundle_resources = /res/bundle_resource/
 appname = defoldtest
 
 [bootstrap]
