@@ -45,11 +45,14 @@ function clsLoadingView:onEnter()
 end
 
 function clsLoadingView:onExit()
+	self.m_id = nil
 	gwjui.unscheduleUpdate(self.m_tickFunc)
 end
 
 function clsLoadingView:close()
-	msg.post(self.m_id, "deleteSelf")
+	if(self.m_id) then
+		msg.post(self.m_id, "deleteSelf")
+	end
 end
 
 return clsLoadingView
