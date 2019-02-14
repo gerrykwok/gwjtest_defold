@@ -24,4 +24,9 @@ int test_callnative(lua_State *L)
 	return ext_callNativeStaticMethod("MyClass", "test1", L, -1);
 }
 
+int test_centerWindow(lua_State *L)
+{
+	return 0;
+}
+
 #endif

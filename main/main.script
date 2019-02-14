@@ -33,6 +33,7 @@ function init(self)
 			dump(t, "agora callback")
 		end)
 	end
+	testext.centerWindow()
 end
 
 function final(self)

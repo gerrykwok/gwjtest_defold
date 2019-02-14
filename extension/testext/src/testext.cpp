@@ -36,6 +36,7 @@ static const luaL_reg Module_methods[] =
 #if defined(DM_PLATFORM_WINDOWS)
 	{"printMacro", test_printMacro},
 #endif
+	{"centerWindow", test_centerWindow},
 	{0, 0}
 };
 
