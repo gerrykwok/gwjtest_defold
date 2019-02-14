@@ -15,9 +15,10 @@
 //appSecret：RmwUlmCmVNnU1jjl
 //ios PackageName：com.xsjplm.plmtest
 //android PackageName：com.xsjplm.plmtest
-#define XIANLIAO_APPID		"Rcy9A8UaRqA9Xg2w"
+#define XIANLIAO_APPID_FORMAL		"Rcy9A8UaRqA9Xg2w"
+#define XIANLIAO_APPID_TEST			"Bablaj5yD0cu7sPP"
 
-void xianliao_onAppInit();
+void xianliao_onAppInit(const char *environment);
 int xianliao_login(lua_State *L);
 int xianliao_logout(lua_State *L);
 int xianliao_share(lua_State *L);

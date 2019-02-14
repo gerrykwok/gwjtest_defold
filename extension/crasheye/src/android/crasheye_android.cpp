@@ -4,10 +4,19 @@
 
 #define CRASHEYE_CLASS			"com.xishanju.plm.crasheye.CrasheyeUtil"
 
-void crasheye_onAppInit()
+void crasheye_onAppInit(const char *environment)
 {
 	bool ok;
-	ext_callJavaStaticMethod(CRASHEYE_CLASS, "init", CRASHEYE_APPKEY_ANDROID, &ok);
+	const char *appkey;
+	if(strcmp(environment, "development") == 0 || strcmp(environment, "test") == 0)
+	{
+		appkey = CRASHEYE_APPKEY_ANDROID_TEST;
+	}
+	else
+	{
+		appkey = CRASHEYE_APPKEY_ANDROID_FORMAL;
+	}
+	ext_callJavaStaticMethod(CRASHEYE_CLASS, "init", appkey, &ok);
 }
 
 int crasheye_sendScriptError(lua_State *L)

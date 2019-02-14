@@ -4,9 +4,12 @@
 #import "XianliaoUtil.h"
 #import "AppControllerXianliao.h"
 
-void xianliao_onAppInit()
+void xianliao_onAppInit(const char *environment)
 {
-	[XianliaoUtil initXianliao:@XIANLIAO_APPID];
+	NSString *appid;
+	if(strcmp(environment, "development") == 0 || strcmp(environment, "test") == 0) appid = @XIANLIAO_APPID_TEST;
+	else appid = @XIANLIAO_APPID_FORMAL;
+	[XianliaoUtil initXianliao:appid];
 	AppControllerXianliao *delegate = [[AppControllerXianliao alloc] init];
 	dmExtension::RegisteriOSUIApplicationDelegate(delegate);
 }

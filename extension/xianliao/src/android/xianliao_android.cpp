@@ -6,10 +6,13 @@
 
 extern void ext_callLuaCallbackInAndroid(JNIEnv *env, jint callback, jstring value, bool unregister);
 
-void xianliao_onAppInit()
+void xianliao_onAppInit(const char *environment)
 {
 	bool ok;
-	ext_callJavaStaticMethod(XIANLIAO_CLASS, "init", XIANLIAO_APPID, &ok);
+	const char *appid;
+	if(strcmp(environment, "development") == 0 || strcmp(environment, "test") == 0) appid = XIANLIAO_APPID_TEST;
+	else appid = XIANLIAO_APPID_FORMAL;
+	ext_callJavaStaticMethod(XIANLIAO_CLASS, "init", appid, &ok);
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_xianliao_XianliaoUtil_nativeNotifyLogin(JNIEnv *env, jclass clz, jint callback, jstring value)

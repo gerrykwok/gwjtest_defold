@@ -2,7 +2,7 @@
 
 #include "../xianliao.h"
 
-void xianliao_onAppInit()
+void xianliao_onAppInit(const char *environment)
 {
 }
 

@@ -2,7 +2,7 @@
 
 #include "../umeng.h"
 
-void umeng_onAppInit()
+void umeng_onAppInit(const char *environment)
 {
 }
 

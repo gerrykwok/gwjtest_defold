@@ -6,10 +6,14 @@
 
 extern NSDictionary* ext_NSDictionaryFromLuaTable(lua_State *L, int index);
 
-void crasheye_onAppInit()
+void crasheye_onAppInit(const char *environment)
 {
-//	NSLog(@"gwjgwj,init crasheye with key %s", CRASHEYE_APPKEY_IOS);
-	[Crasheye initWithAppKey:@CRASHEYE_APPKEY_IOS];
+	NSString *appkey;
+	if(strcmp(environment, "development") == 0 || strcmp(environment, "test") == 0)
+		appkey = @CRASHEYE_APPKEY_IOS_TEST
+	else appkey = @CRASHEYE_APPKEY_IOS_FORMAL;
+//	NSLog(@"gwjgwj,init crasheye with key %@", appkey);
+	[Crasheye initWithAppKey:appkey];
 }
 
 int crasheye_sendScriptError(lua_State *L)

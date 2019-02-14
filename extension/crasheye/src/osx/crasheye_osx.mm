@@ -2,7 +2,7 @@
 
 #include "../crasheye.h"
 
-void crasheye_onAppInit()
+void crasheye_onAppInit(const char *environment)
 {
 }
 

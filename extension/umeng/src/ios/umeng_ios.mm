@@ -3,11 +3,16 @@
 #include "../umeng.h"
 #import "UmengUtil.h"
 
-void umeng_onAppInit()
+void umeng_onAppInit(const char *environment)
 {
+	NSString *appkey;
+	NSString *channel;
+	channel = @UMENG_CHANNEL;
+	if(strcmp(environment, "development") == 0 || strcmp(environment, "test") == 0) appkey = @UMENG_APPKEY_IOS_TEST;
+	else appkey = @UMENG_APPKEY_IOS_FORMAL;
 	[UmengUtil init:@{
-		@"appkey": @UMENG_APPKEY_IOS,
-		@"channel": @UMENG_CHANNEL,
+		@"appkey": appkey,
+		@"channel": channel,
 	}];
 }
 

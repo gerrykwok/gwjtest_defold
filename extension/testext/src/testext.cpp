@@ -52,7 +52,9 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
-	dmLogInfo("testext:app init");
+	const char *environment = dmConfigFile::GetString(params->m_ConfigFile, "project.environment", NULL);
+	if(environment == NULL) environment = "null";
+	dmLogInfo("testext:app init,environment=%s", environment);
 	return dmExtension::RESULT_OK;
 }
 

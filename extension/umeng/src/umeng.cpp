@@ -25,7 +25,7 @@ static dmExtension::Result extAppInit(dmExtension::AppParams* params)
 {
 	if(!g_inited)
 	{
-		umeng_onAppInit();
+		umeng_onAppInit(dmConfigFile::GetString(params->m_ConfigFile, "project.environment", ""));
 		g_inited = true;
 	}
 	return dmExtension::RESULT_OK;
