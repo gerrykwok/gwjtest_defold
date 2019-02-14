@@ -1,5 +1,6 @@
 local gwjui = require("gwjui.gwjui")
 local TipsBanner = require("main.common.tipsbanner.tipsbanner")
+local LoadingView = require("main.common.loading.LoadingView")
 
 local test23 = gwjui.class("test23")
 
@@ -36,6 +37,19 @@ function test23:onExit()
 	if(self.m_request) then
 		self.m_request:cancel()
 		self.m_request = nil
+	end
+end
+
+function test23:setLoadingView(flag)
+	if(flag) then
+		if(self.m_loading == nil) then
+			self.m_loading = LoadingView.show()
+		end
+	else
+		if(self.m_loading) then
+			self.m_loading:close()
+			self.m_loading = nil
+		end
 	end
 end
 
@@ -111,10 +125,12 @@ function test23:onClickHttpReq()
 	local req
 	local dltotal = -1
 	gwjui.printf("begin to download %s", url)
+	self:setLoadingView(true)
 	req = httpreq.HTTPRequest:create(function(script, res)
 		local t = json.decode(res)
 		if(t.name ~= "progress") then
 			gwjui.printf("lua:httpreq callback,res=%s", tostring(res))
+			self:setLoadingView(false)
 		end
 		if(t.name == "progress") then
 			if(t.dltotal ~= dltotal) then
@@ -162,12 +178,14 @@ end
 
 function test23:onClickHttps()
 	local url = "https://mvlpthik01.boyaagame.com/mobile.php"
-	url = "http://10.11.133.34/invalid.aaa"
+--	url = "http://10.11.133.34/invalid.aaa"
 	local req
+	self:setLoadingView(true)
 	req = httpreq.HTTPRequest:create(function(script, res)
 		local t = json.decode(res)
 		if(t.name ~= "progress") then
 			gwjui.printf("lua:httpreq callback,res=%s", tostring(res))
+			self:setLoadingView(false)
 		end
 		if(t.name == "progress") then
 		elseif(t.name == "completed") then
