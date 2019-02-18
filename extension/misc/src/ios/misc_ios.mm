@@ -1,6 +1,8 @@
 #if defined(DM_PLATFORM_IOS)
 
 #include "../misc.h"
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 int misc_installApk(lua_State *L)
 {
@@ -44,8 +46,16 @@ int misc_androidGotoAppSetting(lua_State *L)
 
 int misc_getBatteryInfo(lua_State *L)
 {
-	lua_pushinteger(L, 100);
-	lua_pushinteger(L, 1);
+	UIDevice *device = [UIDevice currentDevice];
+	device.batteryMonitoringEnabled = YES;
+	int level = device.batteryLevel * 100;
+	int plugged = 0;
+	UIDeviceBatteryState state = device.batteryState;
+	if(state == UIDeviceBatteryStateCharging || state == UIDeviceBatteryStateFull)
+		plugged = 1;
+	
+	lua_pushinteger(L, level);
+	lua_pushinteger(L, plugged);
 	return 2;
 }
 
