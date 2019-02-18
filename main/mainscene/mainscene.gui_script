@@ -29,11 +29,24 @@ local alltest =
 	require("main.tests.test22.name"),
 	require("main.tests.test23.name"),
 	require("main.tests.test24.name"),
+	require("main.tests.test25.name"),
 }
+
+local function showBatteryInfo()
+	local level,charging = misc.getBatteryInfo()
+	local text = string.format("level:%d,plugged:%s", level, tostring(charging))
+	local node = gui.get_node("text_batteryinfo")
+	gui.set_text(node, text)
+end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.m_input = gwjui.input.createInstance()
+
+	showBatteryInfo()
+	timer.delay(1, true, function()
+		showBatteryInfo()
+	end)
 
 	self.m_listData = {}
 	for i,test in ipairs(alltest) do

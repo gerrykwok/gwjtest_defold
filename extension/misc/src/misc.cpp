@@ -17,6 +17,7 @@ static const luaL_reg Module_methods[] =
 	{"androidRequestPermissions", misc_androidRequestPermissions},
 	{"androidGetTargetSdkVersion", misc_androidGetTargetSdkVersion},
 	{"androidGotoAppSetting", misc_androidGotoAppSetting},
+	{"getBatteryInfo", misc_getBatteryInfo},
 	{0, 0}
 };
 

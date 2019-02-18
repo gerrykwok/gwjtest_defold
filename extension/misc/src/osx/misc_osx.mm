@@ -37,4 +37,11 @@ int misc_androidGotoAppSetting(lua_State *L)
 	return 1;
 }
 
+int misc_getBatteryInfo(lua_State *L)
+{
+	lua_pushinteger(L, 100);
+	lua_pushinteger(L, 1);
+	return 2;
+}
+
 #endif

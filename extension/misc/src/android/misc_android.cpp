@@ -61,4 +61,16 @@ int misc_androidGotoAppSetting(lua_State *L)
 	return 1;
 }
 
+int misc_getBatteryInfo(lua_State *L)
+{
+	bool ok;
+	std::string res = ext_callJavaStaticMethod("com.xishanju.plm.misc.MiscFunc", "getBatteryInfo", "", &ok);
+	int level, charging;
+	sscanf(res.c_str(), "level:%d,charging:%d", &level, &charging);
+
+	lua_pushinteger(L, level);
+	lua_pushinteger(L, charging);
+	return 2;
+}
+
 #endif

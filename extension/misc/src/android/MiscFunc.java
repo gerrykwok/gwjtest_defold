@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
@@ -17,6 +18,8 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.os.Build;
 import android.provider.Settings;
+import android.content.BroadcastReceiver;
+import android.os.BatteryManager;
 
 //import org.evakwok.tcplog.TcpLog;
 
@@ -30,6 +33,7 @@ class MiscFunc
 //		m_log = new TcpLog();
 //		String serverIp = "10.11.133.31";
 //		m_log.init(ctx, serverIp, 1104);
+		batteryInit(ctx);
 		return "";
 	}
 
@@ -223,5 +227,48 @@ class MiscFunc
 			return "exception";
 		}
 		return "success";
+	}
+
+	//电量获取
+	static boolean m_bBatteryStarted = false;
+	static int m_batteryLevel = 0;
+	static int m_batteryPlugged = 0;//0=未充电、1=AC充电、2=USB充电、3=无线充电
+	static BroadcastReceiver m_batteryReceiver = new BroadcastReceiver()
+	{
+		public void onReceive(Context context, Intent intent)
+		{
+			String action = intent.getAction();
+			if (action.equals(Intent.ACTION_BATTERY_CHANGED))
+			{
+				int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+				int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
+				m_batteryLevel = level * 100 / scale;
+				int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
+				switch(plugged)
+				{
+				case BatteryManager.BATTERY_PLUGGED_AC: plugged = 1; break;
+				case BatteryManager.BATTERY_PLUGGED_USB: plugged = 2; break;
+				case BatteryManager.BATTERY_PLUGGED_WIRELESS: plugged = 3; break;
+				default: plugged = 0; break;
+				}
+				m_batteryPlugged = plugged;
+			}
+		}
+	};
+	private static void batteryInit(Context ctx)
+	{
+		if(!m_bBatteryStarted)
+		{
+			IntentFilter filter;
+			filter = new IntentFilter();
+			filter.addAction(Intent.ACTION_BATTERY_CHANGED);
+			ctx.registerReceiver(m_batteryReceiver, filter);
+			m_bBatteryStarted = true;
+		}
+	}
+	public static String getBatteryInfo(Context ctx, String params)
+	{
+		String str = String.format(Locale.US, "level:%d,charging:%d", m_batteryLevel, m_batteryPlugged);
+		return str;
 	}
 }
