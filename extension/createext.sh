@@ -2,6 +2,10 @@
 
 #该脚本创建extension模板
 
+scriptpath=${BASH_SOURCE[0]}
+cur_dir="$( cd "$( dirname "$scriptpath" )" && pwd )"
+cd $cur_dir
+
 name=$1
 if [ -z "$name" ]; then
 	echo must specify extension name
