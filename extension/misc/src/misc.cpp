@@ -5,6 +5,8 @@
 #include <dmsdk/sdk.h>
 #include "misc.h"
 
+static bool g_inited = false;
+
 static const luaL_reg Module_methods[] =
 {
 	{"installApk", misc_installApk},
@@ -33,10 +35,14 @@ static void LuaInit(lua_State* L)
 
 static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
+	if(!g_inited)
+	{
 #if defined(DM_PLATFORM_ANDROID)
-	bool ok;
-	ext_callJavaStaticMethod("com.xishanju.plm.misc.MiscFunc", "init", "", &ok);
+		bool ok;
+		ext_callJavaStaticMethod("com.xishanju.plm.misc.MiscFunc", "init", "", &ok);
 #endif
+		g_inited = true;
+	}
 	return dmExtension::RESULT_OK;
 }
 
