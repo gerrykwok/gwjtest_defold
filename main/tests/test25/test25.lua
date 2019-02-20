@@ -31,6 +31,14 @@ function test25:onEnter()
 	:onButtonClicked(function()
 		gaode.jumpLocationSetting()
 	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_get_auth",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		local status = gaode.getAuthorizationStatus()
+		TipsBanner.show("权限状态:" .. tostring(status))
+	end)
 end
 
 function test25:onExit()
