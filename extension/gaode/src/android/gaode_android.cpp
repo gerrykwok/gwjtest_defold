@@ -1,5 +1,6 @@
 #if defined(DM_PLATFORM_ANDROID)
 
+#include <stdlib.h>
 #include "../gaode.h"
 
 extern void ext_callLuaCallbackInAndroid(JNIEnv *env, jint callback, jstring value, bool unregister);
