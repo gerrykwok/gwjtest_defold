@@ -15,9 +15,9 @@ int gaode_locationInit(lua_State *L)
 	std::string packageName = ext_callJavaStaticMethod("com.xishanju.plm.gaode.GaodeUtil", "getPackageName", "", &ok);
 	dmLogInfo("package=%s", packageName.c_str());
 	if(packageName == GAODE_ANDROID_PACKAGE_FORMAL)
-	apiKey = GAODE_APIKEY_ANDROID_FORMAL;
+		apiKey = GAODE_APIKEY_ANDROID_FORMAL;
 	else if(packageName == GAODE_ANDROID_PACKAGE_TEST)
-	apiKey = GAODE_APIKEY_ANDROID_TEST;
+		apiKey = GAODE_APIKEY_ANDROID_TEST;
 	else apiKey = GAODE_APIKEY_ANDROID_FORMAL;
 	std::string res = ext_callJavaStaticMethod("com.xishanju.plm.gaode.GaodeUtil", "locationInit", apiKey, &ok);
 
