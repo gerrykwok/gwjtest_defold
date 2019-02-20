@@ -19,6 +19,7 @@ int gaode_jumpLocationSetting(lua_State *L);
 
 extern std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
 extern int ext_callNativeStaticMethod(const char *clazz, const char *method, lua_State *L, int idxParam);
+extern std::string ext_callNativeStaticMethodBase(const char *clazz, const char *method, lua_State *L, int idxParam, bool *ok);
 extern void ext_invokeLuaCallbackWithString(int callbackId, const char *value);
 extern int ext_registerLuaCallback(lua_State* L, int index);
 extern void ext_unregisterLuaCallback(int callbackId);

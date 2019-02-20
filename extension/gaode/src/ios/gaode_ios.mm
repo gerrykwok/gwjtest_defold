@@ -24,7 +24,10 @@ int gaode_locationStop(lua_State *L)
 
 int gaode_getAuthorizationStatus(lua_State *L)
 {
-	return ext_callNativeStaticMethod("GaodeUtil", "getLocationAuthorizationStatus", L, -1);
+	bool ok;
+	std::string res = ext_callNativeStaticMethodBase("GaodeUtil", "getLocationAuthorizationStatus", L, -1, &ok);
+	lua_pushinteger(L, atoi(res.c_str()));
+	return 1;
 }
 
 int gaode_jumpLocationSetting(lua_State *L)

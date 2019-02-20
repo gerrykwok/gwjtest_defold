@@ -4,13 +4,13 @@ platforms:
     arm64-ios:
         context:
             frameworks: ["CoreLocation", "ExternalAccessory"]
-            libs:       []
-            flags:      []
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       ["c++"]
             linkFlags:  []
 
     armv7-ios:
         context:
             frameworks: ["CoreLocation", "ExternalAccessory"]
-            libs:       []
-            flags:      []
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       ["c++"]
             linkFlags:  []
