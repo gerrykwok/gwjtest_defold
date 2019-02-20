@@ -27,4 +27,9 @@ int gaode_getAuthorizationStatus(lua_State *L)
 	return 1;
 }
 
+int gaode_jumpLocationSetting(lua_State *L)
+{
+	return 0;
+}
+
 #endif

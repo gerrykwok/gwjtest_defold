@@ -1,1 +1,16 @@
 name: "gaode"
+
+platforms:
+    arm64-ios:
+        context:
+            frameworks: ["CoreLocation", "ExternalAccessory"]
+            libs:       []
+            flags:      []
+            linkFlags:  []
+
+    armv7-ios:
+        context:
+            frameworks: ["CoreLocation", "ExternalAccessory"]
+            libs:       []
+            flags:      []
+            linkFlags:  []

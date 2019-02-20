@@ -295,5 +295,11 @@
         <string>是否允许{{project.appname}}使用你的相机？</string>
         <key>NSMicrophoneUsageDescription</key>
         <string>{{project.appname}}需要您的同意，您才能在使用期间使用麦克风与其它玩家聊天互动。</string>
+        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+        <string>{{project.appname}}请求访问您的位置信息，用于显示同桌玩家与您的精确距离，以保证游戏的公平性。</string>
+        <key>NSLocationAlwaysUsageDescription</key>
+        <string>{{project.appname}}请求访问您的位置信息，用于显示同桌玩家与您的精确距离，以保证游戏的公平性。</string>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>{{project.appname}}请求访问您的位置信息，用于显示同桌玩家与您的精确距离，以保证游戏的公平性。</string>
 </dict>
 </plist>
