@@ -69,6 +69,7 @@ static IapUtil* g_instance;
 
 -(void)dealloc
 {
+	[super dealloc];
 	[[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
 }
 
