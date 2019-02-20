@@ -160,10 +160,14 @@ public class GaodeUtil
 		boolean bEnabled = locMgr.isProviderEnabled(LocationManager.GPS_PROVIDER);
 		return bEnabled ? "enabled" : "disabled";
 	}
-	public static String jumpToGPSSetting(Context ctx, String params)
+	public static String jumpLocationSetting(Context ctx, String params)
+	{
+		jumpToGPSSetting(ctx);
+		return "";
+	}
+	public static void jumpToGPSSetting(Context ctx)
 	{
 		Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 		ctx.startActivity(intent);
-		return "";
 	}
 }

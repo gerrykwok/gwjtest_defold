@@ -7,6 +7,9 @@ function test25:ctor()
 end
 
 function test25:onEnter()
+	local res = gaode.locationInit()
+	gwjui.printf("location init,res=%s", tostring(res))
+
 	gwjui.ScaleButton.new({
 		main_id = "btn_start",
 		maxScale = 1.1,
@@ -21,8 +24,13 @@ function test25:onEnter()
 	:onButtonClicked(function()
 		self:onClickLocationStop()
 	end)
-	local res = gaode.locationInit()
-	gwjui.printf("location init,res=%s", tostring(res))
+	gwjui.ScaleButton.new({
+		main_id = "btn_jump_setting",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		gaode.jumpLocationSetting()
+	end)
 end
 
 function test25:onExit()

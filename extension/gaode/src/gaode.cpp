@@ -13,6 +13,7 @@ static const luaL_reg Module_methods[] =
 	{"locationStart", gaode_locationStart},
 	{"locationStop", gaode_locationStop},
 	{"getAuthorizationStatus", gaode_getAuthorizationStatus},
+	{"jumpLocationSetting", gaode_jumpLocationSetting},
 	{0, 0}
 };
 

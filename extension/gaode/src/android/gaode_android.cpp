@@ -55,4 +55,11 @@ int gaode_getAuthorizationStatus(lua_State *L)
 	return 1;
 }
 
+int gaode_jumpLocationSetting(lua_State *L)
+{
+	bool ok;
+	std::string res = ext_callJavaStaticMethod("com.xishanju.plm.gaode.GaodeUtil", "jumpLocationSetting", "", &ok);
+	return 0;
+}
+
 #endif
