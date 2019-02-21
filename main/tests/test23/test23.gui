@@ -100,7 +100,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "download"
+  text: "\344\270\213\350\275\275(http.request)"
   font: "test_24"
   id: "text"
   xanchor: XANCHOR_NONE
@@ -279,7 +279,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "\346\265\213\350\257\225httpreq"
+  text: "\344\270\213\350\275\275(httpreq)"
   font: "test_24"
   id: "text1"
   xanchor: XANCHOR_NONE

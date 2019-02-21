@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <functional>
 
 #ifdef GEN_BINDING
 typedef int LUA_FUNCTION;
@@ -36,13 +37,19 @@ typedef int curl_httppost;
 #define kCCHTTPRequestCURLStateBusy             1
 #define kCCHTTPRequestCURLStateClosed           2
 
+class HTTPRequest;
+
 typedef std::vector<std::string> HTTPRequestHeaders;
 typedef HTTPRequestHeaders::iterator HTTPRequestHeadersIterator;
+typedef std::function<void(const char*, HTTPRequest*)> HTTPRequestCallback;
 
 class HTTPRequest
 {
 public:
 	static HTTPRequest* create(LUA_FUNCTION listener, const char *url, const char *method);
+#ifndef GEN_BINDING
+	static HTTPRequest* create(HTTPRequestCallback callback, const char *url, const char *method);
+#endif
 	void addRequestHeader(const char *header);
 	void addPOSTValue(const char *key, const char *value);
 	void setPOSTData(const char *data, size_t len = 0);
@@ -56,6 +63,9 @@ public:
 	int getState(void);
 	int getResponseStatusCode(void);
 	const std::string getResponseHeadersString(void);
+#ifndef GEN_BINDING
+	const HTTPRequestHeaders& getResponseHeaders(void);
+#endif
 	const std::string getResponseString(void);
 	//void *getResponseData(void);
 	LUA_BUFFER getResponseDataLua(void);
@@ -66,6 +76,7 @@ public:
 protected:
 	void release();
 	bool initWithListener(LUA_FUNCTION listener, const char *url, const char *method);
+	bool initWithCallback(HTTPRequestCallback callback, const char *url, const char *method);
 	bool initWithUrl(const char *url, const char* method);
 	void onRequest(void);
 	size_t onWriteData(void *buffer, size_t bytes);
@@ -83,7 +94,7 @@ private:
 	~HTTPRequest();
 
 	std::string m_url;
-//	HTTPRequestDelegate* m_delegate;
+	HTTPRequestCallback m_callback;
 	int m_listener;
 	int m_curlState;
 

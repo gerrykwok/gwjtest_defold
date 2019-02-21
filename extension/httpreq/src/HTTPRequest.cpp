@@ -22,6 +22,45 @@ void httpreq_setCurlProxy(const char *proxy)
 	curl_proxy = proxy;
 }
 
+void httpreq_request(const char *url, const char *method,
+	std::vector<std::string> headers, const char *postData, std::map<std::string, std::string> options,
+	std::function<void(int status, void* respData, size_t respDataSize, std::vector<std::string> &headers)> callback)
+{
+	HTTPRequest *request = HTTPRequest::create([=](const char*result, HTTPRequest*request) {
+		if(callback == nullptr) return;
+		int status = 0;
+		void *respData = NULL;
+		size_t respDataSize = 0;
+		std::vector<std::string> respHeaders;
+		if(strcmp(result, "completed") == 0)
+		{
+			status = request->getResponseStatusCode();
+			LUA_BUFFER buf = request->getResponseDataLua();
+			respData = buf.ptr;
+			respDataSize = buf.size;
+			const HTTPRequestHeaders &respHeaders2 = request->getResponseHeaders();
+			for(std::string header : respHeaders2)
+			{
+//				dmLogInfo("header:%s", header.c_str());
+				respHeaders.push_back(header);
+			}
+		}
+		callback(status, respData, respDataSize, respHeaders);
+	}, url, method);
+	for(std::string header : headers)
+	{
+		request->addRequestHeader(header.c_str());
+	}
+	if(postData) request->setPOSTData(postData);
+	std::map<std::string, std::string>::iterator it = options.find("timeout");
+	if(it != options.end())
+	{
+		int timeout = atoi(it->second.c_str());
+		request->setTimeout(timeout);
+	}
+	request->start();
+}
+
 HTTPRequest* HTTPRequest::create(LUA_FUNCTION listener, const char *url, const char *method)
 {
 	//dmLogInfo("http create,listener=%d,url=%s,method=%s", listener, url, method);
@@ -30,9 +69,22 @@ HTTPRequest* HTTPRequest::create(LUA_FUNCTION listener, const char *url, const c
 	return request;
 }
 
+HTTPRequest* HTTPRequest::create(HTTPRequestCallback callback, const char *url, const char *method)
+{
+	HTTPRequest *request = new HTTPRequest();
+	request->initWithCallback(callback, url, method);
+	return request;
+}
+
 bool HTTPRequest::initWithListener(LUA_FUNCTION listener, const char *url, const char *method)
 {
 	m_listener = listener;
+	return initWithUrl(url, method);
+}
+
+bool HTTPRequest::initWithCallback(HTTPRequestCallback callback, const char *url, const char *method)
+{
+	m_callback = callback;
 	return initWithUrl(url, method);
 }
 
@@ -246,6 +298,7 @@ void HTTPRequest::start()
 
 void HTTPRequest::cancel(void)
 {
+	m_callback = nullptr;
 	if (m_state == kCCHTTPRequestStateIdle || m_state == kCCHTTPRequestStateInProgress)
 	{
 		m_state = kCCHTTPRequestStateCancelled;
@@ -271,6 +324,11 @@ const std::string HTTPRequest::getResponseHeadersString()
 		buf.append(*it);
 	}
 	return buf;
+}
+
+const HTTPRequestHeaders& HTTPRequest::getResponseHeaders()
+{
+	return m_responseHeaders;
 }
 
 const std::string HTTPRequest::getResponseString(void)
@@ -370,24 +428,30 @@ void HTTPRequest::update()
 
 	if(m_state != kCCHTTPRequestStateInProgress)
 	{
+		std::string name;
+		switch (m_state)
+		{
+		case kCCHTTPRequestStateCompleted:
+			name = "completed";
+			break;
+		case kCCHTTPRequestStateCancelled:
+			name = "cancelled";
+			break;
+		case kCCHTTPRequestStateFailed:
+			name = "failed";
+			break;
+		default:
+			name = "unknown";
+			break;
+		}
+
+		if(m_callback != nullptr)
+		{
+			m_callback(name.c_str(), this);
+		}
+
 		if (m_listener)
 		{
-			std::string name;
-
-			switch (m_state)
-			{
-			case kCCHTTPRequestStateCompleted:
-				name = "completed";
-				break;
-			case kCCHTTPRequestStateCancelled:
-				name = "cancelled";
-				break;
-			case kCCHTTPRequestStateFailed:
-				name = "failed";
-				break;
-			default:
-				name = "unknown";
-			}
 			sprintf(str, "{\"name\":\"%s\"}", name.c_str());
 			ext_invokeLuaCallbackWithString(m_listener, str);
 		}
