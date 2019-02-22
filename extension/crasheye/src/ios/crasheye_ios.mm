@@ -10,7 +10,7 @@ void crasheye_onAppInit(const char *environment)
 {
 	NSString *appkey;
 	if(strcmp(environment, "development") == 0 || strcmp(environment, "test") == 0)
-		appkey = @CRASHEYE_APPKEY_IOS_TEST
+		appkey = @CRASHEYE_APPKEY_IOS_TEST;
 	else appkey = @CRASHEYE_APPKEY_IOS_FORMAL;
 //	NSLog(@"gwjgwj,init crasheye with key %@", appkey);
 	[Crasheye initWithAppKey:appkey];
