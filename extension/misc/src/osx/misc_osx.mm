@@ -1,5 +1,6 @@
 #if defined(DM_PLATFORM_OSX)
 
+#include <pthread.h>
 #include "../misc.h"
 
 int misc_installApk(lua_State *L)

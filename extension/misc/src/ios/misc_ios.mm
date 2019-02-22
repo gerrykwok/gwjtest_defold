@@ -3,6 +3,7 @@
 #include "../misc.h"
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#include <pthread.h>
 
 int misc_installApk(lua_State *L)
 {
