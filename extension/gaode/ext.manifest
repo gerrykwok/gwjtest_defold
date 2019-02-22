@@ -19,3 +19,7 @@ platforms:
         context:
             flags:      ["-std=c++11", "-stdlib=libc++"]
             libs:       ["c++"]
+
+    armv7-android:
+        context:
+            flags:      ["-std=c++11"]

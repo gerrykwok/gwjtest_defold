@@ -44,4 +44,11 @@ int misc_getBatteryInfo(lua_State *L)
 	return 2;
 }
 
+int misc_getCurrentThreadId(lua_State *L)
+{
+	DWORD id = GetCurrentThreadId();
+	lua_pushinteger(L, id);
+	return 1;
+}
+
 #endif

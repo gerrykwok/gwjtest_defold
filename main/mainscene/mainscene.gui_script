@@ -48,6 +48,13 @@ function init(self)
 		showBatteryInfo()
 	end)
 
+	local threadId = misc.getCurrentThreadId()
+	gwjui.printf("thread in init:%d", threadId);
+	misc.setAppEventListener(function(script, name)
+		local threadId = misc.getCurrentThreadId()
+		gwjui.printf("threadid=%d,event name = %s", threadId, tostring(name))
+	end)
+
 	self.m_listData = {}
 	for i,test in ipairs(alltest) do
 		local str = string.format("%d.%s", i, test)

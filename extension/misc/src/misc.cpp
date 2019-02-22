@@ -20,6 +20,8 @@ static const luaL_reg Module_methods[] =
 	{"androidGetTargetSdkVersion", misc_androidGetTargetSdkVersion},
 	{"androidGotoAppSetting", misc_androidGotoAppSetting},
 	{"getBatteryInfo", misc_getBatteryInfo},
+	{"setAppEventListener", misc_setAppEventListener},
+	{"getCurrentThreadId", misc_getCurrentThreadId},
 	{0, 0}
 };
 
@@ -67,6 +69,20 @@ static dmExtension::Result ext_update(dmExtension::Params *params)
 	return dmExtension::RESULT_OK;
 }
 
+static void ext_OnEvent(dmExtension::Params* params, const dmExtension::Event* event)
+{
+	dmExtension::EventID eventId = event->m_Event;
+	switch(eventId)
+	{
+	case dmExtension::EVENT_ID_ACTIVATEAPP:
+		misc_invokeAppEventListener("EVENT_ID_ACTIVATEAPP");
+		break;
+	case dmExtension::EVENT_ID_DEACTIVATEAPP:
+		misc_invokeAppEventListener("EVENT_ID_DEACTIVATEAPP");
+		break;
+	}
+}
+
 // Defold SDK uses a macro for setting up extension entry points:
 // DM_DECLARE_EXTENSION(symbol, name, app_init, app_final, init, update, on_event, final)
-DM_DECLARE_EXTENSION(EXTENSION_NAME, LIB_NAME, ext_AppInit, ext_AppFinal, ext_Init, ext_update, 0, ext_Final)
+DM_DECLARE_EXTENSION(EXTENSION_NAME, LIB_NAME, ext_AppInit, ext_AppFinal, ext_Init, ext_update, ext_OnEvent, ext_Final)

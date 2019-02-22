@@ -73,4 +73,11 @@ int misc_getBatteryInfo(lua_State *L)
 	return 2;
 }
 
+int misc_getCurrentThreadId(lua_State *L)
+{
+	pthread_t thread = pthread_self();
+	lua_pushinteger(L, (long)thread);
+	return 1;
+}
+
 #endif
