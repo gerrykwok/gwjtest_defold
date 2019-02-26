@@ -1,1 +1,6 @@
 [liveupdate]
+mode = Zip
+zip-filepath = C:\Users\evakwok\Desktop\liveupdate
+publickey = D:\defold\keys\liveupdate_manifest\public.der
+privatekey = D:\defold\keys\liveupdate_manifest\private.der
+
