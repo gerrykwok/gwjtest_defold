@@ -10,3 +10,4 @@ builtins
 .internal
 obj
 gwjtest_defold.*
+/liveupdate.settings
