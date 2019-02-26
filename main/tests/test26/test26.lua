@@ -10,6 +10,10 @@ function test26:onEnter()
 --	local path = sys.get_save_file("", "")
 --	TipsBanner.show("app support folder:" .. path)
 
+--	for k,v in pairs(lfs) do
+--		gwjui.printf("lfs.%s = %s (%s)", k, tostring(v), type(v))
+--	end
+
 	gwjui.ScaleButton.new({
 		main_id = "btn_check_manifest",
 		maxScale = 1.1,
