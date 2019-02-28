@@ -23,7 +23,7 @@ static const char *misc_getLuaTypeDesc(lua_State *L, int index)
 int misc_setAppEventListener(lua_State *L)
 {
 	int top = lua_gettop(L);
-	dmLogInfo("top=%d", top);
+//	dmLogInfo("top=%d", top);
 	if(top <= 0)
 	{
 		dmLogError("expecting param");
