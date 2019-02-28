@@ -62,6 +62,33 @@ static void UnregisterCallback(LuaCallbackInfo* cbk)
 	}
 }
 
+static void InvokeCallback(LuaCallbackInfo *cbk, int num_args)
+{
+	if(cbk->m_Callback == LUA_NOREF)
+	{
+		return;
+	}
+
+	lua_State* L = cbk->m_L;
+
+	lua_rawgeti(L, LUA_REGISTRYINDEX, cbk->m_Callback);		/* L: arg1 arg2 ... callback */
+	lua_insert(L, -(num_args+1));							/* L: callback arg1 arg2 ... */
+
+	// Setup self (the script instance)
+	lua_rawgeti(L, LUA_REGISTRYINDEX, cbk->m_Self);			/* L: callback arg1 arg2 ... self */
+	lua_insert(L, -(num_args+1));							/* L: callback self arg1 arg2 ... */
+	lua_pushvalue(L, -(num_args+1));						/* L: callback self arg1 arg2 ... self */
+
+	dmScript::SetInstance(L);								/* L: callback self arg1 arg2 ... */
+	int number_of_arguments = num_args+1;
+
+	int ret = lua_pcall(L, number_of_arguments, 0, 0);
+	if(ret != 0) {
+		dmLogError("Error running callback: %s", lua_tostring(L, -1));
+		lua_pop(L, 1);
+	}
+}
+
 static void InvokeCallbackWithString(LuaCallbackInfo* cbk, const char *value)
 {
 	if(cbk->m_Callback == LUA_NOREF)
@@ -72,30 +99,46 @@ static void InvokeCallbackWithString(LuaCallbackInfo* cbk, const char *value)
 	lua_State* L = cbk->m_L;
 	int top = lua_gettop(L);
 
-	lua_rawgeti(L, LUA_REGISTRYINDEX, cbk->m_Callback);		/* L: callback */
-
-	// Setup self (the script instance)
-	lua_rawgeti(L, LUA_REGISTRYINDEX, cbk->m_Self);			/* L: callback self */
-	lua_pushvalue(L, -1);									/* L: callback self self */
-
-	dmScript::SetInstance(L);								/* L: callback self */
-	int number_of_arguments = 1;
-
+//	lua_rawgeti(L, LUA_REGISTRYINDEX, cbk->m_Callback);		/* L: callback */
+//
+//	// Setup self (the script instance)
+//	lua_rawgeti(L, LUA_REGISTRYINDEX, cbk->m_Self);			/* L: callback self */
+//	lua_pushvalue(L, -1);									/* L: callback self self */
+//
+//	dmScript::SetInstance(L);								/* L: callback self */
+//	int number_of_arguments = 1;
+//
+//	lua_pushstring(L, value);
+//	number_of_arguments++;
+//
+//	int ret = lua_pcall(L, number_of_arguments, 0, 0);
+//	if(ret != 0) {
+//		dmLogError("Error running callback: %s", lua_tostring(L, -1));
+//		lua_pop(L, 1);
+//	}
 	lua_pushstring(L, value);
-	number_of_arguments++;
+	InvokeCallback(cbk, 1);
 
-	int ret = lua_pcall(L, number_of_arguments, 0, 0);
-	if(ret != 0) {
-		dmLogError("Error running callback: %s", lua_tostring(L, -1));
-		lua_pop(L, 1);
-	}
 	assert(top == lua_gettop(L));
 }
 
 static dmArray<LuaCallbackInfo> g_callbacks;
 
+static LuaCallbackInfo* FindCallbackWithId(int callbackId)
+{
+	LuaCallbackInfo *pCbk = NULL;
+	for(int i = g_callbacks.Size() - 1; i >= 0; --i) {
+		if(g_callbacks[i].m_id == callbackId) {
+			pCbk = &g_callbacks[i];
+			break;
+		}
+	}
+	return pCbk;
+}
+
 int ext_registerLuaCallback(lua_State* L, int index)
 {
+	if(!lua_isfunction(L, index)) return 0;
 	int top = lua_gettop(L);
 	LuaCallbackInfo cbk;
 	RegisterCallback(L, index, &cbk);
@@ -120,19 +163,87 @@ void ext_unregisterLuaCallback(int callbackId)
 
 void ext_invokeLuaCallbackWithString(int callbackId, const char *value)
 {
-	LuaCallbackInfo *pCbk = NULL;
-	for (int i = g_callbacks.Size() - 1; i >= 0; i--) {
-		if (g_callbacks[i].m_id == callbackId) {
-			pCbk = &g_callbacks[i];
-			break;
-		}
-	}
+	LuaCallbackInfo *pCbk = FindCallbackWithId(callbackId);
 	if(pCbk == NULL)
 	{
 		dmLogInfo("gwjgwj,not found lua callback for id %d", callbackId);
 		return;
 	}
 	InvokeCallbackWithString(pCbk, value);
+}
+
+lua_State* ext_getLuaStateWithCallbackId(int callbackId)
+{
+	LuaCallbackInfo *pCbk = FindCallbackWithId(callbackId);
+	if(pCbk == NULL) return NULL;
+	return pCbk->m_L;
+}
+
+void ext_invokeLuaCallback(int callbackId, int num_args)
+{
+	LuaCallbackInfo *pCbk = FindCallbackWithId(callbackId);
+	if(pCbk == NULL)
+	{
+		dmLogInfo("gwjgwj,not found lua callback for id %d", callbackId);
+		return;
+	}
+	InvokeCallback(pCbk, num_args);
+}
+
+void ext_pushLuaValue(lua_State *L, const LuaValue& value)
+{
+	const LuaValueType type = value.getType();
+	if(type == LuaValueTypeInt)
+	{
+		lua_pushinteger(L, value.intValue());
+	}
+	else if(type == LuaValueTypeFloat)
+	{
+		lua_pushnumber(L, value.floatValue());
+	}
+	else if(type == LuaValueTypeBoolean)
+	{
+		lua_pushboolean(L, value.booleanValue());
+	}
+	else if(type == LuaValueTypeString)
+	{
+		lua_pushstring(L, value.stringValue().c_str());
+	}
+	else if(type == LuaValueTypeDict)
+	{
+		ext_pushLuaValueDict(L, value.dictValue());
+	}
+	else if(type == LuaValueTypeArray)
+	{
+		ext_pushLuaValueArray(L, value.arrayValue());
+	}
+//	else if(type == LuaValueTypeObject)
+//	{
+//		pushObject(value.ccobjectValue(), value.getObjectTypename().c_str());
+//	}
+}
+
+void ext_pushLuaValueDict(lua_State *L, const LuaValueDict& dict)
+{
+	lua_newtable(L);                                              /* L: table */
+	for(LuaValueDictIterator it = dict.begin(); it != dict.end(); ++it)
+	{
+		lua_pushstring(L, it->first.c_str());                     /* L: table key */
+		ext_pushLuaValue(L, it->second);                                     /* L: table key value */
+		lua_rawset(L, -3);                     /* table.key = value, L: table */
+	}
+}
+
+void ext_pushLuaValueArray(lua_State *L, const LuaValueArray& array)
+{
+	lua_newtable(L);                                              /* L: table */
+	int index = 1;
+	for(LuaValueArrayIterator it = array.begin(); it != array.end(); ++it)
+	{
+		ext_pushLuaValue(L, *it);                                            /* L: table value */
+		lua_rawseti(L, -2, index);          /* table[index] = value, L: table */
+		++index;
+	}
 }
 
 std::string ext_jsonFromLuaTable(lua_State *L, int index)

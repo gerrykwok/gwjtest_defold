@@ -1,0 +1,2 @@
+genbindings.py
+pause

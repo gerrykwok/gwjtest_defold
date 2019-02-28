@@ -31,6 +31,7 @@ local alltest =
 	require("main.tests.test24.name"),
 	require("main.tests.test25.name"),
 	require("main.tests.test26.name"),
+	require("main.tests.test27.name"),
 }
 
 local function showBatteryInfo()

@@ -4,6 +4,8 @@
 #include <functional>
 #include <string>
 
+#include "LuaValue.h"
+
 //注册一个lua callback
 //返回id
 int ext_registerLuaCallback(lua_State* L, int index);
@@ -11,6 +13,15 @@ int ext_registerLuaCallback(lua_State* L, int index);
 void ext_unregisterLuaCallback(int callbackId);
 //调用callback
 void ext_invokeLuaCallbackWithString(int callbackId, const char *value);
+//获取某个callback对应的lua状态机
+lua_State* ext_getLuaStateWithCallbackId(int callbackId);
+//用指定参数个数调用callback(需先push相应的值)
+void ext_invokeLuaCallback(int callbackId, int num_args);
+
+void ext_pushLuaValue(lua_State *L, const LuaValue& value);
+void ext_pushLuaValueDict(lua_State *L, const LuaValueDict& dict);
+void ext_pushLuaValueArray(lua_State *L, const LuaValueArray& array);
+
 //在update线程中执行代码(执行一次)
 void ext_performInUpdateThread(const std::function<void(void)> &func);
 //把代码加入到update线程中执行(一直执行)
