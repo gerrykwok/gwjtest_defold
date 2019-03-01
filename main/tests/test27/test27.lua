@@ -21,6 +21,13 @@ function test27:onEnter()
 	:onButtonClicked(function()
 		self:onClickUnzipAllFile()
 	end)
+	gwjui.ScaleButton.new({
+		main_id = "btn_get_allfile",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		self:onClickGetAllFile()
+	end)
 end
 
 function test27:onExit()
@@ -86,6 +93,21 @@ function test27:onClickUnzipAllFile()
 		end
 	end)
 	gwjui.printf("gwjgwj,start extract end")
+end
+
+function test27:onClickGetAllFile()
+	local zipfile = self:getZipFile()
+	local zip = unzip.UnzipUtil:create(zipfile)
+	zip:getAllFiles(function(script, files)
+		local filenum = 0;
+		for i,file in ipairs(files) do
+			gwjui.printf("gwjgwj,file=%s", file)
+			if(string.sub(file, string.len(file)) ~= "/") then
+				filenum = filenum + 1;
+			end
+		end
+		gwjui.printf("gwjgwj,total %d files", filenum)
+	end)
 end
 
 return test27
