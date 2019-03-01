@@ -1,1 +1,22 @@
 name: "unzip"
+
+platforms:
+    arm64-ios:
+        context:
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       ["c++"]
+
+    armv7-ios:
+        context:
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       ["c++"]
+
+    armv7-android:
+        context:
+            flags:      ["-std=c++11"]
+            defines:    ["USE_FILE32API"]
+
+    x86_64-osx:
+        context:
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       ["c++"]

@@ -3,6 +3,11 @@
 #include <vector>
 #if defined(DM_PLATFORM_WINDOWS)
 #include <windows.h>
+#else
+#include <sys/stat.h>
+#include <dirent.h>
+#include <errno.h>
+#include <stdio.h>
 #endif
 #include "FileUtil.h"
 
