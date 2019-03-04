@@ -35,4 +35,12 @@
 -- @param #char zipFile
 -- @return UnzipUtil#UnzipUtil ret (return value: UnzipUtil)
         
+--------------------------------
+-- 
+-- @function [parent=#UnzipUtil] createFromMem 
+-- @param self
+-- @param #int buffer
+-- @param #bool copyBuffer
+-- @return UnzipUtil#UnzipUtil ret (return value: UnzipUtil)
+        
 return nil

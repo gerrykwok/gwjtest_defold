@@ -12,13 +12,46 @@
 
 #define UNZIP_DEBUGLOG			1
 
+UnzipUtil::UnzipUtil()
+{
+	m_handler = 0;
+	m_unzipStatus = UNZIP_STATUS_STOP;
+	m_unzipResult = 0;
+	m_handleSchedule = 0;
+	m_zipBuffer.ptr = NULL;
+	m_zipBuffer.size = 0;
+	m_releaseBuffer = false;
+}
+
+UnzipUtil::~UnzipUtil()
+{
+	if(m_releaseBuffer && m_zipBuffer.ptr)
+		free(m_zipBuffer.ptr);
+	m_zipBuffer.ptr = NULL;
+	m_zipBuffer.size = 0;
+}
+
 UnzipUtil* UnzipUtil::create(const char *zipFile)
 {
 	UnzipUtil *ret = new UnzipUtil;
 	ret->m_zipFile = zipFile;
-	ret->m_unzipStatus = UNZIP_STATUS_STOP;
-	ret->m_unzipResult = 0;
-	ret->m_handleSchedule = 0;
+	return ret;
+}
+
+UnzipUtil* UnzipUtil::createFromMem(LUA_BUFFER buffer, bool copyBuffer)
+{
+	UnzipUtil *ret = new UnzipUtil;
+	ret->m_releaseBuffer = copyBuffer;
+	if(copyBuffer)
+	{
+		ret->m_zipBuffer.ptr = malloc(buffer.size);
+		memcpy(ret->m_zipBuffer.ptr, buffer.ptr, buffer.size);
+	}
+	else
+	{
+		ret->m_zipBuffer.ptr = buffer.ptr;
+	}
+	ret->m_zipBuffer.size = buffer.size;
 	return ret;
 }
 
@@ -59,15 +92,16 @@ void UnzipUtil::unzipOneFile(const char *pathInZip, const char *targetPath, bool
 
 void UnzipUtil::unzipOneFileBase()
 {
-	const char *zipFile = m_zipFile.c_str();
+	const char *zipFile = m_zipFile.length() > 0 ? m_zipFile.c_str() : NULL;
 	const char *pathInZip = m_pathInZip.c_str();
 	const char *targetPath = m_targetPath.c_str();
 	bool needPassword = m_needPassword;
 	const char *password = m_password.c_str();
-	unzFile f;
+	unzFile f = NULL;
 	int ret = 0;
 	int openRet;
-	f = unzOpen(zipFile);
+	if(zipFile) f = unzOpen(zipFile);
+	else if(m_zipBuffer.ptr) f = unzOpenBuffer(m_zipBuffer.ptr, m_zipBuffer.size);
 	if(f)
 	{
 		if(unzLocateFile(f, pathInZip, 0) == UNZ_OK)
@@ -115,7 +149,17 @@ void UnzipUtil::unzipOneFileBase()
 	}
 	else
 	{
-		if(UNZIP_DEBUGLOG) dmLogError("unzip:open %s failed", zipFile);
+		if(UNZIP_DEBUGLOG)
+		{
+			if(zipFile)
+			{
+				dmLogError("unzip:open %s failed", zipFile);
+			}
+			else
+			{
+				dmLogError("unzip:open buffer failed,bufsize=%d", m_zipBuffer.size);
+			}
+		}
 		ret = 1;//打开zip文件失败
 	}
 	this->m_unzipResult = ret;
@@ -154,12 +198,12 @@ void UnzipUtil::unzipAllFile(const char *targetDir, bool needPassword, const cha
 
 void UnzipUtil::unzipAllFileBase()
 {
-	const char *zipFile = m_zipFile.c_str();
+	const char *zipFile = m_zipFile.length() > 0 ? m_zipFile.c_str() : NULL;
 	const char *targetDir = m_targetDir.c_str();
 	bool needPassword = m_needPassword;
 	const char *password = m_password.c_str();
 	int i;
-	unzFile f;
+	unzFile f = NULL;
 	int ret = 0;
 	unz_file_info64 info64;
 	char filename[1024];
@@ -177,7 +221,8 @@ void UnzipUtil::unzipAllFileBase()
 	strcpy(target_dir, targetDir);
 	if(target_dir[strlen(target_dir) - 1] != '/')
 		strcat(target_dir, "/");
-	f = unzOpen(zipFile);
+	if(zipFile) f = unzOpen(zipFile);
+	else if(m_zipBuffer.ptr) f = unzOpenBuffer(m_zipBuffer.ptr, m_zipBuffer.size);
 	if(f)
 	{
 		//计算文件总个数
@@ -376,10 +421,11 @@ void UnzipUtil::update_unzipOne(float dt)
 void UnzipUtil::getAllFiles(LUA_FUNCTION handler)
 {
 	LuaValueArray arr;
-	unzFile f;
+	unzFile f = NULL;
 	unz_file_info64 info64;
 	char filename[1024];
-	f = unzOpen(m_zipFile.c_str());
+	if(m_zipFile.length() > 0) f = unzOpen(m_zipFile.c_str());
+	else if(m_zipBuffer.ptr) f = unzOpenBuffer(m_zipBuffer.ptr, m_zipBuffer.size);
 	if(f)
 	{
 		int rr;

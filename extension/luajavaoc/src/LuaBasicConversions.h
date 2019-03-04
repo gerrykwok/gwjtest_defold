@@ -39,6 +39,12 @@ extern "C" {
 #endif
 //#include "tolua_fix.h"
 
+typedef struct
+{
+	void *ptr;
+	size_t size;
+} LUA_BUFFER;
+
 extern std::unordered_map<std::string, std::string>  g_luaType;
 extern std::unordered_map<std::string, std::string>  g_typeCast;
 
@@ -61,6 +67,7 @@ extern bool luaval_to_number(lua_State* L,int lo,double* outValue, const char* f
 extern bool luaval_to_long_long(lua_State* L,int lo,long long* outValue, const char* funcName = "");
 extern bool luaval_to_std_string(lua_State* L, int lo, std::string* outValue, const char* funcName = "");
 extern bool luaval_to_long(lua_State* L,int lo, long* outValue, const char* funcName = "");
+extern bool luaval_to_buffer(lua_State* L,int lo, LUA_BUFFER* outValue, const char* funcName = "");
 //extern bool luaval_to_ssize(lua_State* L,int lo, ssize_t* outValue, const char* funcName = "");
 //extern bool luaval_to_size(lua_State* L,int lo,Size* outValue, const char* funcName = "");
 //extern bool luaval_to_rect(lua_State* L,int lo,Rect* outValue, const char* funcName = "");
