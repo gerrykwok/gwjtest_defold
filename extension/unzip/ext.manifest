@@ -5,11 +5,13 @@ platforms:
         context:
             flags:      ["-std=c++11", "-stdlib=libc++"]
             libs:       ["c++"]
+            defines:    ["USE_FILE32API"]
 
     armv7-ios:
         context:
             flags:      ["-std=c++11", "-stdlib=libc++"]
             libs:       ["c++"]
+            defines:    ["USE_FILE32API"]
 
     armv7-android:
         context:
