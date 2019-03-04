@@ -66,7 +66,8 @@ function test27:onClickUnzipOneFile()
 		gwjui.dump(event, "event")
 		if(event.name == "completed") then
 			gwjui.printf("gwjgwj,completed")
-			TipsBanner.show("unzip completed")
+			local str = string.format("unzip completed,result=%d", event.result)
+			TipsBanner.show(str)
 		end
 	end)
 	gwjui.printf("gwjgwj,start extract one file end")
@@ -90,6 +91,8 @@ function test27:onClickUnzipAllFile()
 			gwjui.printf("gwjgwj,extracting %d/%d", event.current, event.filenum)
 		elseif(event.name == "completed") then
 			gwjui.printf("gwjgwj,extract completed")
+			local str = string.format("extract completed,result=%d", event.result)
+			TipsBanner.show(str)
 		end
 	end)
 	gwjui.printf("gwjgwj,start extract end")
