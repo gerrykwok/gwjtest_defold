@@ -2,6 +2,9 @@
 #include "unzip_src/unzip.h"
 #include "FileUtil.h"
 #include <extension/luajavaoc/src/LuaValue.h>
+#ifndef DM_PLATFORM_WINDOWS
+#include <pthread.h>
+#endif
 
 #define UNZIP_STATUS_STOP		0
 #define UNZIP_STATUS_RUNNING	1
@@ -227,6 +230,10 @@ void UnzipUtil::unzipAllFileBase()
 							{
 								fileutil_createDirectory(fileDir);
 								fp = fopen(targetPath, "wb");
+								if(fp == NULL)
+								{
+									dmLogError("cannot open %s for writing", targetPath);
+								}
 							}
 						}
 						if(fp) fwrite(buffer, 1, readed, fp);
@@ -236,8 +243,16 @@ void UnzipUtil::unzipAllFileBase()
 						fclose(fp);
 						numSuccess++;
 					}
+					else
+					{
+						dmLogError("extract %s error", filename);
+					}
 
 					unzCloseCurrentFile(f);
+				}
+				else
+				{
+					dmLogError("unzOpenCurrentFile error:%d", openRet);
 				}
 
 				this->m_iFile++;
@@ -254,7 +269,10 @@ void UnzipUtil::unzipAllFileBase()
 	if(ret == 0)
 	{
 		if(numSuccess < this->m_filenum)//部分成功
+		{
+			dmLogInfo("partial success:%d/%d", numSuccess, this->m_filenum);
 			this->m_unzipResult = 1000;
+		}
 		else this->m_unzipResult = 0;
 	}
 	else
