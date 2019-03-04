@@ -15,6 +15,28 @@ int misc_canOpenApp(lua_State *L)
 	return ext_callNativeStaticMethod("MiscFunc", "canOpenApp", L, -1);
 }
 
+int misc_getIOSBundleFilePath(lua_State *L)
+{
+	if(lua_gettop(L) <= 0)
+	{
+		dmLogError("must specify a filename");
+		return 0;
+	}
+	if(!lua_isstring(L, -1))
+	{
+		dmLogError("must specify a filename");
+		return 0;
+	}
+	const char *name = lua_tostring(L, -1);
+	NSString *path = [[NSBundle mainBundle] pathForResource:[NSString stringWithUTF8String:name] ofType:nil];
+	if(path)
+	{
+		lua_pushstring(L, [path UTF8String]);
+		return 1;
+	}
+	return 0;
+}
+
 int misc_androidCheckPermission(lua_State *L)
 {
 	if(!lua_isstring(L, -1))

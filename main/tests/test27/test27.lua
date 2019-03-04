@@ -38,16 +38,17 @@ end
 
 function test27:getZipFile()
 	local zipfile
-	gwjui.printf("device.platform=%s", tostring(device.platform))
+--	gwjui.printf("device.platform=%s", tostring(device.platform))
 	if(device.platform == "android") then
 		zipfile = "/mnt/sdcard/photos.zip"
 	elseif(device.platform == "ios") then
-		zipfile = "photos.zip"
+		zipfile = misc.getIOSBundleFilePath("photos.zip")
 	elseif(device.platform == "windows") then
 		zipfile = "D:\\defold\\projects\\gwjtest\\photos.zip"
 	elseif(device.platform == "mac") then
 		zipfile = "photos.zip"
 	end
+	gwjui.printf("zipfile=%s", tostring(zipfile))
 	return zipfile
 end
 
