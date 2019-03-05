@@ -1,5 +1,6 @@
 #if defined(DM_PLATFORM_OSX)
 
+#import <Foundation/Foundation.h>
 #include <pthread.h>
 #include "../misc.h"
 
@@ -50,6 +51,28 @@ int misc_getCurrentThreadId(lua_State *L)
 	pthread_t thread = pthread_self();
 	lua_pushinteger(L, (long)thread);
 	return 1;
+}
+
+int misc_getBundleResourcePath(lua_State *L)
+{
+	if(lua_gettop(L) <= 0)
+	{
+		dmLogError("must specify a filename");
+		return 0;
+	}
+	if(!lua_isstring(L, -1))
+	{
+		dmLogError("must specify a filename");
+		return 0;
+	}
+	const char *name = lua_tostring(L, -1);
+	NSString *path = [[NSBundle mainBundle] pathForResource:[NSString stringWithUTF8String:name] ofType:nil];
+	if(path)
+	{
+		lua_pushstring(L, [path UTF8String]);
+		return 1;
+	}
+	return 0;
 }
 
 #endif

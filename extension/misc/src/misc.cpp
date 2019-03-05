@@ -14,7 +14,9 @@ static const luaL_reg Module_methods[] =
 	{"isApkInstalled", misc_isApkInstalled},
 #elif defined(DM_PLATFORM_IOS)
 	{"canOpenApp", misc_canOpenApp},
-	{"getIOSBundleFilePath", misc_getIOSBundleFilePath},
+#endif
+#if defined(DM_PLATFORM_IOS) || defined(DM_PLATFORM_OSX)
+	{"getBundleResourcePath", misc_getBundleResourcePath},
 #endif
 	{"androidCheckPermission", misc_androidCheckPermission},
 	{"androidRequestPermissions", misc_androidRequestPermissions},

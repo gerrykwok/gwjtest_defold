@@ -15,7 +15,7 @@ int misc_canOpenApp(lua_State *L)
 	return ext_callNativeStaticMethod("MiscFunc", "canOpenApp", L, -1);
 }
 
-int misc_getIOSBundleFilePath(lua_State *L)
+int misc_getBundleResourcePath(lua_State *L)
 {
 	if(lua_gettop(L) <= 0)
 	{

@@ -64,7 +64,7 @@ function test27:getZipFile()
 	if(device.platform == "android") then
 		zipfile = "/mnt/sdcard/photos.zip"
 	elseif(device.platform == "ios") then
-		zipfile = misc.getIOSBundleFilePath("photos.zip")
+		zipfile = misc.getBundleResourcePath("photos.zip")
 	elseif(device.platform == "windows") then
 		zipfile = "D:\\defold\\projects\\gwjtest\\photos.zip"
 	elseif(device.platform == "mac") then

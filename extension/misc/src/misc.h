@@ -7,7 +7,7 @@
 int misc_installApk(lua_State *L);
 int misc_isApkInstalled(lua_State *L);
 int misc_canOpenApp(lua_State *L);
-int misc_getIOSBundleFilePath(lua_State *L);
+int misc_getBundleResourcePath(lua_State *L);
 int misc_androidCheckPermission(lua_State *L);
 int misc_androidRequestPermissions(lua_State *L);
 int misc_androidGetTargetSdkVersion(lua_State *L);
