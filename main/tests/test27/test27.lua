@@ -180,8 +180,12 @@ function test27:onClickMemUnzipAllFile()
 		local needPassword = false
 		local password = ""
 
-		lfs.mkdir(targetDir)
-		gwjui.printf("gwjgwj,start extract %s", zipfile)
+		local ok,res = lfs.mkdir(targetDir)
+		gwjui.printf("gwjgwj,mkdir %s,ok=%s,res=%s", targetDir, tostring(ok), tostring(res))
+		if(not ok) then
+			TipsBanner.show("mkdir failed:" .. tostring(res))
+		end
+		gwjui.printf("gwjgwj,start extract from memory")
 --		zip:unzipAllFile(targetDir, false, "", nil)--同步
 		zip:unzipAllFile(targetDir, needPassword, password, function(script, event)--异步
 --			gwjui.dump(event, "event")
@@ -209,6 +213,7 @@ function test27:onClickMemGetAllFile()
 				end
 			end
 			gwjui.printf("gwjgwj,total %d files", filenum)
+			TipsBanner.show("filenum:" .. filenum)
 		end)
 	end)
 end
