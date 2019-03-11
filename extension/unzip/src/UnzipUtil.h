@@ -3,9 +3,8 @@
 
 #include <string>
 
-typedef int LUA_FUNCTION;
-
 #ifdef GEN_BINDING
+typedef int LUA_FUNCTION;
 typedef int LUA_BUFFER;
 #else
 #include "unzip.h"

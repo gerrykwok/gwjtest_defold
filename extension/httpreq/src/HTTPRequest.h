@@ -8,7 +8,6 @@
 
 #ifdef GEN_BINDING
 typedef int LUA_FUNCTION;
-typedef int LUA_STRING;
 typedef int LUA_BUFFER;
 typedef void CURL;
 typedef unsigned int size_t;
