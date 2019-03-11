@@ -7,6 +7,7 @@
 #endif
 #include <sstream> //for std::stringbuf
 #include <stdlib.h>//for atoi
+#include <extension/luajavaoc/src/LuaValue.h>//for LUA_BUFFER
 
 #define DEFAULT_TIMEOUT			10 // 10 seconds
 #define BUFFER_CHUNK_SIZE 		32768 // 32 KB

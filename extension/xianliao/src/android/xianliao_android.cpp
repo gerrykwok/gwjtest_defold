@@ -1,7 +1,7 @@
 #if defined(DM_PLATFORM_ANDROID)
 
-#include <extension/luajavaoc/src/android/luajavaoc_android.h>
 #include "../xianliao.h"
+#include <extension/luajavaoc/src/android/luajavaoc_android.h>
 
 #define XIANLIAO_CLASS	"com.xishanju.plm.xianliao.XianliaoUtil"
 

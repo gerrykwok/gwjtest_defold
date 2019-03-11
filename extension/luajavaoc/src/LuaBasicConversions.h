@@ -38,12 +38,7 @@ extern "C" {
 }
 #endif
 //#include "tolua_fix.h"
-
-typedef struct
-{
-	void *ptr;
-	size_t size;
-} LUA_BUFFER;
+#include "LuaValue.h"
 
 extern std::unordered_map<std::string, std::string>  g_luaType;
 extern std::unordered_map<std::string, std::string>  g_typeCast;

@@ -9,11 +9,6 @@
 
 typedef int LUA_FUNCTION;
 typedef int LUA_STRING;
-typedef struct
-{
-	void *ptr;
-	size_t size;
-} LUA_BUFFER;
 
 void httpreq_printCurlVersion();
 //something like "192.168.2.2:8888"

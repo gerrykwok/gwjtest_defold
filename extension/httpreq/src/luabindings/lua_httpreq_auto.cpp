@@ -1,6 +1,6 @@
 #include "lua_httpreq_auto.hpp"
-#include "../HTTPRequest.h"
 #include "external_include.h"
+#include "../HTTPRequest.h"
 
 int lua_httpreq_HTTPRequest_getErrorCode(lua_State* tolua_S)
 {

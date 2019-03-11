@@ -1,8 +1,8 @@
 #if defined(DM_PLATFORM_ANDROID)
 
 #include <stdlib.h>
-#include <extension/luajavaoc/src/android/luajavaoc_android.h>
 #include "../gaode.h"
+#include <extension/luajavaoc/src/android/luajavaoc_android.h>
 
 void gaode_onAppInit(const char *environment)
 {

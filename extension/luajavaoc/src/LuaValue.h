@@ -38,6 +38,11 @@
 typedef int LUA_FUNCTION;
 typedef int LUA_TABLE;
 typedef int LUA_STRING;
+typedef struct
+{
+	void *ptr;
+	size_t size;
+} LUA_BUFFER;
 
 class LuaValue;
 
