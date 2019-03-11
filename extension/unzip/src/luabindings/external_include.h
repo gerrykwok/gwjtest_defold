@@ -1,6 +1,6 @@
 #pragma once
 
-extern int ext_registerLuaCallback(lua_State* L, int index);
+#include <extension/luajavaoc/src/luacallback.h>
 
 //tolua++.h
 #include <extension/luajavaoc/src/tolua/tolua++.h>

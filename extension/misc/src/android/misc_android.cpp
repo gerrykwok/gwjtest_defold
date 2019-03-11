@@ -2,6 +2,7 @@
 
 #include "../misc.h"
 #include <stdlib.h>
+#include <extension/luajavaoc/src/android/luajavaoc_android.h>
 
 int misc_installApk(lua_State *L)
 {
@@ -33,8 +34,6 @@ int misc_androidRequestPermissions(lua_State *L)
 {
 	return ext_callNativeStaticMethod("com.xishanju.plm.misc.MiscFunc", "requestPermissions", L, -1);
 }
-
-extern void ext_callLuaCallbackInAndroid(JNIEnv *env, jint callback, jstring value, bool unregister);
 
 extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_misc_MiscFunc_nativeNotifyRequestPermissionResult(JNIEnv *env, jclass clz, jint callback, jstring value)
 {

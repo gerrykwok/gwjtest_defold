@@ -1,9 +1,8 @@
 #if defined(DM_PLATFORM_ANDROID)
 
 #include <stdlib.h>
+#include <extension/luajavaoc/src/android/luajavaoc_android.h>
 #include "../gaode.h"
-
-extern void ext_callLuaCallbackInAndroid(JNIEnv *env, jint callback, jstring value, bool unregister);
 
 void gaode_onAppInit(const char *environment)
 {

@@ -3,10 +3,9 @@
 #include <dmsdk/sdk.h>
 #include <functional>
 #include "../wechat.h"
+#include <extension/luajavaoc/src/android/luajavaoc_android.h>
 
 #define WECHAT_CLASS	"com.xishanju.plm.wechat.PlatformWechat"
-
-extern void ext_callLuaCallbackInAndroid(JNIEnv *env, jint callback, jstring value, bool unregister);
 
 extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_PlatformWechat_notifyLua(JNIEnv *env, jclass clz, jint callback, jstring value)
 {

@@ -3,8 +3,7 @@
 #include "../crasheye.h"
 #include "crasheye_ios_v2.6.3/Crasheye.h"
 #import "CrasheyeUtil.h"
-
-extern NSDictionary* ext_NSDictionaryFromLuaTable(lua_State *L, int index);
+#include <extension/luajavaoc/src/ios/luajavaoc_ios.h>
 
 void crasheye_onAppInit(const char *environment)
 {

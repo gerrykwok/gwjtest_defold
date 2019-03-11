@@ -3,6 +3,7 @@
 #include <dmsdk/sdk.h>
 #include <string>
 #include <functional>
+#include <extension/luajavaoc/src/luacallback.h>
 
 //闲聊appid，用于闲聊登录和闲聊分享
 //运营:
@@ -22,9 +23,3 @@ void xianliao_onAppInit(const char *environment);
 int xianliao_login(lua_State *L);
 int xianliao_logout(lua_State *L);
 int xianliao_share(lua_State *L);
-
-extern void ext_unregisterLuaCallback(int callbackId);
-extern void ext_invokeLuaCallbackWithString(int callbackId, const char *value);
-extern void ext_performInUpdateThread(const std::function<void(void)> &func);
-extern std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
-extern int ext_callNativeStaticMethod(const char *clazz, const char *method, lua_State *L, int idxParam);
