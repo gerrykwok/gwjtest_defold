@@ -4,24 +4,24 @@ platforms:
     arm64-ios:
         context:
             frameworks: ["AVFoundation", "Accelerate", "SystemConfiguration", "CoreMedia", "AudioToolbox", "CoreTelephony", "CFNetwork"]
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++", "resolv.9"]
+            flags:      []
+            libs:       ["resolv.9"]
 
     armv7-ios:
         context:
             frameworks: ["AVFoundation", "Accelerate", "SystemConfiguration", "CoreMedia", "AudioToolbox", "CoreTelephony", "CFNetwork"]
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++", "resolv.9"]
+            flags:      []
+            libs:       ["resolv.9"]
 
     armv7-android:
         context:
-            flags:      ["-std=c++11"]
+            flags:      []
 
     x86_64-osx:
         context:
             frameworks: ["AVFoundation", "AudioToolbox", "VideoToolbox", "CoreAudio", "CoreServices", "CoreFoundation", "AudioUnit", "CoreMedia", "CoreWLAN", "SystemConfiguration"]
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++", "resolv.9"]
+            flags:      []
+            libs:       ["resolv.9"]
 
     x86_64-win32:
         context:

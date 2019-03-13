@@ -3,23 +3,23 @@ name: "unzip"
 platforms:
     arm64-ios:
         context:
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      []
+            libs:       []
             defines:    ["USE_FILE32API"]
 
     armv7-ios:
         context:
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      []
+            libs:       []
             defines:    ["USE_FILE32API"]
 
     armv7-android:
         context:
-            flags:      ["-std=c++11"]
+            flags:      []
             defines:    ["USE_FILE32API"]
 
     x86_64-osx:
         context:
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      []
+            libs:       []
             defines:    ["USE_FILE32API"]

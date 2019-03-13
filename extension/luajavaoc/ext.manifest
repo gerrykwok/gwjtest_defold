@@ -3,19 +3,19 @@ name: "luajavaoc"
 platforms:
     arm64-ios:
         context:
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      []
+            libs:       []
 
     armv7-ios:
         context:
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      []
+            libs:       []
 
     armv7-android:
         context:
-            flags:      ["-std=c++11"]
+            flags:      []
 
     x86_64-osx:
         context:
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      []
+            libs:       []

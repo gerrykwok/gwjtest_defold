@@ -1,7 +1,64 @@
+# App manifest generated Thu Sep 06 2018 16:46:15 GMT+0800 (中国标准时间)
+# Settings: Clang
 platforms:
-    x86_64-win32:
+    x86_64-osx:
         context:
-            use-clang: true
+            excludeLibs: []
+            excludeSymbols: []
+            libs: ["c++"]
+            flags: ["-std=c++11", "-stdlib=libc++"]
+            linkFlags: []
+
+    x86_64-linux:
+        context:
+            excludeLibs: []
+            excludeSymbols: []
+            libs: []
+            linkFlags: []
+
+    js-web:
+        context:
+            excludeLibs: []
+            excludeSymbols: []
+            libs: []
+            flags:      ["-std=c++11", "-stdlib=libc++"]
+            linkFlags: []
+
     x86-win32:
         context:
-            use-clang: true
+            excludeLibs: []
+            excludeSymbols: []
+            libs: []
+            linkFlags: []
+
+    x86_64-win32:
+        context:
+            excludeLibs: []
+            excludeSymbols: []
+            libs: []
+            linkFlags: []
+
+    armv7-android:
+        context:
+            excludeLibs: []
+            excludeSymbols: []
+            libs: []
+            linkFlags: []
+            flags: ["-std=c++11"]
+
+    armv7-ios:
+        context:
+            excludeLibs: []
+            excludeSymbols: []
+            libs: ["c++"]
+            flags: ["-std=c++11", "-stdlib=libc++"]
+            linkFlags: []
+
+    arm64-ios:
+        context:
+            excludeLibs: []
+            excludeSymbols: []
+            libs: ["c++"]
+            flags: ["-std=c++11", "-stdlib=libc++"]
+            linkFlags: []
+

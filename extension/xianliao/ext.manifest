@@ -3,21 +3,21 @@ name: "xianliao"
 platforms:
     armv7-android:
         context:
-            flags:      ["-std=c++11"]
+            flags:      []
 
     arm64-ios:
         context:
-            libs:       ["c++"]
-            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       []
+            flags:      []
             linkFlags:  ["-ObjC"]
 
     armv7-ios:
         context:
-            libs:       ["c++"]
-            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       []
+            flags:      []
             linkFlags:  ["-ObjC"]
 
     x86_64-osx:
         context:
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      []
+            libs:       []

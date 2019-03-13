@@ -3,23 +3,23 @@ name: "wechat"
 platforms:
     armv7-android:
         context:
-            flags:      ["-std=c++11"]
+            flags:      []
 
     arm64-ios:
         context:
             frameworks: ["JavaScriptCore", "SystemConfiguration", "Security", "CoreTelephony", "CFNetwork"]
-            libs:       ["z", "sqlite3", "c++"]
-            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       ["z", "sqlite3"]
+            flags:      []
             linkFlags:  ["-ObjC"]
 
     armv7-ios:
         context:
             frameworks: ["JavaScriptCore", "SystemConfiguration", "Security", "CoreTelephony", "CFNetwork"]
-            libs:       ["z", "sqlite3", "c++"]
-            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       ["z", "sqlite3"]
+            flags:      []
             linkFlags:  ["-ObjC"]
 
     x86_64-osx:
         context:
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      []
+            libs:       []

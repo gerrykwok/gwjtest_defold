@@ -3,25 +3,25 @@ name: "appleiap"
 platforms:
     armv7-android:
         context:
-            flags:      ["-std=c++11"]
+            flags:      []
 
     arm64-ios:
         context:
             frameworks: ["StoreKit"]
-            libs:       ["c++"]
-            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       []
+            flags:      []
             linkFlags:  ["-ObjC"]
             defines:    []
 
     armv7-ios:
         context:
             frameworks: ["StoreKit"]
-            libs:       ["c++"]
-            flags:      ["-std=c++11", "-stdlib=libc++"]
+            libs:       []
+            flags:      []
             linkFlags:  ["-ObjC"]
             defines:    []
 
     x86_64-osx:
         context:
-            flags:      ["-std=c++11", "-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      []
+            libs:       []
