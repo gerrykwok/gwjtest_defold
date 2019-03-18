@@ -1123,6 +1123,398 @@ gui.SIZE_MODE_AUTO = 1
 --- </summary>
 gui.SIZE_MODE_MANUAL = 1
 
+go = {}
+
+--- <summary>
+--- in-back
+--- </summary>
+go.EASING_INBACK = 1
+--- <summary>
+--- in-bounce
+--- </summary>
+go.EASING_INBOUNCE = 1
+--- <summary>
+--- in-circlic
+--- </summary>
+go.EASING_INCIRC = 1
+--- <summary>
+--- in-cubic
+--- </summary>
+go.EASING_INCUBIC = 1
+--- <summary>
+--- in-elastic
+--- </summary>
+go.EASING_INELASTIC = 1
+--- <summary>
+--- in-exponential
+--- </summary>
+go.EASING_INEXPO = 1
+--- <summary>
+--- in-out-back
+--- </summary>
+go.EASING_INOUTBACK = 1
+--- <summary>
+--- in-out-bounce
+--- </summary>
+go.EASING_INOUTBOUNCE = 1
+--- <summary>
+--- in-out-circlic
+--- </summary>
+go.EASING_INOUTCIRC = 1
+--- <summary>
+--- in-out-cubic
+--- </summary>
+go.EASING_INOUTCUBIC = 1
+--- <summary>
+--- in-out-elastic
+--- </summary>
+go.EASING_INOUTELASTIC = 1
+--- <summary>
+--- in-out-exponential
+--- </summary>
+go.EASING_INOUTEXPO = 1
+--- <summary>
+--- in-out-quadratic
+--- </summary>
+go.EASING_INOUTQUAD = 1
+--- <summary>
+--- in-out-quartic
+--- </summary>
+go.EASING_INOUTQUART = 1
+--- <summary>
+--- in-out-quintic
+--- </summary>
+go.EASING_INOUTQUINT = 1
+--- <summary>
+--- in-out-sine
+--- </summary>
+go.EASING_INOUTSINE = 1
+--- <summary>
+--- in-quadratic
+--- </summary>
+go.EASING_INQUAD = 1
+--- <summary>
+--- in-quartic
+--- </summary>
+go.EASING_INQUART = 1
+--- <summary>
+--- in-quintic
+--- </summary>
+go.EASING_INQUINT = 1
+--- <summary>
+--- in-sine
+--- </summary>
+go.EASING_INSINE = 1
+--- <summary>
+--- linear interpolation
+--- </summary>
+go.EASING_LINEAR = 1
+--- <summary>
+--- out-back
+--- </summary>
+go.EASING_OUTBACK = 1
+--- <summary>
+--- out-bounce
+--- </summary>
+go.EASING_OUTBOUNCE = 1
+--- <summary>
+--- out-circlic
+--- </summary>
+go.EASING_OUTCIRC = 1
+--- <summary>
+--- out-cubic
+--- </summary>
+go.EASING_OUTCUBIC = 1
+--- <summary>
+--- out-elastic
+--- </summary>
+go.EASING_OUTELASTIC = 1
+--- <summary>
+--- out-exponential
+--- </summary>
+go.EASING_OUTEXPO = 1
+--- <summary>
+--- out-in-back
+--- </summary>
+go.EASING_OUTINBACK = 1
+--- <summary>
+--- out-in-bounce
+--- </summary>
+go.EASING_OUTINBOUNCE = 1
+--- <summary>
+--- out-in-circlic
+--- </summary>
+go.EASING_OUTINCIRC = 1
+--- <summary>
+--- out-in-cubic
+--- </summary>
+go.EASING_OUTINCUBIC = 1
+--- <summary>
+--- out-in-elastic
+--- </summary>
+go.EASING_OUTINELASTIC = 1
+--- <summary>
+--- out-in-exponential
+--- </summary>
+go.EASING_OUTINEXPO = 1
+--- <summary>
+--- out-in-quadratic
+--- </summary>
+go.EASING_OUTINQUAD = 1
+--- <summary>
+--- out-in-quartic
+--- </summary>
+go.EASING_OUTINQUART = 1
+--- <summary>
+--- out-in-quintic
+--- </summary>
+go.EASING_OUTINQUINT = 1
+--- <summary>
+--- out-in-sine
+--- </summary>
+go.EASING_OUTINSINE = 1
+--- <summary>
+--- out-quadratic
+--- </summary>
+go.EASING_OUTQUAD = 1
+--- <summary>
+--- out-quartic
+--- </summary>
+go.EASING_OUTQUART = 1
+--- <summary>
+--- out-quintic
+--- </summary>
+go.EASING_OUTQUINT = 1
+--- <summary>
+--- out-sine
+--- </summary>
+go.EASING_OUTSINE = 1
+--- <summary>
+--- loop backward
+--- </summary>
+go.PLAYBACK_LOOP_BACKWARD = 1
+--- <summary>
+--- loop forward
+--- </summary>
+go.PLAYBACK_LOOP_FORWARD = 1
+--- <summary>
+--- ping pong loop
+--- </summary>
+go.PLAYBACK_LOOP_PINGPONG = 1
+--- <summary>
+--- no playback
+--- </summary>
+go.PLAYBACK_NONE = 1
+--- <summary>
+--- once backward
+--- </summary>
+go.PLAYBACK_ONCE_BACKWARD = 1
+--- <summary>
+--- once forward
+--- </summary>
+go.PLAYBACK_ONCE_FORWARD = 1
+--- <summary>
+--- once ping pong
+--- </summary>
+go.PLAYBACK_ONCE_PINGPONG = 1
+
+--- <summary>
+--- animates a named property of the specified game object or component
+--- This is only supported for numerical properties. If the node property is already being animated, that animation will be canceled and replaced by the new one.
+--- 
+--- If a complete_function (lua function) is specified, that function will be called when the animation has completed. By starting a new animation in that function, several animations can be sequenced together. See the examples for more information.
+--- 
+--- If you call go.animate() from a game object's final() function, any passed complete_function will be ignored and never called upon animation completion.
+--- 
+--- See the properties guide for which properties can be animated and the animation guide for how to animate them.
+--- </summary>
+function go.animate(url, property, playback, to, easing, duration, delay, complete_function) end
+
+--- <summary>
+--- cancels all animations of the named property of the specified game object or component
+--- By calling this function, all stored animations of the given property will be canceled.
+--- 
+--- See the properties guide for which properties can be animated and the animation guide for how to animate them.
+--- </summary>
+function go.cancel_animations(url, property) end
+
+--- <summary>
+--- delete one or more game object instances
+--- Delete one or more game objects identified by id. Deletion is asynchronous meaning that the game object(s) are scheduled for deletion which will happen at the end of the current frame. Note that game objects scheduled for deletion will be counted against max_instances in "game.project" until they are actually removed.
+--- </summary>
+function go.delete(id, recursive) end
+
+--- <summary>
+--- gets a named property of the specified game object or component
+--- </summary>
+function go.get(url, property) end
+
+--- <summary>
+--- gets the id of an instance
+--- Returns or constructs an instance identifier. The instance id is a hash of the absolute path to the instance.
+---    If path is specified, it can either be absolute or relative to the instance of the calling script.
+---    If path is not specified, the id of the game object instance the script is attached to will be returned.
+--- </summary>
+function go.get_id(path) end
+
+--- <summary>
+--- gets the position of a game object instance
+--- The position is relative the parent (if any). Use go.get_world_position to retrieve the global world position.
+--- </summary>
+function go.get_position(id) end
+
+--- <summary>
+--- gets the rotation of the game object instance
+--- The rotation is relative to the parent (if any). Use go.get_world_rotation to retrieve the global world position.
+--- </summary>
+function go.get_rotation(id) end
+
+--- <summary>
+--- gets the 3D scale factor of the game object instance
+--- The scale is relative the parent (if any). Use go.get_world_scale to retrieve the global world 3D scale factor.
+--- </summary>
+function go.get_scale(id) end
+
+--- <summary>
+--- gets the uniform scale factor of the game object instance
+--- The uniform scale is relative the parent (if any). If the underlying scale vector is non-uniform the min element of the vector is returned as the uniform scale factor.
+--- </summary>
+function go.get_scale_uniform(id) end
+
+--- <summary>
+--- gets the game object instance world position
+--- Use go.get_position to retrieve the position relative to the parent.
+--- </summary>
+function go.get_world_position(id) end
+
+--- <summary>
+--- gets the game object instance world rotation
+--- Use go.get_rotation to retrieve the rotation relative to the parent.
+--- </summary>
+function go.get_world_rotation(id) end
+
+--- <summary>
+--- gets the game object instance world 3D scale factor
+--- Use go.get_scale to retrieve the 3D scale factor relative to the parent. This vector is derived by decomposing the transformation matrix and should be used with care. For most cases it should be fine to use go.get_world_scale_uniform instead.
+--- </summary>
+function go.get_world_scale(id) end
+
+--- <summary>
+--- gets the uniform game object instance world scale factor
+--- Use go.get_scale_uniform to retrieve the scale factor relative to the parent.
+--- </summary>
+function go.get_world_scale_uniform(id) end
+
+--- <summary>
+--- define a property for the script
+--- This function defines a property which can then be used in the script through the self-reference. The properties defined this way are automatically exposed in the editor in game objects and collections which use the script. Note that you can only use this function outside any callback-functions like init and update.
+--- </summary>
+function go.property(name, value) end
+
+--- <summary>
+--- sets a named property of the specified game object or component
+--- </summary>
+function go.set(url, property, value) end
+
+--- <summary>
+--- sets the parent for a specific game object instance
+--- Sets the parent for a game object instance. This means that the instance will exist in the geometrical space of its parent, like a basic transformation hierarchy or scene graph. If no parent is specified, the instance will be detached from any parent and exist in world space.
+--- </summary>
+function go.set_parent(id, parent_id, keep_world_transform) end
+
+--- <summary>
+--- sets the position of the game object instance
+--- The position is relative to the parent (if any). The global world position cannot be manually set.
+--- </summary>
+function go.set_position(position, id) end
+
+--- <summary>
+--- sets the rotation of the game object instance
+--- The rotation is relative to the parent (if any). The global world rotation cannot be manually set.
+--- </summary>
+function go.set_rotation(rotation, id) end
+
+--- <summary>
+--- sets the scale factor of the game object instance
+--- The scale factor is relative to the parent (if any). The global world scale factor cannot be manually set.
+--- 
+--- Physics are currently not affected when setting scale from this function.
+--- parameters:
+---      scale: (number|vector3) vector or uniform scale factor, must be greater than 0
+--- </summary>
+function go.set_scale(scale, id) end
+
+profiler = {}
+
+--- <summary>
+--- enables or disables the on-screen profiler ui
+--- Creates and shows or hides and destroys the on-sceen profiler ui
+--- 
+--- The profiler is a real-time tool that shows the numbers of milliseconds spent in each scope per frame as well as counters. The profiler is very useful for tracking down performance and resource problems.
+--- </summary>
+function profiler.enable_ui(enabled) end
+
+--- <summary>
+--- get current CPU usage for app reported by OS
+--- Get the percent of CPU usage by the application, as reported by the OS.
+--- 
+--- This function is not available on HTML5.
+--- 
+--- For some platforms ( Android, Linux and Windows), this information is only available by default in the debug version of the engine. It can be enabled in release version as well by checking track_cpu under profiler in the game.project file. (This means that the engine will sample the CPU usage in intervalls during execution even in release mode.)
+--- </summary>
+function profiler.get_cpu_usage() end
+
+--- <summary>
+--- get current memory usage for app reported by OS
+--- Get the amount of memory used (resident/working set) by the application in bytes, as reported by the OS.
+--- 
+--- This function is not available on HTML5.
+--- </summary>
+function profiler.get_memory_usage() end
+
+--- <summary>
+--- get the number of recorded frames in the on-screen profiler ui
+--- Get the number of recorded frames in the on-screen profiler ui recording buffer
+--- </summary>
+function profiler.recorded_frame_count() end
+
+--- <summary>
+--- sets the the on-screen profiler ui mode
+--- Set the on-screen profile mode - run, pause, record or show peak frame
+--- </summary>
+function profiler.set_ui_mode(mode) end
+
+--- <summary>
+--- sets the the on-screen profiler ui view mode
+--- Set the on-screen profile view mode - minimized or expanded
+--- </summary>
+function profiler.set_ui_view_mode(mode) end
+
+--- <summary>
+--- Shows or hides the vsync wait time in the on-screen profiler ui
+--- Shows or hides the time the engine waits for vsync in the on-screen profiler
+--- 
+--- Each frame the engine waits for vsync and depending on your vsync settings and how much time your game logic takes this time can dwarf the time in the game logic making it hard to see details in the on-screen profiler graph and lists.
+--- 
+--- Also, by hiding this the FPS times in the header show the time spent each time excuding the time spent waiting for vsync. This shows you how long time your game is spending actively working each frame.
+--- 
+--- This setting also effects the display of recorded frames but does not affect the actual recorded frames so it is possible to toggle this on and off when viewing recorded frames.
+--- 
+--- By default the vsync wait times is displayed in the profiler.
+--- </summary>
+function profiler.set_ui_vsync_wait_visible(visible) end
+
+--- <summary>
+--- displays a previously recorded frame in the on-screen profiler ui
+--- Pauses and displays a frame from the recording buffer in the on-screen profiler ui
+--- The frame to show can either be an absolute frame or a relative frame to the current frame.
+--- Parameters
+--- frame_index: a table where you specify one of the following parameters:
+---     distance: The offset from the currently displayed frame (this is truncated between zero and the number of recorded frames)
+---     frame: The frame index in the recording buffer (1 is first recorded frame)
+--- </summary>
+function profiler.view_recorded_frame(frame_index) end
+
 sys = {}
 
 --- <summary>
@@ -1280,3 +1672,63 @@ sys.NETWORK_CONNECTED_CELLULAR = 0
 --- no network connection found
 --- </summary>
 sys.NETWORK_DISCONNECTED = 0
+
+timer = {}
+
+timer.INVALID_TIMER_HANDLE = 0
+
+--- <summary>
+--- You may cancel a timer from inside a timer callback. Cancelling a timer that is already executed or cancelled is safe.
+--- return: true if the timer was active, false if the timer is already cancelled / complete
+--- </summary>
+function timer.cancel(handle) end
+
+--- <summary>
+--- Adds a timer and returns a unique handle
+--- 
+--- You may create more timers from inside a timer callback.
+--- 
+--- Using a delay of 0 will result in a timer that triggers at the next frame just before script update functions.
+--- 
+--- If you want a timer that triggers on each frame, set delay to 0.0f and repeat to true.
+--- 
+--- Timers created within a script will automatically die when the script is deleted.
+--- 
+--- callback: function(self, handle, time_elapsed)
+--- return: identifier for the create timer, returns timer.INVALID_TIMER_HANDLE if the timer can not be created
+--- </summary>
+function timer.delay(delay_in_second, bRepeat, callback) end
+
+msg = {}
+
+--- <summary>
+--- Post a message to a receiving URL. The most common case is to send messages to a component. If the component part of the receiver is omitted, the message is broadcast to all components in the game object.
+--- 
+--- The following receiver shorthands are available:
+--- 
+---     "." the current game object
+---     "#" the current component
+--- 
+--- There is a 2 kilobyte limit to the message parameter table size.
+--- </summary>
+function msg.post(receiver, message_id, message) end
+
+--- <summary>
+--- overloaded:
+---      #1 ():
+---          This is equivalent to msg.url(nil) or msg.url("#"), which creates an url to the current script component.
+---      #2 (urlstring):
+---          The format of the string must be [socket:][path][#fragment], which is similar to a HTTP URL. When addressing instances:
+---          
+---              socket is the name of a valid world (a collection)
+---              path is the id of the instance, which can either be relative the instance of the calling script or global
+---              fragment would be the id of the desired component
+---          
+---          In addition, the following shorthands are available:
+---          
+---              "." the current game object
+---              "#" the current component
+---          
+---      #3 ([socket], [path], [fragment])
+--- </summary>
+function msg.url() end
