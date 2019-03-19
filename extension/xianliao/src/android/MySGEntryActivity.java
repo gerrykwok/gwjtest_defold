@@ -1,7 +1,6 @@
-package com.xsjplm.plm.sgapi;
+package com.xishanju.plm;
 
 import java.util.Locale;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,7 +17,7 @@ import org.xianliao.im.sdk.modelmsg.SendAuth;
 
 import com.xishanju.plm.xianliao.XianliaoUtil;
 
-public class SGEntryActivity extends Activity implements ISGAPIEventHandler
+public class MySGEntryActivity extends Activity implements ISGAPIEventHandler
 {
 	ISGAPI m_api;
 	@Override

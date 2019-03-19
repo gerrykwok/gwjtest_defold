@@ -1,4 +1,4 @@
-package com.xsjplm.plm.wxapi;
+package com.xishanju.plm;
 
 import java.util.Locale;
 
@@ -13,12 +13,11 @@ import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import com.xishanju.plm.wechat.PlatformWechat;
 import com.xishanju.plm.wechat.ShareUtil;
 
-public class WXEntryActivity extends Activity implements IWXAPIEventHandler
+public class MyWXEntryActivity extends Activity implements IWXAPIEventHandler
 {
 	private IWXAPI m_api;
 	@Override

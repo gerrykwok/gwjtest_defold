@@ -1,4 +1,4 @@
-package com.xsjplm.plm.wxapi;
+package com.xishanju.plm;
 
 import java.util.Locale;
 
@@ -16,12 +16,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import com.xishanju.plm.wechat.WeixinPayUtil;
 
-/**
- * 微信支付回调类
- * @author guoweiji
- * 一定要用该包名和类名，否则无法回调
- */
-public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler
+public class MyWXPayEntryActivity extends Activity implements IWXAPIEventHandler
 {
 	private IWXAPI m_api;
 	@Override
