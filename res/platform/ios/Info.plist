@@ -127,6 +127,16 @@
                     <key>CFBundleTypeRole</key>
                     <string>Editor</string>
                     <key>CFBundleURLName</key>
+                    <string>wechattest</string>
+                    <key>CFBundleURLSchemes</key>
+                    <array>
+                        <string>wx4452e2c2c7b10700</string>
+                    </array>
+                </dict>
+                <dict>
+                    <key>CFBundleTypeRole</key>
+                    <string>Editor</string>
+                    <key>CFBundleURLName</key>
                     <string>xianliao</string>
                     <key>CFBundleURLSchemes</key>
                     <array>
@@ -139,6 +149,7 @@
         <array>
                 {{#application-queries-schemes}}<string>{{.}}</string>{{/application-queries-schemes}}
                 <string>wechat</string>
+                <string>weixin</string>
                 <string>xianliao</string>
         </array>
 
