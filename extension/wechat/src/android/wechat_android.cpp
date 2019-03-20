@@ -12,10 +12,13 @@ extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_PlatformWechat_no
 	ext_callLuaCallbackInAndroid(env, callback, value, true);
 }
 
-void wechat_onAppInit()
+void wechat_onAppInit(const char *environment)
 {
 	bool ok;
-	ext_callJavaStaticMethod(WECHAT_CLASS, "init", WECHAT_APPID, &ok);
+	const char *appid;
+	if(strcmp(environment, "development") == 0 || strcmp(environment, "test") == 0) appid = WECHAT_APPID_TEST;
+	else appid = WECHAT_APPID_FORMAL;
+	ext_callJavaStaticMethod(WECHAT_CLASS, "init", appid, &ok);
 }
 
 int wechat_login(lua_State *L)

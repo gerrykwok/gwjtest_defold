@@ -5,11 +5,16 @@
 #import "AppControllerWechat.h"
 
 static AppControllerWechat* g_appDelegate;
-void wechat_onAppInit()
+void wechat_onAppInit(const char *environment)
 {
 	if(!g_appDelegate)
 	{
+		NSString *appid;
+		if(strcmp(environment, "development") == 0 || strcmp(environment, "test") == 0) appid = @WECHAT_APPID_TEST;
+		else appid = @WECHAT_APPID_FORMAL;
+
 		g_appDelegate = [[AppControllerWechat alloc] init];
+		[g_appDelegate setWxAppId:appid];
 		dmExtension::RegisteriOSUIApplicationDelegate(g_appDelegate);
 	}
 }

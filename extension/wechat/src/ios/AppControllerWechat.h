@@ -3,6 +3,9 @@
 
 @interface AppControllerWechat : NSObject <UIApplicationDelegate, WXApiDelegate>
 {
+	NSString *m_appid;
 }
+
+-(void)setWxAppId:(NSString*)appid;
 
 @end

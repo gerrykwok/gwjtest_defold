@@ -37,7 +37,7 @@ static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 {
 	if(!g_inited)
 	{
-		wechat_onAppInit();
+		wechat_onAppInit(dmConfigFile::GetString(params->m_ConfigFile, "project.environment", ""));
 		g_inited = true;
 	}
 	return dmExtension::RESULT_OK;

@@ -7,10 +7,14 @@
 
 @implementation AppControllerWechat
 
+-(void)setWxAppId:(NSString*)appid
+{
+	m_appid = appid;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	NSString *wechatAppId = [NSString stringWithUTF8String:WECHAT_APPID];
-	[WXApi registerApp:wechatAppId];
+	[WXApi registerApp:m_appid];
 	return YES;
 }
 

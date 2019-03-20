@@ -2,7 +2,7 @@
 
 #include "../wechat.h"
 
-void wechat_onAppInit()
+void wechat_onAppInit(const char *environment)
 {
 }
 
