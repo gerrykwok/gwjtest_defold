@@ -12,6 +12,24 @@ extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_PlatformWechat_no
 	ext_callLuaCallbackInAndroid(env, callback, value, true);
 }
 
+extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_PlatformWechat_delayNotifyLoginResult(JNIEnv *env, jclass clz, jint callback, jdouble timeout, jstring value)
+{
+	jstring value2 = (jstring)env->NewGlobalRef(value);
+	ext_performWithDelaySecond(timeout, [=](){
+		JavaVM *vm = dmGraphics::GetNativeAndroidJavaVM();
+		JNIEnv *env2;
+		vm->AttachCurrentThread(&env2, NULL);
+		const char *value_ = env2->GetStringUTFChars(value2, 0);
+
+		ext_invokeLuaCallbackWithString(callback, value_);
+		ext_unregisterLuaCallback(callback);
+
+		env2->ReleaseStringUTFChars(value2, value_);
+		env2->DeleteGlobalRef(value2);
+		vm->DetachCurrentThread();
+	});
+}
+
 void wechat_onAppInit(const char *environment)
 {
 	bool ok;
