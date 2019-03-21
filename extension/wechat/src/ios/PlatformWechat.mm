@@ -21,7 +21,7 @@ static int g_loginCallback = 0;
     [WXApi sendReq:req];
     if(timeout != 0)
     {
-        ext_performWithDelaySecond(timeout, [=](){
+        ext_performWithDelay(timeout, [=](){
             if(g_loginCallback > 0)
             {
                 const char *value = "{\"errCode\":-2, \"errStr\":\"cancel login\"}";

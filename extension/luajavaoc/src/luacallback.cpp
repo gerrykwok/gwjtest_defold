@@ -358,18 +358,11 @@ struct DELAY_STRUCT
 {
 	bool m_valid;
 	std::function<void(void)> m_callback;
-	int m_leftCount;
-};
-struct DELAY_STRUCT2
-{
-	bool m_valid;
-	std::function<void(void)> m_callback;
 	long m_startTimeSec, m_startTimeUsec;
 	double m_delay;
 };
 #define DELAY_MAX	8
 static DELAY_STRUCT g_allDelay[DELAY_MAX];
-static DELAY_STRUCT2 g_allDelay2[DELAY_MAX];
 
 void ext_performInUpdateThread(const std::function<void(void)> &func)
 {
@@ -398,28 +391,10 @@ void ext_unscheduleUpdate(unsigned int entryId)
 	}
 }
 
-void ext_performWithDelay(int delayInUpdateCount, const std::function<void(void)> &func)
+void ext_performWithDelay(float delayInSeconds, const std::function<void(void)> &func)
 {
 	DELAY_STRUCT *p, *pEnd;
 	p = g_allDelay;
-	pEnd = p + DELAY_MAX;
-	while(p < pEnd)
-	{
-		if(!p->m_valid)
-		{
-			p->m_callback = func;
-			p->m_leftCount = delayInUpdateCount;
-			p->m_valid = true;
-			break;
-		}
-		p++;
-	}
-}
-
-void ext_performWithDelaySecond(float delayInSeconds, const std::function<void(void)> &func)
-{
-	DELAY_STRUCT2 *p, *pEnd;
-	p = g_allDelay2;
 	pEnd = p + DELAY_MAX;
 	while(p < pEnd)
 	{
@@ -447,29 +422,11 @@ void ext_onUpdate()
 			func();
 		}
 	}
-	//delay in count
-	DELAY_STRUCT *p, *pEnd;
-	p = g_allDelay;
-	pEnd = p + DELAY_MAX;
-	while(p < pEnd)
-	{
-		if(p->m_valid)
-		{
-			p->m_leftCount--;
-			if(p->m_leftCount <= 0)
-			{
-				p->m_callback();
-				p->m_callback = nullptr;
-				p->m_valid = false;
-			}
-		}
-		p++;
-	}
 	//delay in seconds
 	long nowSec, nowUsec;
 	ext_gettimeofday(&nowSec, &nowUsec);
-	DELAY_STRUCT2 *p2, *pEnd2;
-	p2 = g_allDelay2;
+	DELAY_STRUCT *p2, *pEnd2;
+	p2 = g_allDelay;
 	pEnd2 = p2 + DELAY_MAX;
 	while(p2 < pEnd2)
 	{

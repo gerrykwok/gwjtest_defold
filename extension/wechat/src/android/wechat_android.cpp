@@ -15,7 +15,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_PlatformWechat_no
 extern "C" JNIEXPORT void JNICALL Java_com_xishanju_plm_wechat_PlatformWechat_delayNotifyLoginResult(JNIEnv *env, jclass clz, jint callback, jdouble timeout, jstring value)
 {
 	jstring value2 = (jstring)env->NewGlobalRef(value);
-	ext_performWithDelaySecond(timeout, [=](){
+	ext_performWithDelay(timeout, [=](){
 		JavaVM *vm = dmGraphics::GetNativeAndroidJavaVM();
 		JNIEnv *env2;
 		vm->AttachCurrentThread(&env2, NULL);

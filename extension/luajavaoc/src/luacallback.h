@@ -30,8 +30,7 @@ unsigned int ext_scheduleUpdate(const std::function<void(void)> &func);
 //移除在update中执行的代码
 void ext_unscheduleUpdate(unsigned int entryId);
 //延迟执行代码
-void ext_performWithDelay(int delayInUpdateCount, const std::function<void(void)> &func);
-void ext_performWithDelaySecond(float delayInSeconds, const std::function<void(void)> &func);
+void ext_performWithDelay(float delayInSeconds, const std::function<void(void)> &func);
 //根据lua栈中的参数转换为json字符串
 //idxParam指向参数的lua栈索引，是个table
 std::string ext_jsonFromLuaTable(lua_State *L, int index);

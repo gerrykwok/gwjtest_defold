@@ -30,7 +30,7 @@ static int test_delay(lua_State *L)
 	long sec,usec;
 	ext_gettimeofday(&sec, &usec);
 	dmLogInfo("gwjgwj,start delay %f,now=%ld.%ld", delay, sec, usec);
-	ext_performWithDelaySecond(delay, [=](){
+	ext_performWithDelay(delay, [=](){
 		long sec2, usec2;
 		ext_gettimeofday(&sec2, &usec2);
 		double d1, d2;
