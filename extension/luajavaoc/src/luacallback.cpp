@@ -459,6 +459,7 @@ void ext_onUpdate()
 			if(p->m_leftCount <= 0)
 			{
 				p->m_callback();
+				p->m_callback = nullptr;
 				p->m_valid = false;
 			}
 		}
@@ -478,6 +479,7 @@ void ext_onUpdate()
 			if(elapsed >= p2->m_delay)
 			{
 				p2->m_callback();
+				p2->m_callback = nullptr;
 				p2->m_valid = false;
 			}
 		}
