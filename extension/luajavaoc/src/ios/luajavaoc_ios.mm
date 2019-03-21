@@ -286,4 +286,9 @@ std::string ext_callNativeStaticMethodBase(const char *clazz, const char *method
 	}
 }
 
+int ext_gettimeofday(long *sec, long *usec)
+{
+	return 0;
+}
+
 #endif

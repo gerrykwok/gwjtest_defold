@@ -61,6 +61,14 @@ function test12:onEnter()
 	:onButtonClicked(function()
 		testext.test()
 	end)
+	--delay test
+	gwjui.ScaleButton.new({
+		main_id = "btn_test_delay",
+		maxScale = 1.1,
+	})
+	:onButtonClicked(function()
+		testext.test_delay(2.5)
+	end)
 end
 
 function test12:onExit()

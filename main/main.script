@@ -24,16 +24,20 @@ function init(self)
 	local msg = ext2.test()
 	ccprint("msg=%s", msg)
 	]]
-	local ok,ret = umeng.sendEvent({
-		name = "app_start_test",
-	})
+	if(umeng) then
+		local ok,ret = umeng.sendEvent({
+			name = "app_start_test",
+		})
+	end
 	if(agora) then
 		agora.initCallback(function(script, res)
 			local t = json.decode(res)
 			dump(t, "agora callback")
 		end)
 	end
-	testext.centerWindow()
+	if(testext) then
+		testext.centerWindow()
+	end
 end
 
 function final(self)
