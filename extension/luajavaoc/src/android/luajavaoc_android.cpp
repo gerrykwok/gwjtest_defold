@@ -286,4 +286,17 @@ void ext_callLuaCallbackInAndroid(JNIEnv *env, jint callback, jstring value, boo
 	ext_performInUpdateThread(func);
 }
 
+int ext_gettimeofday(long *sec, long *usec)
+{
+	int ret;
+	struct timeval now;
+	ret = gettimeofday(&now, NULL);
+	if(ret == 0)
+	{
+		if(sec) *sec = now.tv_sec;
+		if(usec) *usec = now.tv_usec;
+	}
+	return ret;
+}
+
 #endif

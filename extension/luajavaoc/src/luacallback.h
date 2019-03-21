@@ -31,6 +31,7 @@ unsigned int ext_scheduleUpdate(const std::function<void(void)> &func);
 void ext_unscheduleUpdate(unsigned int entryId);
 //延迟执行代码
 void ext_performWithDelay(int delayInUpdateCount, const std::function<void(void)> &func);
+void ext_performWithDelaySecond(float delayInSeconds, const std::function<void(void)> &func);
 //根据lua栈中的参数转换为json字符串
 //idxParam指向参数的lua栈索引，是个table
 std::string ext_jsonFromLuaTable(lua_State *L, int index);
@@ -50,3 +51,5 @@ std::string ext_callNativeStaticMethodBase(const char *clazz, const char *method
 //OC方法型如: +(NSString*) func:(NSDictionary*)params  返回值可任意
 //返回: 插入到lua栈的返回值个数
 int ext_callNativeStaticMethod(const char *clazz, const char *method, lua_State *L, int idxParam);
+//获取当前时间
+int ext_gettimeofday(long *sec, long *usec);

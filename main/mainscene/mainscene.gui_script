@@ -35,6 +35,7 @@ local alltest =
 }
 
 local function showBatteryInfo()
+	if(not misc) then return end
 	local level,charging = misc.getBatteryInfo()
 	local text = string.format("level:%d,plugged:%s", level, tostring(charging))
 	local node = gui.get_node("text_batteryinfo")
@@ -50,12 +51,14 @@ function init(self)
 		showBatteryInfo()
 	end)
 
-	local threadId = misc.getCurrentThreadId()
-	gwjui.printf("thread in init:%d", threadId);
-	misc.setAppEventListener(function(script, name)
+	if(misc) then
 		local threadId = misc.getCurrentThreadId()
-		gwjui.printf("threadid=%d,event name = %s", threadId, tostring(name))
-	end)
+		gwjui.printf("thread in init:%d", threadId);
+		misc.setAppEventListener(function(script, name)
+			local threadId = misc.getCurrentThreadId()
+			gwjui.printf("threadid=%d,event name = %s", threadId, tostring(name))
+		end)
+	end
 
 	self.m_listData = {}
 	for i,test in ipairs(alltest) do

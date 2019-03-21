@@ -360,8 +360,16 @@ struct DELAY_STRUCT
 	std::function<void(void)> m_callback;
 	int m_leftCount;
 };
+struct DELAY_STRUCT2
+{
+	bool m_valid;
+	std::function<void(void)> m_callback;
+	long m_startTimeSec, m_startTimeUsec;
+	double m_delay;
+};
 #define DELAY_MAX	8
 static DELAY_STRUCT g_allDelay[DELAY_MAX];
+static DELAY_STRUCT2 g_allDelay2[DELAY_MAX];
 
 void ext_performInUpdateThread(const std::function<void(void)> &func)
 {
@@ -408,6 +416,25 @@ void ext_performWithDelay(int delayInUpdateCount, const std::function<void(void)
 	}
 }
 
+void ext_performWithDelaySecond(float delayInSeconds, const std::function<void(void)> &func)
+{
+	DELAY_STRUCT2 *p, *pEnd;
+	p = g_allDelay2;
+	pEnd = p + DELAY_MAX;
+	while(p < pEnd)
+	{
+		if(!p->m_valid)
+		{
+			p->m_callback = func;
+			ext_gettimeofday(&p->m_startTimeSec, &p->m_startTimeUsec);
+			p->m_delay = delayInSeconds;
+			p->m_valid = true;
+			break;
+		}
+		p++;
+	}
+}
+
 void ext_onUpdate()
 {
 	if( !g_functionsToPerform.empty() ) {
@@ -420,6 +447,7 @@ void ext_onUpdate()
 			func();
 		}
 	}
+	//delay in count
 	DELAY_STRUCT *p, *pEnd;
 	p = g_allDelay;
 	pEnd = p + DELAY_MAX;
@@ -435,6 +463,25 @@ void ext_onUpdate()
 			}
 		}
 		p++;
+	}
+	//delay in seconds
+	long nowSec, nowUsec;
+	ext_gettimeofday(&nowSec, &nowUsec);
+	DELAY_STRUCT2 *p2, *pEnd2;
+	p2 = g_allDelay2;
+	pEnd2 = p2 + DELAY_MAX;
+	while(p2 < pEnd2)
+	{
+		if(p2->m_valid)
+		{
+			double elapsed = (double)(nowSec - p2->m_startTimeSec) + (double)(nowUsec - p2->m_startTimeUsec) / 1000000.0;
+			if(elapsed >= p2->m_delay)
+			{
+				p2->m_callback();
+				p2->m_valid = false;
+			}
+		}
+		p2++;
 	}
 	//schedule
 	if(!g_functionsToSchedule.empty())

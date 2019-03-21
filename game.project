@@ -25,7 +25,7 @@ shared_state = 1
 
 [android]
 app_icon_96x96 = /res/platform/android/android_icon96.png
-package = com.xsjplm.plmtest
+package = com.evakwok.plmtest
 iap_provider = 
 manifest = /res/platform/android/AndroidManifest.xml
 

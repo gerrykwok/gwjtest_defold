@@ -24,6 +24,24 @@ static int luatableToJson(lua_State *L)
 	return 1;
 }
 
+static int test_delay(lua_State *L)
+{
+	double delay = lua_tonumber(L, -1);
+	long sec,usec;
+	ext_gettimeofday(&sec, &usec);
+	dmLogInfo("gwjgwj,start delay %f,now=%ld.%ld", delay, sec, usec);
+	ext_performWithDelaySecond(delay, [=](){
+		long sec2, usec2;
+		ext_gettimeofday(&sec2, &usec2);
+		double d1, d2;
+		d1 = sec2 - sec;
+		d2 = usec2 - usec;
+		double elapsed = d1 + d2 / 1000000.0;
+		dmLogInfo("gwjgwj,delay reach,elapsed=%f", elapsed);
+	});
+	return 0;
+}
+
 static const luaL_reg Module_methods[] =
 {
 	{"test", test},
@@ -37,6 +55,7 @@ static const luaL_reg Module_methods[] =
 	{"printMacro", test_printMacro},
 #endif
 	{"centerWindow", test_centerWindow},
+	{"test_delay", test_delay},
 	{0, 0}
 };
 
