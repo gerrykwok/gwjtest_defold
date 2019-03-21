@@ -1,6 +1,7 @@
 #if defined(DM_PLATFORM_IOS)
 
 #include <dmsdk/sdk.h>
+#include <sys/time.h>
 #include "luajavaoc_ios.h"
 #include "../luacallback.h"
 
@@ -288,7 +289,15 @@ std::string ext_callNativeStaticMethodBase(const char *clazz, const char *method
 
 int ext_gettimeofday(long *sec, long *usec)
 {
-	return 0;
+	int ret;
+	struct timeval now;
+	ret = gettimeofday(&now, NULL);
+	if(ret == 0)
+	{
+		if(sec) *sec = now.tv_sec;
+		if(usec) *usec = now.tv_usec;
+	}
+	return ret;
 }
 
 #endif
