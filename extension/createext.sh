@@ -73,6 +73,7 @@ echo -e "}" >> $cpppath
 echo -e "" >> $cpppath
 echo -e "static dmExtension::Result extInit(dmExtension::Params* params)" >> $cpppath
 echo -e "{" >> $cpppath
+echo -e "	dmLogInfo("Registered %s Extension", MODULE_NAME);" >> $cpppath
 echo -e "	LuaInit(params->m_L);" >> $cpppath
 echo -e "	return dmExtension::RESULT_OK;" >> $cpppath
 echo -e "}" >> $cpppath
