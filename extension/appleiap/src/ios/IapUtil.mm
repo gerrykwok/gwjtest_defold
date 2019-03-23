@@ -2,6 +2,7 @@
 
 #import "IapUtil.h"
 #import "../appleiap.h"
+#include <extension/crypto/src/crypto.h>
 
 @implementation IapUtil
 

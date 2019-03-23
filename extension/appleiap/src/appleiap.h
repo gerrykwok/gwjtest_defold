@@ -2,7 +2,6 @@
 
 #include <dmsdk/sdk.h>
 #include <extension/luajavaoc/src/luacallback.h>
-#include <extension/crypto/src/crypto.h>
 
 int appleiap_init(lua_State *L);
 int appleiap_uninit(lua_State *L);
