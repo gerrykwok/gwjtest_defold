@@ -6,6 +6,7 @@
 #include "misc.h"
 
 static bool g_inited = false;
+static bool g_has_final = false;
 
 static const luaL_reg Module_methods[] =
 {
@@ -54,6 +55,7 @@ static dmExtension::Result ext_AppInit(dmExtension::AppParams* params)
 static dmExtension::Result ext_Init(dmExtension::Params* params)
 {
 	LuaInit(params->m_L);
+	g_has_final = false;
 	return dmExtension::RESULT_OK;
 }
 
@@ -64,7 +66,7 @@ static dmExtension::Result ext_AppFinal(dmExtension::AppParams* params)
 
 static dmExtension::Result ext_Final(dmExtension::Params* params)
 {
-	g_inited = false;
+	g_has_final = true;
 	return dmExtension::RESULT_OK;
 }
 
@@ -82,7 +84,7 @@ static void ext_OnEvent(dmExtension::Params* params, const dmExtension::Event* e
 		misc_invokeAppEventListener("EVENT_ID_ACTIVATEAPP");
 		break;
 	case dmExtension::EVENT_ID_DEACTIVATEAPP:
-		if(g_inited)
+		if(!g_has_final)
 			misc_invokeAppEventListener("EVENT_ID_DEACTIVATEAPP");
 		break;
 	}
