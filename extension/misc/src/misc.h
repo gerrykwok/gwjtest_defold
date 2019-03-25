@@ -16,4 +16,6 @@ int misc_androidGotoAppSetting(lua_State *L);
 int misc_getBatteryInfo(lua_State *L);
 int misc_setAppEventListener(lua_State *L);
 int misc_getCurrentThreadId(lua_State *L);
+int misc_vibrate(lua_State *L);
+void misc_doVibrate(float timeInSeconds);
 void misc_invokeAppEventListener(const char *res);

@@ -89,4 +89,9 @@ int misc_getCurrentThreadId(lua_State *L)
 	return 1;
 }
 
+void misc_doVibrate(float timeInSeconds)
+{
+	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+}
+
 #endif

@@ -26,6 +26,7 @@ static const luaL_reg Module_methods[] =
 	{"getBatteryInfo", misc_getBatteryInfo},
 	{"setAppEventListener", misc_setAppEventListener},
 	{"getCurrentThreadId", misc_getCurrentThreadId},
+	{"vibrate", misc_vibrate},
 	{0, 0}
 };
 

@@ -75,4 +75,52 @@ int misc_getBundleResourcePath(lua_State *L)
 	return 0;
 }
 
+struct DataContext
+{
+	float m_elapsed;
+	int m_xWnd, m_yWnd;
+	float m_timeInSeconds;
+	unsigned int m_handleUpdate;
+};
+
+void misc_doVibrate(float timeInSeconds)
+{
+	DataContext *data = new DataContext;
+	data->m_elapsed = 0;
+	NSWindow *mainWnd = dmGraphics::GetNativeOSXNSWindow();
+	data->m_xWnd = mainWnd.frame.origin.x; data->m_yWnd = mainWnd.frame.origin.y;
+	data->m_timeInSeconds = timeInSeconds;
+
+	long sec, usec;
+	ext_gettimeofday(&sec, &usec);
+	data->m_handleUpdate = ext_scheduleUpdate([=]() {
+		int offsetX, offsetY;
+		bool bEnd;
+		if(data->m_elapsed < data->m_timeInSeconds)
+		{
+			offsetX = rand() % 10 * (rand() > 16384 ? 1 : -1);
+			offsetY = rand() % 10 * (rand() > 16384 ? 1 : -1);
+
+			long sec2, usec2;
+			ext_gettimeofday(&sec2, &usec2);
+			data->m_elapsed = sec2 - sec + (float)(usec2 - usec) / 1000000.0f;
+			bEnd = false;
+		}
+		else
+		{
+			offsetX = offsetY = 0;
+			bEnd = true;
+		}
+
+		NSWindow *mainWnd = dmGraphics::GetNativeOSXNSWindow();
+		[mainWnd setFrameOrigin:NSMakePoint(data->m_xWnd+offsetX, data->m_yWnd+offsetY)];
+
+		if(bEnd)
+		{
+			ext_unscheduleUpdate(data->m_handleUpdate);
+			delete data;
+		}
+	});
+}
+
 #endif

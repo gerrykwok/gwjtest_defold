@@ -17,13 +17,14 @@ import android.net.Uri;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.os.Build;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.content.BroadcastReceiver;
 import android.os.BatteryManager;
 
 //import org.evakwok.tcplog.TcpLog;
 
-class MiscFunc
+public class MiscFunc
 {
 	public static final String TAG = "misc";
 //	private static TcpLog m_log;
@@ -34,6 +35,8 @@ class MiscFunc
 //		String serverIp = "10.11.133.31";
 //		m_log.init(ctx, serverIp, 1104);
 		batteryInit(ctx);
+		if(m_Vibrator == null)
+			m_Vibrator = (Vibrator)ctx.getSystemService(Context.VIBRATOR_SERVICE);
 		return "";
 	}
 
@@ -270,5 +273,18 @@ class MiscFunc
 	{
 		String str = String.format(Locale.US, "level:%d,charging:%d", m_batteryLevel, m_batteryPlugged);
 		return str;
+	}
+
+	static Vibrator m_Vibrator = null;
+	public static String vibrate(Context ctx, String params)
+	{
+		if(m_Vibrator == null)
+		{
+			return "failed";
+		}
+		long time;
+		time = Long.parseLong(params);
+		m_Vibrator.vibrate(time);
+		return "success";
 	}
 }

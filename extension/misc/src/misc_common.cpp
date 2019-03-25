@@ -49,3 +49,23 @@ void misc_invokeAppEventListener(const char *res)
 	if(g_appEventListener <= 0) return;
 	ext_invokeLuaCallbackWithString(g_appEventListener, res);
 }
+
+int misc_vibrate(lua_State *L)
+{
+	int top = lua_gettop(L);
+	if(top <= 0)
+	{
+		dmLogError("expecting param");
+		return 0;
+	}
+	if(!lua_isnumber(L, -1))
+	{
+		const char *t = misc_getLuaTypeDesc(L, -1);
+		dmLogError("param 1 is '%s', expecting number", t);
+		return 0;
+	}
+
+	float second = lua_tonumber(L, -1);
+	misc_doVibrate(second);
+	return 0;
+}

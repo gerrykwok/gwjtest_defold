@@ -79,4 +79,13 @@ int misc_getCurrentThreadId(lua_State *L)
 	return 1;
 }
 
+void misc_doVibrate(float timeInSeconds)
+{
+	bool ok;
+	char params[128];
+	long timeInMS = timeInSeconds * 1000;
+	sprintf(params, "%ld", timeInMS);
+	ext_callJavaStaticMethod("com.xishanju.plm.misc.MiscFunc", "vibrate", params, &ok);
+}
+
 #endif
