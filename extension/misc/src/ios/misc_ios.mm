@@ -4,6 +4,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #include <pthread.h>
+#import "AudioToolbox/AudioServices.h"
 
 int misc_installApk(lua_State *L)
 {
@@ -91,7 +92,11 @@ int misc_getCurrentThreadId(lua_State *L)
 
 void misc_doVibrate(float timeInSeconds)
 {
-	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+	SystemSoundID id = kSystemSoundID_Vibrate;
+	if(timeInSeconds == 10000) id = 1519;//短振 3D touch中的peek振动反馈
+	else if(timeInSeconds == 20000) id = 1520;//短振 3D touch中的pop振动反馈
+	else if(timeInSeconds == 30000) id = 1521;//连续三次短振动
+	AudioServicesPlaySystemSound(id);
 }
 
 #endif

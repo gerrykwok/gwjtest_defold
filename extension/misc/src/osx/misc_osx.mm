@@ -1,6 +1,7 @@
 #if defined(DM_PLATFORM_OSX)
 
 #import <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
 #include <pthread.h>
 #include "../misc.h"
 
@@ -112,7 +113,6 @@ void misc_doVibrate(float timeInSeconds)
 			bEnd = true;
 		}
 
-		NSWindow *mainWnd = dmGraphics::GetNativeOSXNSWindow();
 		[mainWnd setFrameOrigin:NSMakePoint(data->m_xWnd+offsetX, data->m_yWnd+offsetY)];
 
 		if(bEnd)
