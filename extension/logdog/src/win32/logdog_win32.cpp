@@ -21,13 +21,6 @@ void logdog_onAppInit()
 	}
 }
 
-int logdog_lualog(lua_State *L)
-{
-	const char *msg = lua_tostring(L, -1);
-	logdog_doLog(msg);
-	return 0;
-}
-
 void logdog_doLog(const char *message)
 {
 //	dmLogInfo("do log %s,logwnd=%lx", message, g_logWnd);

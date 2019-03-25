@@ -75,6 +75,13 @@ static void LuaInit(lua_State* L)
 	assert(top == lua_gettop(L));
 }
 
+int logdog_lualog(lua_State *L)
+{
+	const char *msg = lua_tostring(L, -1);
+	logdog_doLog(msg);
+	return 0;
+}
+
 static dmExtension::Result extAppInit(dmExtension::AppParams* params)
 {
 	if(!g_appInited)

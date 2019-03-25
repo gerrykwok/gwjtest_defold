@@ -6,9 +6,8 @@ void logdog_onAppInit()
 {
 }
 
-int logdog_lualog(lua_State *L)
+void logdog_doLog(const char *message)
 {
-	return 0;
 }
 
 #endif
