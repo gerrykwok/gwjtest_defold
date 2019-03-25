@@ -118,9 +118,9 @@ end
 
 function test23:onClickHttpReq()
 	local url = "http://qnweb.xsjplm.com/mj_beta_201806051000_1.apk"
---	url = "http://10.11.133.31/day%20tripper.mp3"
+	url = "http://10.11.133.31/day%20tripper.mp3"
 --	url = "http://10.11.133.31/gdmj-release.apk"
-	url = "http://10.11.133.32/invalid.aaa"
+--	url = "http://10.11.133.32/invalid.aaa"
 --	url = "http://dldir1.qq.com/weixin/android/weixin703android1400.apk"
 	local req
 	local dltotal = -1
@@ -128,10 +128,7 @@ function test23:onClickHttpReq()
 	self:setLoadingView(true)
 	req = httpreq.HTTPRequest:create(function(script, res)
 		local t = json.decode(res)
-		if(t.name ~= "progress") then
-			gwjui.printf("lua:httpreq callback,res=%s", tostring(res))
-			self:setLoadingView(false)
-		end
+
 		if(t.name == "progress") then
 			if(t.dltotal ~= dltotal) then
 				gwjui.printf("lua:progress: %d/%d", t.dltotal, t.total)
@@ -141,7 +138,13 @@ function test23:onClickHttpReq()
 			local size = gui.get_size(gui.get_node("progress1"))
 			size.x = size.x * t.dltotal / t.total
 			gui.set_size(gui.get_node("progress2"), size)
-		elseif(t.name == "completed") then
+			return
+		end
+
+		self.m_request = nil
+		gwjui.printf("lua:httpreq callback,res=%s", tostring(res))
+		self:setLoadingView(false)
+		if(t.name == "completed") then
 			local statusCode = req:getResponseStatusCode()
 			if(statusCode == 200) then
 				local len = req:getResponseDataLength()
