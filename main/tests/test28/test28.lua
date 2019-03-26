@@ -44,7 +44,7 @@ function test28:on_message(message_id, message, sender)
 end
 
 function test28:onClickVibrate()
-	self:doVibrate(2.5)
+	self:doVibrate(0.1)
 end
 
 function test28:onClickVibrate1()

@@ -1637,6 +1637,7 @@ function sys.load_resource(filename) end
 --- <summary>
 --- open url in default application
 --- Open URL in default application, typically a browser
+--- return: a boolean indicating if the url could be opened or not
 --- </summary>
 function sys.open_url(url) end
 
