@@ -65,12 +65,14 @@ static void LuaInit(lua_State* L)
 	lua_pop(L, 1);
 
 	//重载lua的print
+#if defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_OSX)
 	const luaL_reg global_functions[] = {
 		{ "print", lua_print },
 		{ nullptr, nullptr }
 	};
 	luaL_register(L, "_G", global_functions);
 	lua_pop(L, 1);
+#endif
 
 	assert(top == lua_gettop(L));
 }
