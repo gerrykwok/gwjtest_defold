@@ -1733,3 +1733,52 @@ function msg.post(receiver, message_id, message) end
 ---      #3 ([socket], [path], [fragment])
 --- </summary>
 function msg.url() end
+
+window = {}
+
+--- <summary>
+--- dimming mode off
+--- </summary>
+window.DIMMING_OFF = 0
+--- <summary>
+--- dimming mode on
+--- </summary>
+window.DIMMING_ON = 0
+--- <summary>
+--- dimming mode unknown
+--- </summary>
+window.DIMMING_UNKNOWN = 0
+--- <summary>
+--- focus gained window event
+--- </summary>
+window.WINDOW_EVENT_FOCUS_GAINED = 0
+--- <summary>
+--- focus lost window event
+--- </summary>
+window.WINDOW_EVENT_FOCUS_LOST = 0
+--- <summary>
+--- resized window event
+--- </summary>
+window.WINDOW_EVENT_RESIZED = 0
+
+--- <summary>
+--- Returns the current dimming mode set on a mobile device.
+--- The dimming mode specifies whether or not a mobile device should dim the screen after a period without user interaction.
+--- On platforms that does not support dimming, window.DIMMING_UNKNOWN is always returned.
+--- </summary>
+function window.get_dim_mode() end
+--- <summary>
+--- Sets the dimming mode on a mobile device.
+--- 
+--- The dimming mode specifies whether or not a mobile device should dim the screen after a period without user interaction. The dimming mode will only affect the mobile device while the game is in focus on the device, but not when the game is running in the background.
+--- 
+--- This function has no effect on platforms that does not support dimming.
+--- </summary>
+function window.set_dim_mode(mode) end
+--- <summary>
+--- Sets a window event listener.
+--- params:
+--- A callback which receives info about window events. Pass an empty function if you no longer wish to receive callbacks.
+--- function(self, event, data)
+--- </summary>
+function window.set_listener(callback) end
