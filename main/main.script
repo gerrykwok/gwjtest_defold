@@ -6,6 +6,7 @@ local function show(self, proxy)
 end
 
 function init(self)
+	window.set_dim_mode(window.DIMMING_OFF) --禁止屏幕休眠
 	msg.post(".", "acquire_input_focus")
 	self.m_curTest = 0
 	self.m_sceneSwitch = true
