@@ -287,4 +287,13 @@ public class MiscFunc
 		m_Vibrator.vibrate(time);
 		return "success";
 	}
+	
+	public static String goHome(Context ctx, String params)
+	{
+		Intent i= new Intent(Intent.ACTION_MAIN);
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		i.addCategory(Intent.CATEGORY_HOME);
+		ctx.startActivity(i);
+		return "success";
+	}
 }

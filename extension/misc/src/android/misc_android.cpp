@@ -88,4 +88,11 @@ void misc_doVibrate(float timeInSeconds)
 	ext_callJavaStaticMethod("com.xishanju.plm.misc.MiscFunc", "vibrate", params, &ok);
 }
 
+int misc_goHome(lua_State *L)
+{
+	bool ok;
+	ext_callJavaStaticMethod("com.xishanju.plm.misc.MiscFunc", "goHome", "", &ok);
+	return 0;
+}
+
 #endif

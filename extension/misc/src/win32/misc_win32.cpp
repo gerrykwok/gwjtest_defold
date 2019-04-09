@@ -101,4 +101,9 @@ void misc_doVibrate(float timeInSeconds)
 	});
 }
 
+int misc_goHome(lua_State *L)
+{
+	return 0;
+}
+
 #endif

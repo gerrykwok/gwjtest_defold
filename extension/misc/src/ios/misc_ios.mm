@@ -99,4 +99,9 @@ void misc_doVibrate(float timeInSeconds)
 	AudioServicesPlaySystemSound(id);
 }
 
+int misc_goHome(lua_State *L)
+{
+	return 0;
+}
+
 #endif
