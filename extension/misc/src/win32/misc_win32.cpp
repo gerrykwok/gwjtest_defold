@@ -103,6 +103,8 @@ void misc_doVibrate(float timeInSeconds)
 
 int misc_goHome(lua_State *L)
 {
+	HWND window = dmGraphics::GetNativeWindowsHWND();
+	::ShowWindow(window, SW_SHOWMINIMIZED);
 	return 0;
 }
 
