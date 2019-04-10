@@ -2,15 +2,12 @@ require("main.common.MiscUtil")
 local gwjui = require("gwjui.gwjui")
 
 local TextureCache = require("gwjui.TextureCache")
---local luaj = require("extension.cocosext.luaj")
---local luaoc = require("extension.cocosext.luaoc")
 local TipsBanner = require("main.common.tipsbanner.tipsbanner")
 local LoadingView = require("main.common.loading.LoadingView")
 
 local device = {}
 local info = sys.get_sys_info()
 local sysName = info.system_name
---ccprint("gwjgwj,system_name=%s", sysName)
 if(sysName == "Android") then
 	device.platform = "android"
 elseif(sysName == "iPhone OS") then
@@ -75,23 +72,7 @@ function test12:onExit()
 end
 
 function test12:on_message(message_id, message, sender)
-	if(message_id == hash("get_photo_result")) then
-		local localPath = message.path
-		local res = tonumber(message.res)
-		gwjui.dump(message, "get photo result")
-		if(tostring(res) == "1") then
-			TextureCache.getInstance():removeTextureForKey(localPath)
-			local count = 0
-			local function func()
-				count = count + 1
-				if(count >= 4) then
-					gwjui.unscheduleUpdate(func)
-					self:onGetPhotoResult(res, localPath)
-				end
-			end
-			gwjui.scheduleUpdate(func)
-		end
-	elseif(message_id == hash("upload_result")) then
+	if(message_id == hash("upload_result")) then
 		self:setLoadingView(false)
 		local str = string.format("上传结果:%s", tostring(message.res))
 		TipsBanner.show(str)
@@ -102,40 +83,67 @@ function test12:onGetPhoto(fromCamera)
 	local imageWidth = 320
 	local imageHeight = 320
 	gwjui.printf("gwjgwj,onGetPhoto")
-	local localPath = sys.get_save_file("plm", "avatarout.jpg")
+	local localPath = sys.get_save_file(sys.get_config("project.title"), "avatarout.jpg")
 	--localPath = "/storage/emulated/0/avatarout.png"
-	local source = fromCamera and "camera" or "gallery"
-	gwjui.printf("gwjgwj,get from %s,localPath=%s", source, localPath)
-	if(device.platform == "android") then
-		gwjui.printf("LuaJavaBridge=%s(%s)", tostring(LuaJavaBridge), type(LuaJavaBridge))
-		--getPhoto(Context ctx, int fromCamera, String localPath, int width, int height, int luaCallbackFunction)
-		local javaClassName = "com/xishanju/plm/plmext/plmext"
-		local javaMethodName = "getPhoto"
-		local javaParams = {
-			fromCamera and 1 or 0,
-			localPath,
-			imageWidth,
-			imageHeight,
-			function(res)
-				gwjui.printf("gwjgwj,getPhoto res=%s", tostring(res))
-				msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
+	gwjui.printf("gwjgwj,get from %s,localPath=%s", fromCamera and "camera" or "gallery", localPath)
+	if(takephoto == nil) then return end
+	local ok,res = takephoto.getPhoto({
+		fromCamera = fromCamera,
+		localPath = localPath,
+		imageWidth = imageWidth,
+		imageHeight = imageHeight,
+		callback = function(script, res)
+			gwjui.printf("gwjgwj,callback res = %s", tostring(res))
+			local t = json.decode(res)
+
+			if(t.result == 1) then
+				TextureCache.getInstance():removeTextureForKey(localPath)
+				local count = 0
+				local function func()
+					count = count + 1
+					if(count >= 4) then
+						gwjui.unscheduleUpdate(func)
+						self:onGetPhotoResult(t.result, localPath)
+					end
+				end
+				gwjui.scheduleUpdate(func)
+			else
+				TipsBanner.show("取消")
 			end
-		}
-		local javaMethodSig = "(ILjava/lang/String;III)V"
-		luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
-	elseif(device.platform == "ios") then
-		gwjui.printf("LuaObjcBridge=%s(%s)", tostring(LuaObjcBridge), type(LuaObjcBridge))
-		local args = {
-			fromCamera = fromCamera and 1 or 0,--是否从摄像头获取
-			path = localPath,
-			width = imageWidth,
-			height = imageHeight,
-			callback = function(res)
-				msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
-			end
-		}
-		luaoc.callStaticMethod("TakePhoto", "takePicture", args)
-	end
+		end,
+	})
+	gwjui.printf("takephoto,ok=%s,res=%s", tostring(ok), tostring(res))
+
+--	if(device.platform == "android") then
+--		gwjui.printf("LuaJavaBridge=%s(%s)", tostring(LuaJavaBridge), type(LuaJavaBridge))
+--		--getPhoto(Context ctx, int fromCamera, String localPath, int width, int height, int luaCallbackFunction)
+--		local javaClassName = "com/xishanju/plm/plmext/plmext"
+--		local javaMethodName = "getPhoto"
+--		local javaParams = {
+--			fromCamera and 1 or 0,
+--			localPath,
+--			imageWidth,
+--			imageHeight,
+--			function(res)
+--				gwjui.printf("gwjgwj,getPhoto res=%s", tostring(res))
+--				msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
+--			end
+--		}
+--		local javaMethodSig = "(ILjava/lang/String;III)V"
+--		luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
+--	elseif(device.platform == "ios") then
+--		gwjui.printf("LuaObjcBridge=%s(%s)", tostring(LuaObjcBridge), type(LuaObjcBridge))
+--		local args = {
+--			fromCamera = fromCamera and 1 or 0,--是否从摄像头获取
+--			path = localPath,
+--			width = imageWidth,
+--			height = imageHeight,
+--			callback = function(res)
+--				msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
+--			end
+--		}
+--		luaoc.callStaticMethod("TakePhoto", "takePicture", args)
+--	end
 end
 
 function test12:onGetPhotoResult(res, path)
@@ -158,7 +166,10 @@ function test12:onClickUpload()
 	gwjui.printf("upload head,path=%s", self.m_localPath)
 	local localPath = self.m_localPath or ""
 	local key = string.format("gwjtest/test_%d.jpg", os.time())
-	if(localPath == "") then return end
+	if(localPath == "") then
+		TipsBanner.show("请先选择图片")
+		return
+	end
 	if(device.platform == "android") then
 		self:setLoadingView(true)
 		local javaClassName = "com/xishanju/plm/plmext/UploadHead"

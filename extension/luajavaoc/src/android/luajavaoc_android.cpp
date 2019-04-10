@@ -4,33 +4,61 @@
 #include "../luacallback.h"
 #include "luajavaoc_android.h"
 
-static JNIEnv* Attach()
-{
-	JNIEnv* env;
-	JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
-	vm->AttachCurrentThread(&env, NULL);
-	return env;
-}
-
-static bool Detach(JNIEnv* env)
-{
-	bool exception = (bool) env->ExceptionCheck();
-	env->ExceptionClear();
-	JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
-	vm->DetachCurrentThread();
-	return !exception;
-}
+//static JNIEnv* Attach()
+//{
+//	JNIEnv* env;
+//	JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
+//	vm->AttachCurrentThread(&env, NULL);
+//	return env;
+//}
+//
+//static bool Detach(JNIEnv* env)
+//{
+//	bool exception = (bool) env->ExceptionCheck();
+//	env->ExceptionClear();
+//	JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
+//	vm->DetachCurrentThread();
+//	return !exception;
+//}
 
 class AttachScope
 {
-	public:
+public:
 	JNIEnv* m_Env;
-	AttachScope() : m_Env(Attach())
+	bool m_attached;
+	AttachScope()
 	{
+		m_attached = false;
+		JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
+		jint status = vm->GetEnv((void**)&m_Env, JNI_VERSION_1_4);
+		switch(status)
+		{
+		case JNI_EDETACHED:
+			vm->AttachCurrentThread(&m_Env, NULL);
+//			dmLogInfo("version attached:0x%x", m_Env->GetVersion());
+			m_attached = true;
+			break;
+		case JNI_EVERSION:
+			dmLogError("GetEnv not support JNI version 1.4");
+			break;
+		default:
+			if(status != JNI_OK)
+				dmLogError("GetEnv error:%d", status);
+			break;
+		}
 	}
 	~AttachScope()
 	{
-		Detach(m_Env);
+		if(m_Env)
+		{
+			m_Env->ExceptionCheck();
+			m_Env->ExceptionClear();
+		}
+		if(m_attached)
+		{
+			JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
+			vm->DetachCurrentThread();
+		}
 	}
 };
 
@@ -95,6 +123,54 @@ std::string ext_callJavaStaticMethod(const char *clazz, const char *method, cons
 	std::string retStr = stringBuff;
 	env->ReleaseStringUTFChars(retjs, stringBuff);
 	return retStr;
+}
+
+void ext_callJavaStaticMethodV(const char *clazz, const char *method, const char *signature, ...)
+{
+	AttachScope attachscope;
+	JNIEnv* env = attachscope.m_Env;
+	jclass cls = GetClass(env, clazz);
+	if(cls == NULL)
+	{
+		std::string str = (std::string)"failed to find class " + clazz;
+		dmLogError(str.c_str());
+		return;
+	}
+	jmethodID dummy_method = env->GetStaticMethodID(cls, method, signature);
+	if(dummy_method == NULL)
+	{
+		std::string str = (std::string)"failed to find method " + clazz + "." + method + " " + signature;
+		dmLogError(str.c_str());
+		return;
+	}
+
+	const char *retType = strstr(signature, ")");
+	if(retType) retType++;
+	dmLogInfo("rettype=%s", retType);
+
+	va_list args;
+	va_start(args, signature);
+	if(strcmp(retType, "Z"))
+		env->CallStaticBooleanMethodV(cls, dummy_method, args);
+	else if(strcmp(retType, "B"))
+		env->CallStaticByteMethodV(cls, dummy_method, args);
+	else if(strcmp(retType, "C"))
+		env->CallStaticCharMethodV(cls, dummy_method, args);
+	else if(strcmp(retType, "S"))
+		env->CallStaticShortMethodV(cls, dummy_method, args);
+	else if(strcmp(retType, "I"))
+		env->CallStaticIntMethodV(cls, dummy_method, args);
+	else if(strcmp(retType, "J"))
+		env->CallStaticLongMethodV(cls, dummy_method, args);
+	else if(strcmp(retType, "F"))
+		env->CallStaticFloatMethodV(cls, dummy_method, args);
+	else if(strcmp(retType, "D"))
+		env->CallStaticDoubleMethodV(cls, dummy_method, args);
+	else if(strcmp(retType, "V"))
+		env->CallStaticVoidMethodV(cls, dummy_method, args);
+	else
+		env->CallStaticObjectMethodV(cls, dummy_method, args);
+	va_end(args);
 }
 
 static jobject newJavaObject(JNIEnv *env, const char *className)

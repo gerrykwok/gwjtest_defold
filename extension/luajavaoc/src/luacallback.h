@@ -39,6 +39,8 @@ std::string ext_jsonFromLuaTable(lua_State *L, int index);
 //java方法型如: String func(Context, String)
 //如果返回的ok为true，则该函数返回java方法的返回值，否则，返回出错消息
 std::string ext_callJavaStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
+
+void ext_callJavaStaticMethodV(const char *clazz, const char *method, const char *signature, ...);
 //调用oc方法
 std::string ext_callOcStaticMethod(const char *clazz, const char *method, const char *params, bool *ok);
 
