@@ -8,7 +8,7 @@ void takephoto_onAppInit(const char *environment)
 
 int takephoto_get_photo(lua_State *L)
 {
-	return 0;
+	return ext_callNativeStaticMethod("TakePhoto", "takePicture", L, -1);
 }
 
 #endif

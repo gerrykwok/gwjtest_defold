@@ -14,11 +14,6 @@ int test_oc(lua_State *L)
 	return 2;
 }
 
-int test_takephoto(lua_State *L)
-{
-	return ext_callNativeStaticMethod("TakePhoto", "takePicture", L, -1);
-}
-
 int test_callnative(lua_State *L)
 {
 	return ext_callNativeStaticMethod("MyClass", "test1", L, -1);

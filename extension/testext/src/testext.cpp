@@ -47,7 +47,6 @@ static const luaL_reg Module_methods[] =
 	{"test", test},
 	{"luatableToJson", luatableToJson},
 #if defined(DM_PLATFORM_IOS)
-	{"takePhoto", test_takephoto},
 	{"test_oc", test_oc},
 #endif
 	{"callnative", test_callnative},

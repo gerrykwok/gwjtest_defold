@@ -6,7 +6,6 @@
 #include <extension/luajavaoc/src/luacallback.h>
 
 int test_oc(lua_State *L);
-int test_takephoto(lua_State *L);
 int test_callnative(lua_State *L);
 int test_printMacro(lua_State *L);
 int test_centerWindow(lua_State *L);
