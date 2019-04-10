@@ -21,7 +21,7 @@ void takephoto_onAppInit(const char *environment)
 
 int takephoto_get_photo(lua_State *L)
 {
-	dmLogInfo("gwjgwj,getphoto,activity=0x%x", dmGraphics::GetNativeAndroidActivity());
+//	dmLogInfo("gwjgwj,getphoto,activity=0x%x", dmGraphics::GetNativeAndroidActivity());
 	return ext_callNativeStaticMethod("com.xishanju.plm.takephoto.TakePhoto", "getPhoto", L, -1);
 }
 

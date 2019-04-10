@@ -78,7 +78,7 @@ public class TakePhoto
 	}
 	public static void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		Log.d(TAG, "gwjgwj,onActivityResult, requestCode:"+requestCode+", resultCode:"+resultCode+",data="+data);
+//		Log.d(TAG, "gwjgwj,onActivityResult, requestCode:"+requestCode+", resultCode:"+resultCode+",data="+data);
 		if(resultCode != Activity.RESULT_OK)
 		{
 			notifyAvatarGetResult(AVATAR_GET_RES_FAIL);
@@ -103,7 +103,7 @@ public class TakePhoto
 			if(data != null && data.getData() != null)
 			{
 				//在模拟器andy中，通过文件管理在DCIM目录下，会出现裁剪结果无法保存到camerafilepath,这个时候就move过去。目前只在这个模拟器遇到过
-				Log.d(TAG, data.getData().toString());
+//				Log.d(TAG, data.getData().toString());
 				String realFilePath = getRealFilePath(data.getData());
 				if(realFilePath.endsWith(m_camerafilepath))
 				{
@@ -121,9 +121,9 @@ public class TakePhoto
 			{
 				Log.d(TAG, "crop no uri");
 			}
-			Log.i(TAG, "camarafilepath:" + m_camerafilepath+", avatarLocalPath:"+m_avatarLocalPath);
+//			Log.i(TAG, "camarafilepath:" + m_camerafilepath+", avatarLocalPath:"+m_avatarLocalPath);
 
-			testFile(m_camerafilepath);
+//			testFile(m_camerafilepath);
 
 			boolean mirrorX = false;
 			boolean res = saveAsAvatar(m_camerafilepath, m_avatarLocalPath, mirrorX);
@@ -163,7 +163,7 @@ public class TakePhoto
 		intent.putExtra("outputX", m_imageWidth);
 		intent.putExtra("outputY", m_imageHeight);
 		intent.putExtra("scale", true);
-		Log.d(TAG, "path=file://"+m_camerafilepath);
+//		Log.d(TAG, "path=file://"+m_camerafilepath);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(m_camerafilepath)));
 		intent.putExtra("return-data", false);
 		intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
@@ -254,7 +254,7 @@ public class TakePhoto
 
 	private static native void nativeNotifyGetResult(int callback, String res);
 	private static void notifyAvatarGetResult(int res) {
-		Log.d(TAG, String.format(Locale.US, "gwjgwj,notifyAvatarGetResult,callback=%d,res=%d", m_avatarCallback, res));
+//		Log.d(TAG, String.format(Locale.US, "gwjgwj,notifyAvatarGetResult,callback=%d,res=%d", m_avatarCallback, res));
 		if (m_avatarCallback > 0) {
 			String str = String.format(Locale.US, "{\"result\":%d}", res);
 			nativeNotifyGetResult(m_avatarCallback, str);
