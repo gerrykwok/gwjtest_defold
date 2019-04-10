@@ -113,37 +113,6 @@ function test12:onGetPhoto(fromCamera)
 		end,
 	})
 	gwjui.printf("takephoto,ok=%s,res=%s", tostring(ok), tostring(res))
-
---	if(device.platform == "android") then
---		gwjui.printf("LuaJavaBridge=%s(%s)", tostring(LuaJavaBridge), type(LuaJavaBridge))
---		--getPhoto(Context ctx, int fromCamera, String localPath, int width, int height, int luaCallbackFunction)
---		local javaClassName = "com/xishanju/plm/plmext/plmext"
---		local javaMethodName = "getPhoto"
---		local javaParams = {
---			fromCamera and 1 or 0,
---			localPath,
---			imageWidth,
---			imageHeight,
---			function(res)
---				gwjui.printf("gwjgwj,getPhoto res=%s", tostring(res))
---				msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
---			end
---		}
---		local javaMethodSig = "(ILjava/lang/String;III)V"
---		luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
---	elseif(device.platform == "ios") then
---		gwjui.printf("LuaObjcBridge=%s(%s)", tostring(LuaObjcBridge), type(LuaObjcBridge))
---		local args = {
---			fromCamera = fromCamera and 1 or 0,--是否从摄像头获取
---			path = localPath,
---			width = imageWidth,
---			height = imageHeight,
---			callback = function(res)
---				msg.post(self.m_url, "get_photo_result", {res=res, path=localPath})
---			end
---		}
---		luaoc.callStaticMethod("TakePhoto", "takePicture", args)
---	end
 end
 
 function test12:onGetPhotoResult(res, path)
