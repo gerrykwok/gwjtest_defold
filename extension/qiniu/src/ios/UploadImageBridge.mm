@@ -1,8 +1,8 @@
 #if defined(DM_PLATFORM_IOS)
 
 #import "UploadImageBridge.h"
-#import "Json/JsonUtil.h"
-#import "lua/CocosLua.h"
+//#import "Json/JsonUtil.h"
+//#import "lua/CocosLua.h"
 #import "AFNetworking/AFHTTPRequestOperationManager.h"
 
 @interface UploadImageBridge (Private)
@@ -13,38 +13,28 @@
 
 @implementation UploadImageBridge
 
-+(void)compileIn
-{
-}
-
 #define UPLOAD_UNDEFINE_KEY         "?"
 #define UPLOAD_QINIU_KEY            "key"
 #define UPLOAD_QINIU_TOKEN          "token"
 #define UPLOAD_QINIU_MIME_TYPE      "mimetype"
-#define UPLOAD_QINIU_FILE           "filepath"
-#define UPLOAD_QINIU_FILE_SUFFIX    "file_suffix"
+#define UPLOAD_QINIU_FILE           "path"
 
 #define UPLOAD_QINIU_URL            "upload.qiniu.com"
 
-+(void)uploadImage:(NSDictionary *)dict
++(void)uploadFile:(NSDictionary *)dict
 {
     if(dict == nil)
-    {
         return;
-    }
     
     if([dict count] == 0)
-    {
         return;
-    }
-    
+
     int callback = [[dict objectForKey:@"callback"] intValue];
     
     NSString *key = [dict objectForKey:@UPLOAD_QINIU_KEY];
     NSString *token = [dict objectForKey:@UPLOAD_QINIU_TOKEN];
     NSString *mimeType = [dict objectForKey:@UPLOAD_QINIU_MIME_TYPE];
     NSString *filePath = [dict objectForKey:@UPLOAD_QINIU_FILE];
-//    NSString *fileSuffix = [dict objectForKey:@UPLOAD_QINIU_FILE_SUFFIX];
     if(mimeType == nil || [mimeType isEqual:@""])
     {
         mimeType = @"application/octet-stream";
@@ -53,12 +43,6 @@
     BOOL checkError = [UploadImageBridge checkAndNotifyError:key token:token];
     if(checkError)
     {
-//        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-//        [dictionary setObject:@RESULT_FAIL forKey:@JSON_KEY_RESULT];
-//        string jsonRes = [Commom buildJsonString:dictionary];
-//        
-//        [Commom executeCallbackMethod:callback res:jsonRes.c_str()];
-        
         std::string json_str;
         [JsonUtil json_object_begin:json_str];
         [JsonUtil json_object_append_number_item:json_str key:"result" value:-1];
