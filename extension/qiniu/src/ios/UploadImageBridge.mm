@@ -44,10 +44,10 @@
 	if(checkError)
 	{
 		std::string json_str;
-		[JsonUtil json_object_begin:json_str];
-		[JsonUtil json_object_append_number_item:json_str key:"result" value:-1];
-		[JsonUtil json_object_end:json_str];
-		[CocosLua callLuaFunction:callback res:json_str.c_str()];
+//g		[JsonUtil json_object_begin:json_str];
+//g		[JsonUtil json_object_append_number_item:json_str key:"result" value:-1];
+//g		[JsonUtil json_object_end:json_str];
+//g		[CocosLua callLuaFunction:callback res:json_str.c_str()];
 		
 		return;
 	}
@@ -60,17 +60,11 @@
 		// 读取文件失败
 		NSLog(@"---------读取文件失败-------------");
 		
-//		NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-//		[dictionary setObject:@RESULT_FAIL forKey:@JSON_KEY_RESULT];
-//		string jsonRes = [Commom buildJsonString:dictionary];
-//		
-//		[Commom executeCallbackMethod:callback res:jsonRes.c_str()];
-		
 		std::string json_str;
-		[JsonUtil json_object_begin:json_str];
-		[JsonUtil json_object_append_number_item:json_str key:"result" value:-1];
-		[JsonUtil json_object_end:json_str];
-		[CocosLua callLuaFunction:callback res:json_str.c_str()];
+//g		[JsonUtil json_object_begin:json_str];
+//g		[JsonUtil json_object_append_number_item:json_str key:"result" value:-1];
+//g		[JsonUtil json_object_end:json_str];
+//g		[CocosLua callLuaFunction:callback res:json_str.c_str()];
 		
 		return;
 	}
@@ -99,17 +93,11 @@
 		// 上传成功
 		NSLog(@"---------上传图片成功-------------");
 		
-//		NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-//		[dictionary setObject:@RESULT_OK forKey:@JSON_KEY_RESULT];
-//		string jsonRes = [Commom buildJsonString:dictionary];
-//
-//		[Commom executeCallbackMethod:callback res:jsonRes.c_str()];
-
 		std::string json_str;
-		[JsonUtil json_object_begin:json_str];
-		[JsonUtil json_object_append_number_item:json_str key:"result" value:0];
-		[JsonUtil json_object_end:json_str];
-		[CocosLua callLuaFunction:callback res:json_str.c_str()];
+//g		[JsonUtil json_object_begin:json_str];
+//g		[JsonUtil json_object_append_number_item:json_str key:"result" value:0];
+//g		[JsonUtil json_object_end:json_str];
+//g		[CocosLua callLuaFunction:callback res:json_str.c_str()];
 		
 	} failure:^(AFHTTPRequestOperation *operation, NSError *error){
 		
@@ -117,16 +105,11 @@
 		NSLog(@"---------上传图片失败-------------");
 		NSLog(@"%@", [error userInfo]);
 		
-//		NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-//		[dictionary setObject:@RESULT_FAIL forKey:@JSON_KEY_RESULT];
-//		string jsonRes = [Commom buildJsonString:dictionary];
-//		[Commom executeCallbackMethod:callback res:jsonRes.c_str()];
-		
 		std::string json_str;
-		[JsonUtil json_object_begin:json_str];
-		[JsonUtil json_object_append_number_item:json_str key:"result" value:-1];
-		[JsonUtil json_object_end:json_str];
-		[CocosLua callLuaFunction:callback res:json_str.c_str()];
+//g		[JsonUtil json_object_begin:json_str];
+//g		[JsonUtil json_object_append_number_item:json_str key:"result" value:-1];
+//g		[JsonUtil json_object_end:json_str];
+//g		[CocosLua callLuaFunction:callback res:json_str.c_str()];
 	}];
 }
 
