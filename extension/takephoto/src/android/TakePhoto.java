@@ -63,7 +63,15 @@ public class TakePhoto
 		if(fromCamera)
 		{
 			Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-			i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(m_camerafilepath)));
+			File f = new File(m_camerafilepath);
+			Uri uri = Uri.fromFile(f);
+			Log.i(TAG, "uri1="+uri);
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+			{
+				uri = UriUtil.getImageContentUri(ctx, f);
+			}
+			Log.i(TAG, "uri2="+uri);
+			i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
 			act.startActivityForResult(i, ACT_RES_CAMERA_PHOTOS);
 		}
 		else
@@ -78,7 +86,7 @@ public class TakePhoto
 	}
 	public static void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-//		Log.d(TAG, "gwjgwj,onActivityResult, requestCode:"+requestCode+", resultCode:"+resultCode+",data="+data);
+		Log.i(TAG, "gwjgwj,onActivityResult, requestCode:"+requestCode+", resultCode:"+resultCode+",data="+data);
 		if(resultCode != Activity.RESULT_OK)
 		{
 			notifyAvatarGetResult(AVATAR_GET_RES_FAIL);
@@ -87,27 +95,44 @@ public class TakePhoto
 		if(requestCode == ACT_RES_LOCAL_PHOTOS)
 		{
 			Uri uri = data.getData();
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-			{
-				String str = UriUtil.getPath(m_ctx, uri);
-				uri = Uri.fromFile(new File(str));
+			Log.i(TAG, "album uri="+uri);
+			//https://blog.csdn.net/cryssdut/article/details/50174519
+			//https://www.jianshu.com/p/2275bb552327
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+			{//在android7.0上，data.getData()返回的uri应该是content://开头的
 			}
+			else
+			{
+				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+				{
+					String str = UriUtil.getPath(m_ctx, uri);
+					uri = Uri.fromFile(new File(str));
+				}
+			}
+			Log.i(TAG, "album uri2="+uri);
 			cropImageFromUri(uri);
+			Log.i(TAG, "album end");
 		}
 		else if(requestCode == ACT_RES_CAMERA_PHOTOS)
 		{
-			cropImageFromUri(Uri.fromFile(new File(m_camerafilepath)));
+			File f = new File(m_camerafilepath);
+			Uri uri = Uri.fromFile(f);
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+			{
+				uri = UriUtil.getImageContentUri(m_ctx, f);
+			}
+			cropImageFromUri(uri);
 		}
 		else if(requestCode == ACT_CROP_PHOTOS)
 		{
 			if(data != null && data.getData() != null)
 			{
 				//在模拟器andy中，通过文件管理在DCIM目录下，会出现裁剪结果无法保存到camerafilepath,这个时候就move过去。目前只在这个模拟器遇到过
-//				Log.d(TAG, data.getData().toString());
+//				Log.i(TAG, data.getData().toString());
 				String realFilePath = getRealFilePath(data.getData());
 				if(realFilePath.endsWith(m_camerafilepath))
 				{
-					Log.d(TAG, "need not to move");
+					Log.i(TAG, "need not to move");
 				}
 				else
 				{
@@ -119,7 +144,7 @@ public class TakePhoto
 			}
 			else
 			{
-				Log.d(TAG, "crop no uri");
+				Log.i(TAG, "crop no uri");
 			}
 //			Log.i(TAG, "camarafilepath:" + m_camerafilepath+", avatarLocalPath:"+m_avatarLocalPath);
 
@@ -140,7 +165,7 @@ public class TakePhoto
 			byte[] buffer;
 			is = new FileInputStream(filepath);
 			filesize = is.available();
-			Log.d(TAG, "filesize="+filesize);
+			Log.i(TAG, "filesize="+filesize);
 			buffer = new byte[filesize];
 			is.read(buffer);
 			is.close();
@@ -163,7 +188,7 @@ public class TakePhoto
 		intent.putExtra("outputX", m_imageWidth);
 		intent.putExtra("outputY", m_imageHeight);
 		intent.putExtra("scale", true);
-//		Log.d(TAG, "path=file://"+m_camerafilepath);
+//		Log.i(TAG, "path=file://"+m_camerafilepath);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(m_camerafilepath)));
 		intent.putExtra("return-data", false);
 		intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
@@ -254,7 +279,7 @@ public class TakePhoto
 
 	private static native void nativeNotifyGetResult(int callback, String res);
 	private static void notifyAvatarGetResult(int res) {
-//		Log.d(TAG, String.format(Locale.US, "gwjgwj,notifyAvatarGetResult,callback=%d,res=%d", m_avatarCallback, res));
+//		Log.i(TAG, String.format(Locale.US, "gwjgwj,notifyAvatarGetResult,callback=%d,res=%d", m_avatarCallback, res));
 		if (m_avatarCallback > 0) {
 			String str = String.format(Locale.US, "{\"result\":%d}", res);
 			nativeNotifyGetResult(m_avatarCallback, str);
