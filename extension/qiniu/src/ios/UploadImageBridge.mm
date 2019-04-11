@@ -1,5 +1,7 @@
 #if defined(DM_PLATFORM_IOS)
 
+#include <string>
+#include "../qiniu.h"
 #import "UploadImageBridge.h"
 //#import "Json/JsonUtil.h"
 //#import "lua/CocosLua.h"
@@ -43,12 +45,8 @@
 	BOOL checkError = [UploadImageBridge checkAndNotifyError:key token:token];
 	if(checkError)
 	{
-		std::string json_str;
-//g		[JsonUtil json_object_begin:json_str];
-//g		[JsonUtil json_object_append_number_item:json_str key:"result" value:-1];
-//g		[JsonUtil json_object_end:json_str];
-//g		[CocosLua callLuaFunction:callback res:json_str.c_str()];
-		
+		NSString *res = [NSString stringWithFormat:@"{\"result\":%d,\"errMsg\":\"key or token invalid\"}", -1];
+		[UploadImageBridge callLua:callback withResult:[res UTF8String]];
 		return;
 	}
 	
@@ -59,13 +57,8 @@
 	{
 		// 读取文件失败
 		NSLog(@"---------读取文件失败-------------");
-		
-		std::string json_str;
-//g		[JsonUtil json_object_begin:json_str];
-//g		[JsonUtil json_object_append_number_item:json_str key:"result" value:-1];
-//g		[JsonUtil json_object_end:json_str];
-//g		[CocosLua callLuaFunction:callback res:json_str.c_str()];
-		
+		NSString *res = [NSString stringWithFormat:@"{\"result\":%d,\"errMsg\":\"read file failed\"}", -1];
+		[UploadImageBridge callLua:callback withResult:[res UTF8String]];
 		return;
 	}
 	
@@ -89,27 +82,31 @@
 	[manager POST:[NSString stringWithFormat:@"http://%@", @UPLOAD_QINIU_URL] parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData){
 		[formData appendPartWithFileData:data name:@"file" fileName:fileName mimeType:mimeType];
 	} success:^(AFHTTPRequestOperation *operation, id responseObject){
-		
 		// 上传成功
 		NSLog(@"---------上传图片成功-------------");
-		
-		std::string json_str;
-//g		[JsonUtil json_object_begin:json_str];
-//g		[JsonUtil json_object_append_number_item:json_str key:"result" value:0];
-//g		[JsonUtil json_object_end:json_str];
-//g		[CocosLua callLuaFunction:callback res:json_str.c_str()];
+		NSString *res = [NSString stringWithFormat:@"{\"result\":%d}", 0];
+		[UploadImageBridge callLua:callback withResult:[res UTF8String]];
 		
 	} failure:^(AFHTTPRequestOperation *operation, NSError *error){
-		
 		// 上传失败
+		NSString *res;
 		NSLog(@"---------上传图片失败-------------");
-		NSLog(@"%@", [error userInfo]);
-		
-		std::string json_str;
-//g		[JsonUtil json_object_begin:json_str];
-//g		[JsonUtil json_object_append_number_item:json_str key:"result" value:-1];
-//g		[JsonUtil json_object_end:json_str];
-//g		[CocosLua callLuaFunction:callback res:json_str.c_str()];
+		NSDictionary *userInfo = [error userInfo];
+		NSLog(@"userInfo:%@", userInfo);
+//		for(NSString *key in userInfo)
+//		{
+//			NSLog(@"userInfo[%@] = %@", key, userInfo[key]);
+//		}
+		NSString *desc = userInfo[NSLocalizedDescriptionKey];
+		if([desc containsString:@"(614)"])
+		{
+			res = [NSString stringWithFormat:@"{\"result\":%d,\"errMsg\":\"file exists\"}", 1];
+		}
+		else
+		{
+			res = [NSString stringWithFormat:@"{\"result\":%d,\"errMsg\":\"upload failed\"}", -1];
+		}
+		[UploadImageBridge callLua:callback withResult:[res UTF8String]];
 	}];
 }
 
@@ -120,6 +117,15 @@
 	}
 	
 	return NO;
+}
+
++(void)callLua:(int)callback withResult:(const char *)res
+{
+	if(callback > 0)
+	{
+		ext_invokeLuaCallbackWithString(callback, res);
+		ext_unregisterLuaCallback(callback);
+	}
 }
 
 @end

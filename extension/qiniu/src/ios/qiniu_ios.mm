@@ -4,7 +4,7 @@
 
 int qiniu_uploadFile(lua_State *L)
 {
-	return 0;
+	return ext_callNativeStaticMethod("UploadImageBridge", "uploadFile", L, -1);
 }
 
 #endif
