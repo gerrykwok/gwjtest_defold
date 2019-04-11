@@ -44,6 +44,19 @@ function test12:onEnter()
 	:onButtonClicked(function()
 		self:onGetPhoto(true)
 	end)
+	--userid
+	local input = gwjui.UIInput.new({
+		main_id = "input_userid",
+		text = "0",
+		textColor = vmath.vector4(1, 0, 0, 1),
+		textFont = "test_24",
+		placeholder = "输入userId",
+		placeholderColor = vmath.vector3(0.5, 0.5, 0.5),
+		listener = function(event, edit)
+			gwjui.printf("edit event:%s text=%s", tostring(event), edit:getText())
+		end,
+	})
+	self.m_inputUserId = input
 	--上传头像按钮
 	local btn = gwjui.ScaleButton.new({
 		main_id = "btn_upload_head",
@@ -72,11 +85,6 @@ function test12:onExit()
 end
 
 function test12:on_message(message_id, message, sender)
-	if(message_id == hash("upload_result")) then
-		self:setLoadingView(false)
-		local str = string.format("上传结果:%s", tostring(message.res))
-		TipsBanner.show(str)
-	end
 end
 
 function test12:onGetPhoto(fromCamera)
@@ -134,46 +142,68 @@ function test12:onClickUpload()
 	local qiniu_token = "34kE2v75Sx0LwsTZRZz8fDEUqpolcgYWL87f9FRo:zB39WK-Wi29Bm9FfvTC2lMazYkg=:eyJzY29wZSI6Imd3anRlc3QiLCJkZWFkbGluZSI6MTU3NzgwODAwMH0="
 	gwjui.printf("upload head,path=%s", self.m_localPath)
 	local localPath = self.m_localPath or ""
-	local key = string.format("gwjtest/test_%d.jpg", os.time())
+--	local key = string.format("gwjtest/test_%d.jpg", os.time())
+	local key = string.format("gwjtest/test_qiniu_%s.jpg", self.m_inputUserId:getText())
+	gwjui.printf("key=%s", key)
 	if(localPath == "") then
 		TipsBanner.show("请先选择图片")
 		return
 	end
-	if(device.platform == "android") then
-		self:setLoadingView(true)
-		local javaClassName = "com/xishanju/plm/plmext/UploadHead"
-		local javaMethodName = "uploadHead"
-		local javaParams = {
-			qiniu_token,
-			localPath,
-			key,
-			function(res)
-				gwjui.printf("gwjgwj,res=%s", tostring(res))
-				msg.post(self.m_url, "upload_result", {res=res})
+	if(qiniu == nil) then return end
+	self:setLoadingView(true)
+	local ok,res = qiniu.uploadFile({
+		token = qiniu_token,
+		path = localPath,
+		key = key,
+		callback = function(script, res)
+			self:setLoadingView(false)
+			--TipsBanner.show("res=" .. tostring(res))
+			local t = json.decode(res)
+			if(t.result == 0) then
+				TipsBanner.show("上传成功")
+			elseif(t.result == 1) then
+				TipsBanner.show("目标资源已存在")
+			else
+				TipsBanner.show("上传失败:" .. t.errMsg)
 			end
-		}
-		--String token, String path, String name, final int luaCallbackFunction
-		local javaMethodSig = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V"
-		luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
-	elseif(device.platform == "ios") then
-		self:setLoadingView(true)
-		local args = {
-			token = qiniu_token,
-			filepath = localPath,
-			key = key,
-			callback = function(res)
-				gwjui.printf("gwjgwj,ios upload photo res:"..res)
-				local data = json.decode(res)
-				if(data and data.result == 0) then
-					res = "1"
-				else
-					res = "0"
-				end
-				msg.post(self.m_url, "upload_result", {res=res})
-			end
-		}
-		luaoc.callStaticMethod("UploadImageBridge", "uploadImage", args)
-	end
+		end,
+	})
+	gwjui.printf("uploadfile,ok=%s,res=%s", tostring(ok), tostring(res))
+--	if(device.platform == "android") then
+--		self:setLoadingView(true)
+--		local javaClassName = "com/xishanju/plm/plmext/UploadHead"
+--		local javaMethodName = "uploadHead"
+--		local javaParams = {
+--			qiniu_token,
+--			localPath,
+--			key,
+--			function(res)
+--				gwjui.printf("gwjgwj,res=%s", tostring(res))
+--				msg.post(self.m_url, "upload_result", {res=res})
+--			end
+--		}
+--		--String token, String path, String name, final int luaCallbackFunction
+--		local javaMethodSig = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V"
+--		luaj.callStaticMethod(javaClassName, javaMethodName, javaParams, javaMethodSig)
+--	elseif(device.platform == "ios") then
+--		self:setLoadingView(true)
+--		local args = {
+--			token = qiniu_token,
+--			filepath = localPath,
+--			key = key,
+--			callback = function(res)
+--				gwjui.printf("gwjgwj,ios upload photo res:"..res)
+--				local data = json.decode(res)
+--				if(data and data.result == 0) then
+--					res = "1"
+--				else
+--					res = "0"
+--				end
+--				msg.post(self.m_url, "upload_result", {res=res})
+--			end
+--		}
+--		luaoc.callStaticMethod("UploadImageBridge", "uploadImage", args)
+--	end
 end
 
 function test12:setLoadingView(flag)
