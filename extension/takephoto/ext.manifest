@@ -1,1 +1,10 @@
 name: "takephoto"
+
+platforms:
+    x86_64-win32:
+        context:
+            libs:       ["ComDlg32"]
+
+    x86-win32:
+        context:
+            libs:       ["ComDlg32"]
