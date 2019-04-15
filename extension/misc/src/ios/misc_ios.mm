@@ -104,4 +104,9 @@ int misc_goHome(lua_State *L)
 	return 0;
 }
 
+void misc_doPrint(const char *msg)
+{
+	dmLogInfo("%s", msg);
+}
+
 #endif

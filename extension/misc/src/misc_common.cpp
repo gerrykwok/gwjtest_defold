@@ -69,3 +69,22 @@ int misc_vibrate(lua_State *L)
 	misc_doVibrate(second);
 	return 0;
 }
+
+int misc_print(lua_State *L)
+{
+	int top = lua_gettop(L);
+	if(top <= 0)
+	{
+		dmLogError("expecting param");
+		return 0;
+	}
+	if(!lua_isstring(L, -1))
+	{
+		const char *t = misc_getLuaTypeDesc(L, -1);
+		dmLogError("param 1 is '%s', expecting string", t);
+		return 0;
+	}
+	const char *str = lua_tostring(L, -1);
+	misc_doPrint(str);
+	return 0;
+}

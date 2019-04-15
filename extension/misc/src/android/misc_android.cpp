@@ -2,6 +2,7 @@
 
 #include "../misc.h"
 #include <stdlib.h>
+#include <android/log.h>
 #include <extension/luajavaoc/src/android/luajavaoc_android.h>
 
 int misc_installApk(lua_State *L)
@@ -93,6 +94,11 @@ int misc_goHome(lua_State *L)
 	bool ok;
 	ext_callJavaStaticMethod("com.xishanju.plm.misc.MiscFunc", "goHome", "", &ok);
 	return 0;
+}
+
+void misc_doPrint(const char *msg)
+{
+	__android_log_print(ANDROID_LOG_INFO, "defold", "%s", msg);
 }
 
 #endif

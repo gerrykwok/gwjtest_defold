@@ -28,6 +28,7 @@ static const luaL_reg Module_methods[] =
 	{"getCurrentThreadId", misc_getCurrentThreadId},
 	{"vibrate", misc_vibrate},
 	{"goHome", misc_goHome},
+	{"print", misc_print},
 	{0, 0}
 };
 
