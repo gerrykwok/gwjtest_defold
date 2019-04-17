@@ -13,3 +13,4 @@ int agora_initCallback(lua_State *L);
 int agora_joinChannel(lua_State *L);
 int agora_leaveChannel(lua_State *L);
 int agora_getCurrentChannel(lua_State *L);
+int agora_muteLocalAudioStream(lua_State *L);

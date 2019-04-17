@@ -97,6 +97,33 @@ int agora_getCurrentChannel(lua_State *L)
 	return 1;
 }
 
+int agora_muteLocalAudioStream(lua_State *L)
+{
+	int top = lua_gettop(L);
+//	dmLogInfo("top=%d", top);
+	if(top <= 0)
+	{
+		dmLogError("expecting param");
+		return 0;
+	}
+	if(!lua_isboolean(L, -1))
+	{
+		dmLogError("param 1 is not boolean");
+		return 0;
+	}
+	int mute = lua_toboolean(L, -1);
+	bool isMute = mute;
+	int ret;
+#if defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_OSX)
+	RtcEngineParameters param(g_agoraEngine);
+	ret = param.muteLocalAudioStream(isMute);
+#else
+	ret = g_agoraEngine->muteLocalAudioStream(isMute);
+#endif
+	lua_pushinteger(L, ret);
+	return 1;
+}
+
 void MyAgoraEventHandler::onJoinChannelSuccess(const char* channel, uid_t userId, int elapsed)
 {
 	dmLogInfo("gwjgwj,join channel success,channel=%s,userId=%d,elapsed=%d", channel, userId, elapsed);

@@ -13,7 +13,7 @@ using namespace agora::rtc;
 
 class MyAgoraEventHandler : public IRtcEngineEventHandler
 {
-	public:
+public:
 	void onJoinChannelSuccess(const char* channel, uid_t userId, int elapsed);
 	void onRejoinChannelSuccess(const char* channel, uid_t userId, int elapsed);
 	void onLeaveChannel(const RtcStats& stats);
