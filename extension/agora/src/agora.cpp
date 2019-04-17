@@ -11,6 +11,7 @@ static const luaL_reg Module_methods[] =
 	{"joinChannel", agora_joinChannel},
 	{"leaveChannel", agora_leaveChannel},
 	{"getCurrentChannel", agora_getCurrentChannel},
+	{"muteLocalAudioStream", agora_muteLocalAudioStream},
 	{0, 0}
 };
 
