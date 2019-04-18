@@ -100,7 +100,6 @@ int agora_getCurrentChannel(lua_State *L)
 int agora_muteLocalAudioStream(lua_State *L)
 {
 	int top = lua_gettop(L);
-//	dmLogInfo("top=%d", top);
 	if(top <= 0)
 	{
 		dmLogError("expecting param");
@@ -122,6 +121,53 @@ int agora_muteLocalAudioStream(lua_State *L)
 #endif
 	lua_pushinteger(L, ret);
 	return 1;
+}
+
+int agora_enableLocalAudio(lua_State *L)
+{
+	int top = lua_gettop(L);
+	if(top <= 0)
+	{
+		dmLogError("expecting param");
+		return 0;
+	}
+	if(!lua_isboolean(L, -1))
+	{
+		dmLogError("param 1 is not boolean");
+		return 0;
+	}
+	int enable = lua_toboolean(L, -1);
+	bool isEnable = enable;
+	int ret;
+#if defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_OSX)
+	ret = 0;
+#else
+	ret = g_agoraEngine->enableLocalAudio(isEnable);
+#endif
+	lua_pushinteger(L, ret);
+	return 1;
+}
+
+int agora_enableAudioVolumeIndication(lua_State *L)
+{
+	int top = lua_gettop(L);
+	if(top < 2)
+	{
+		dmLogError("expecting 2 params");
+		return 0;
+	}
+	int interval, smooth;
+	interval = lua_tointeger(L, -2);
+	smooth = lua_tointeger(L, -1);
+	dmLogInfo("interval:%d,smooth:%d", interval, smooth);
+	int ret;
+#if defined(DM_PLATFORM_WINDOWS) || defined(DM_PLATFORM_OSX)
+	RtcEngineParameters param(g_agoraEngine);
+	ret = param.enableAudioVolumeIndication(interval, smooth);
+#else
+	ret = g_agoraEngine->enableAudioVolumeIndication(interval, smooth);
+#endif
+	return ret;
 }
 
 void MyAgoraEventHandler::onJoinChannelSuccess(const char* channel, uid_t userId, int elapsed)
@@ -216,6 +262,36 @@ void MyAgoraEventHandler::onMicrophoneEnabled(bool enabled)
 			char sz[1024];
 			sprintf(sz, "{\"name\":\"microphoneEnabled\",\"enable\":%s}", enabled?"true":"false");
 			ext_invokeLuaCallbackWithString(g_luaCallback, sz);
+		});
+	}
+}
+
+void MyAgoraEventHandler::onAudioVolumeIndication(const AudioVolumeInfo* speakers, unsigned int speakerNumber, int totalVolume)
+{
+	dmLogInfo("gwjgwj,onAudioVolumeIndication");
+	if(g_luaCallback > 0)
+	{
+		int i;
+		char sz[1024];
+		char tmp[64];
+		const AudioVolumeInfo *speaker;
+		sz[0] = 0;
+		strcat(sz, "{\"name\":\"audioVolumeIndication\",\"speakers\":[");
+		for(i = 0, speaker = speakers; i < speakerNumber; ++i, ++speaker)
+		{
+			if(i > 0)
+			{
+				strcat(sz, ",");
+			}
+			sprintf(tmp, "{\"uid\":%d,\"volume\":%d}", speaker->uid, speaker->volume);
+			strcat(sz, tmp);
+		}
+		strcat(sz, "]}");
+		char *res = new char[strlen(sz)+4];
+		strcpy(res, sz);
+		ext_performInUpdateThread([=]() {
+			ext_invokeLuaCallbackWithString(g_luaCallback, res);
+			delete[] res;
 		});
 	}
 }

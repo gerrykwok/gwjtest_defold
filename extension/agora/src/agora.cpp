@@ -12,6 +12,8 @@ static const luaL_reg Module_methods[] =
 	{"leaveChannel", agora_leaveChannel},
 	{"getCurrentChannel", agora_getCurrentChannel},
 	{"muteLocalAudioStream", agora_muteLocalAudioStream},
+	{"enableLocalAudio", agora_enableLocalAudio},
+	{"enableAudioVolumeIndication", agora_enableAudioVolumeIndication},
 	{0, 0}
 };
 

@@ -21,6 +21,7 @@ public:
 	void onUserOffline(uid_t userId, USER_OFFLINE_REASON_TYPE reason);
 	void onUserMuteAudio(uid_t userId, bool muted);
 	void onMicrophoneEnabled(bool enabled);
+	void onAudioVolumeIndication(const AudioVolumeInfo* speakers, unsigned int speakerNumber, int totalVolume);
 };
 
 void agora_initAgora();
