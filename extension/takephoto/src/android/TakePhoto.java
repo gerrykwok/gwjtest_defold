@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ContentResolver;
 import android.util.Log;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -114,6 +115,7 @@ public class TakePhoto
 		}
 		else if(requestCode == ACT_RES_CAMERA_PHOTOS)
 		{
+			updatePhotoMedia(m_ctx, m_camerafilepath);
 			File f = new File(m_camerafilepath);
 			Uri uri = Uri.fromFile(f);
 			Log.i(TAG, "camera uri1="+uri);
@@ -151,6 +153,7 @@ public class TakePhoto
 
 			boolean mirrorX = false;
 			boolean res = saveAsAvatar(m_camerafilepath, m_avatarLocalPath, mirrorX);
+			updatePhotoMedia(m_ctx, m_camerafilepath);
 			notifyAvatarGetResult(res ? AVATAR_GET_RES_SUCCES : AVATAR_GET_RES_FAIL);
 		}
 	}
@@ -264,5 +267,32 @@ public class TakePhoto
 			nativeNotifyGetResult(m_avatarCallback, str);
 			m_avatarCallback = 0;
 		}
+	}
+	
+	private static void updatePhotoMedia(Context context, String path)
+	{
+		MediaScannerConnection.scanFile(m_ctx, new String[]{path}, null, new MediaScannerConnection.OnScanCompletedListener()
+		{
+			@Override
+			public void onScanCompleted(String path, Uri uri)
+			{
+				Log.i(TAG, "scan " + path + " completed");
+			}
+		});
+
+//		Intent intent = new Intent();
+//		intent.setAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//		intent.setData(Uri.fromFile(new File(path)));
+//		context.sendBroadcast(intent);
+
+//		File f = new File(path);
+//		String filename = f.getName();
+//		try
+//		{
+//			MediaStore.Images.Media.insertImage(context.getContentResolver(), path, filename, null);
+//		} catch (FileNotFoundException e)
+//		{
+//			e.printStackTrace();
+//		}
 	}
 }
