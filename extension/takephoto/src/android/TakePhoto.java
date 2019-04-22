@@ -1,7 +1,6 @@
 package com.xishanju.plm.takephoto;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
@@ -117,10 +116,12 @@ public class TakePhoto
 		{
 			File f = new File(m_camerafilepath);
 			Uri uri = Uri.fromFile(f);
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+			Log.i(TAG, "camera uri1="+uri);
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
 			{
 				uri = UriUtil.getImageContentUri(m_ctx, f);
 			}
+			Log.i(TAG, "camera uri2="+uri);
 			cropImageFromUri(uri);
 		}
 		else if(requestCode == ACT_CROP_PHOTOS)
@@ -148,31 +149,9 @@ public class TakePhoto
 			}
 //			Log.i(TAG, "camarafilepath:" + m_camerafilepath+", avatarLocalPath:"+m_avatarLocalPath);
 
-//			testFile(m_camerafilepath);
-
 			boolean mirrorX = false;
 			boolean res = saveAsAvatar(m_camerafilepath, m_avatarLocalPath, mirrorX);
 			notifyAvatarGetResult(res ? AVATAR_GET_RES_SUCCES : AVATAR_GET_RES_FAIL);
-		}
-	}
-
-	private static void testFile(String filepath)
-	{
-		try
-		{
-			FileInputStream is;
-			int filesize;
-			byte[] buffer;
-			is = new FileInputStream(filepath);
-			filesize = is.available();
-			Log.i(TAG, "filesize="+filesize);
-			buffer = new byte[filesize];
-			is.read(buffer);
-			is.close();
-		} catch (Exception e)
-		{
-			Log.e(TAG, "gwjgwj,error:" + e.getMessage());
-			e.printStackTrace();
 		}
 	}
 
