@@ -3,7 +3,7 @@
 #include <string>
 #include <functional>
 #import <Foundation/Foundation.h>
-#import "AFHTTPRequestOperationManager.h"
+#import "../ios/AFNetworking/AFHTTPRequestOperationManager.h"
 
 #define UPLOAD_UNDEFINE_KEY         "?"
 #define UPLOAD_QINIU_KEY            "key"
