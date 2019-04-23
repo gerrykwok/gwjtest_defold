@@ -58,7 +58,7 @@ void gwjQiniu::onUploadEnd(int code, const char *message)
 	{
 		uploadResult = 0;
 	}
-	else if(code == 614)//Ä¿±ê×ÊÔ´ÒÑ´æÔÚ
+	else if(code == 614)//ç›®æ ‡èµ„æºå·²å­˜åœ¨
 	{
 		uploadResult = 1;
 	}
