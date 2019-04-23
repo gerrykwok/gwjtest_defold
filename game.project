@@ -58,3 +58,6 @@ include_dirs = gwjui
 [native_extension]
 app_manifest = /game.appmanifest
 
+[osx]
+infoplist = /res/platform/osx/Info.plist
+
