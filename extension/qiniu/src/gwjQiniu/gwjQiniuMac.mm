@@ -75,15 +75,23 @@ extern "C" void Qiniu_mac_upload(const char *sToken, const char *sName, const ch
 		// 上传成功
 		NSLog(@"---------上传图片成功-------------");
 		
-		(*func)(0, "success");
+		(*func)(200, "success");
 		delete func;
 	} failure:^(AFHTTPRequestOperation *operation, NSError *error){
 		
 		// 上传失败
 		NSLog(@"---------上传图片失败-------------");
-		NSLog(@"%@", [error userInfo]);
-		
-		(*func)(1, "upload failed");
+		NSDictionary *userInfo = [error userInfo];
+		NSLog(@"userInfo:%@", userInfo);
+		NSString *desc = userInfo[NSLocalizedDescriptionKey];
+		if([desc containsString:@"(614)"])
+		{
+			(*func)(614, "resource exists");
+		}
+		else
+		{
+			(*func)(-2, "upload failed");
+		}
 		delete func;
 	}];
 }
