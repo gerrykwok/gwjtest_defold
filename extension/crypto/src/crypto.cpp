@@ -7,7 +7,7 @@
 
 int crypto_encodeBase64(lua_State *L)
 {
-	const char *input = lua_tostring(L, -1);
+	const char *input = lua_tostring(L, -2);
 	int inputlength = lua_tointeger(L, -1);
 
 	char* encoded = crypto_encode_base64(input, inputlength);
